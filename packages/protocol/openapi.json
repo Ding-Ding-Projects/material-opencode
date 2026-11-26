@@ -19066,6 +19066,9 @@
               "browser_stream_tunnel": {
                 "type": "boolean"
               },
+              "mcp_resilience": {
+                "type": "boolean"
+              },
               "video_generate": {
                 "anyOf": [
                   {
@@ -23209,6 +23212,9 @@
                 "$ref": "#/components/schemas/Mcp.Status.Failed"
               },
               {
+                "$ref": "#/components/schemas/Mcp.Status.Disconnected"
+              },
+              {
                 "$ref": "#/components/schemas/Mcp.Status.NeedsAuth"
               }
             ]
@@ -23243,6 +23249,20 @@
           }
         },
         "required": ["status"],
+        "additionalProperties": false
+      },
+      "Mcp.Status.Disconnected": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["disconnected"]
+          },
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": ["status", "error"],
         "additionalProperties": false
       },
       "Mcp.Status.Failed": {
