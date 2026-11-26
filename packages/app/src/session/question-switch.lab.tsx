@@ -1,5 +1,5 @@
-import { activeQuestionRequest, questionPendingDocument } from "@opencode/session-ui/storybook"
-import { SessionPreview } from "./story-model"
+import { activeQuestionRequest, questionPendingDocument } from "@opencode/session-ui/lab"
+import { SessionPreview } from "./lab-model"
 import { SettingsExperimental } from "@/settings/experimental/experimental"
 
 export default {

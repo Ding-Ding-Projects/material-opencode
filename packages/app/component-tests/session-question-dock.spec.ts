@@ -1,9 +1,9 @@
 import type { Locator } from "@playwright/test"
 import type { MotionKnob } from "@opencode/ui/motion-tuning"
-import { expect, sourceURL, story } from "../../stories/playwright/story"
+import { expect, sourceURL, test } from "../../lab/playwright/test"
 
 for (const variant of ["classic", "experimental"] as const) {
-  story(`${variant} answer cards allow text selection without changing answers`, async ({ mount, page }) => {
+  test(`${variant} answer cards allow text selection without changing answers`, async ({ mount, page }) => {
     await page.addInitScript(
       (enabled) => localStorage.setItem("settings.v3", JSON.stringify({ general: { newQuestionUI: enabled } })),
       variant === "experimental",
@@ -67,7 +67,7 @@ for (const variant of ["classic", "experimental"] as const) {
     await expect(files).not.toBeChecked()
   })
 
-  story(`${variant} question text links URLs`, async ({ mount, page }) => {
+  test(`${variant} question text links URLs`, async ({ mount, page }) => {
     await page.addInitScript(
       (enabled) => localStorage.setItem("settings.v3", JSON.stringify({ general: { newQuestionUI: enabled } })),
       variant === "experimental",
@@ -83,7 +83,7 @@ for (const variant of ["classic", "experimental"] as const) {
   })
 }
 
-story("MCP elicitation message and field descriptions link URLs", async ({ mount }) => {
+test("MCP elicitation message and field descriptions link URLs", async ({ mount }) => {
   const component = await mount("app-current-session-surface--mcp-elicitation-request")
   const dock = component.locator('[data-component="dock-prompt"][data-kind="question"]')
 
@@ -91,7 +91,7 @@ story("MCP elicitation message and field descriptions link URLs", async ({ mount
     await expect(dock.getByRole("link", { name: url, exact: true })).toHaveAttribute("href", url)
 })
 
-story(
+test(
   "uses the original question cards by default and submits selected and custom answers",
   async ({ mount, page }) => {
     const component = await mount("app-current-session-surface--question-request")
@@ -145,7 +145,7 @@ story(
   },
 )
 
-story("keeps classic long answer lists inside the panel and scrolls them", async ({ mount, page }) => {
+test("keeps classic long answer lists inside the panel and scrolls them", async ({ mount, page }) => {
   const component = await mount("session-question-switch--long-list")
   const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
   const first = question.getByRole("checkbox", { name: /All typography/ })
@@ -169,7 +169,7 @@ story("keeps classic long answer lists inside the panel and scrolls them", async
   await expect(question.getByRole("radio", { name: "One pull request", exact: true })).toBeFocused()
 })
 
-story("classic arrow keys land in the custom answer's field and Up from its start leaves it", async ({ mount, page }) => {
+test("classic arrow keys land in the custom answer's field and Up from its start leaves it", async ({ mount, page }) => {
   const component = await mount("app-current-session-surface--question-request")
   const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
   const focused = question.getByRole("radio", { name: /Focused/ })
@@ -203,11 +203,11 @@ story("classic arrow keys land in the custom answer's field and Up from its star
   await expect(custom).toBeChecked()
 })
 
-story.describe("on a 393x852 mobile viewport", () => {
-  story.use({ hasTouch: true, isMobile: true, viewport: { width: 393, height: 852 } })
+test.describe("on a 393x852 mobile viewport", () => {
+  test.use({ hasTouch: true, isMobile: true, viewport: { width: 393, height: 852 } })
 
   for (const experimental of [false, true]) {
-    story(
+    test(
       `keeps navigation visible and scrolls long prompts and 12 options (${experimental ? "experimental" : "classic"})`,
       async ({ mount, page }) => {
         if (experimental) {
@@ -287,7 +287,7 @@ story.describe("on a 393x852 mobile viewport", () => {
   }
 })
 
-story(
+test(
   "minimizes and restores classic questions immediately for reduced motion and keyboard actions",
   async ({ mount, page }) => {
     const component = await mount("app-current-session-surface--question-request")
@@ -322,7 +322,7 @@ story(
   },
 )
 
-story(
+test(
   "opts into the new question UI in Experiments without losing answers and remembers the setting",
   async ({ mount, page }) => {
     const component = await mount("session-question-switch--experiments")
@@ -352,12 +352,12 @@ story(
   },
 )
 
-story.describe("with the new question UI experiment enabled", () => {
-  story.beforeEach(({ page }) =>
+test.describe("with the new question UI experiment enabled", () => {
+  test.beforeEach(({ page }) =>
     page.addInitScript(() => localStorage.setItem("settings.v3", JSON.stringify({ general: { newQuestionUI: true } }))),
   )
 
-  story("resizes the dock to fit different answer counts", async ({ mount }) => {
+  test("resizes the dock to fit different answer counts", async ({ mount }) => {
     const component = await mount("app-current-session-surface--question-answer-counts")
     const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
     const next = question.getByRole("button", { name: "Next", exact: true })
@@ -378,7 +378,7 @@ story.describe("with the new question UI experiment enabled", () => {
     await expect(question.getByRole("radio", { name: /Focused/ })).toBeVisible()
   })
 
-  story("selects single answers and toggles multiple answers with number keys", async ({ mount }) => {
+  test("selects single answers and toggles multiple answers with number keys", async ({ mount }) => {
     const component = await mount("app-current-session-surface--question-request")
     const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
     const focused = question.getByRole("radio", { name: /Focused/ })
@@ -433,7 +433,7 @@ story.describe("with the new question UI experiment enabled", () => {
     await expect(terminal).not.toBeChecked()
   })
 
-  story("moves only the highlight with Up and Down and marks it with Space", async ({ mount, page }) => {
+  test("moves only the highlight with Up and Down and marks it with Space", async ({ mount, page }) => {
     const component = await mount("app-current-session-surface--question-request")
     const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
     const focused = question.getByRole("radio", { name: /Focused/ })
@@ -472,7 +472,7 @@ story.describe("with the new question UI experiment enabled", () => {
     await expect(wide).toBeChecked()
   })
 
-  story("shows the highlight only for the arrow keys, never for hover or a click", async ({ mount, page }) => {
+  test("shows the highlight only for the arrow keys, never for hover or a click", async ({ mount, page }) => {
     const component = await mount("app-current-session-surface--question-request")
     const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
     const focused = question.getByRole("radio", { name: /Focused/ })
@@ -523,7 +523,7 @@ story.describe("with the new question UI experiment enabled", () => {
     await expect(highlight).toBeVisible()
   })
 
-  story("Enter picks the highlighted answer and moves on", async ({ mount, page }) => {
+  test("Enter picks the highlighted answer and moves on", async ({ mount, page }) => {
     const component = await mount("app-current-session-surface--question-request")
     const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
     const focused = question.getByRole("radio", { name: /Focused/ })
@@ -552,7 +552,7 @@ story.describe("with the new question UI experiment enabled", () => {
     await expect(question).toBeHidden()
   })
 
-  story("typing on the highlighted custom answer starts it", async ({ mount, page }) => {
+  test("typing on the highlighted custom answer starts it", async ({ mount, page }) => {
     const component = await mount("app-current-session-surface--question-request")
     const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
     const focused = question.getByRole("radio", { name: /Focused/ })
@@ -579,7 +579,7 @@ story.describe("with the new question UI experiment enabled", () => {
     await expect(input).toHaveValue("Split")
   })
 
-  story("switches questions with Left and Right outside the text field", async ({ mount, page }) => {
+  test("switches questions with Left and Right outside the text field", async ({ mount, page }) => {
     const component = await mount("app-current-session-surface--question-request")
     const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
     const focused = question.getByRole("radio", { name: /Focused/ })
@@ -813,12 +813,12 @@ story.describe("with the new question UI experiment enabled", () => {
     }, keys)
 
   // The dock's motion is off unless its knob is on, so these turn it on before the dock loads.
-  story.describe("with the question dock's motion on", () => {
-    story.beforeEach(({ page }) =>
+  test.describe("with the question dock's motion on", () => {
+    test.beforeEach(({ page }) =>
       page.addInitScript(() => localStorage.setItem("opencode.motion.v2", JSON.stringify({ "question.motion": 1 }))),
     )
 
-    story("keeps a question on screen while switching", async ({ mount }) => {
+    test("keeps a question on screen while switching", async ({ mount }) => {
       const component = await mount("app-current-session-surface--question-request")
       const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
       await expect(question.getByRole("radio", { name: /Focused/ })).toBeFocused()
@@ -840,7 +840,7 @@ story.describe("with the new question UI experiment enabled", () => {
       expect(forward.some((frame) => frame.blur)).toBe(true)
     })
 
-    story("switches questions without a second answer highlight", async ({ mount, page }) => {
+    test("switches questions without a second answer highlight", async ({ mount, page }) => {
       const component = await mount("session-question-switch--question-series")
       const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
       const highlight = question.locator('[data-slot="question-highlight"]')
@@ -854,7 +854,7 @@ story.describe("with the new question UI experiment enabled", () => {
       expect(frames.every((frame) => frame.highlights === 1)).toBe(true)
     })
 
-    story("keeps one outgoing copy and a visible question through rapid switches", async ({ mount }) => {
+    test("keeps one outgoing copy and a visible question through rapid switches", async ({ mount }) => {
       const component = await mount("session-question-switch--question-series")
       const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
       const options = question.locator('[data-slot="question-options"]')
@@ -886,7 +886,7 @@ story.describe("with the new question UI experiment enabled", () => {
         }
     })
 
-    story("rolls the question count up going on and down going back", async ({ mount }) => {
+    test("rolls the question count up going on and down going back", async ({ mount }) => {
       const component = await mount("session-question-switch--question-series")
       const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
       const title = question.locator('[data-slot="question-header-title"]')
@@ -911,7 +911,7 @@ story.describe("with the new question UI experiment enabled", () => {
       )
     })
 
-    story("takes Next clicks and the submit shortcut while the footer is still moving", async ({ mount }) => {
+    test("takes Next clicks and the submit shortcut while the footer is still moving", async ({ mount }) => {
       const component = await mount("session-question-switch--question-series")
       const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
       const title = question.locator('[data-slot="question-header-title"]')
@@ -930,7 +930,7 @@ story.describe("with the new question UI experiment enabled", () => {
       await expect(title).toHaveText("5 of 5 questions")
     })
 
-    story("rolls the count on from where it is when it changes again mid-roll", async ({ mount }) => {
+    test("rolls the count on from where it is when it changes again mid-roll", async ({ mount }) => {
       const component = await mount("session-question-switch--question-series")
       const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
       const title = question.locator('[data-slot="question-header-title"]')
@@ -982,7 +982,7 @@ story.describe("with the new question UI experiment enabled", () => {
       }))
 
     for (const dir of ["ltr", "rtl"] as const)
-      story(`slides the progress bar straight to a clicked dash (${dir})`, async ({ mount, page }) => {
+      test(`slides the progress bar straight to a clicked dash (${dir})`, async ({ mount, page }) => {
         const component = await mount("session-question-switch--question-series")
         const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
         await expect(question.getByRole("radio").first()).toBeFocused()
@@ -1006,7 +1006,7 @@ story.describe("with the new question UI experiment enabled", () => {
         expect(way).toBe(dir === "rtl" ? -1 : 1)
       })
 
-    story("swaps questions, the count and the progress bar at once under reduced motion", async ({ mount, page }) => {
+    test("swaps questions, the count and the progress bar at once under reduced motion", async ({ mount, page }) => {
       await page.emulateMedia({ reducedMotion: "reduce" })
       const component = await mount("session-question-switch--question-series")
       const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
@@ -1039,7 +1039,7 @@ story.describe("with the new question UI experiment enabled", () => {
       expect(values.slice(1).every((value, i) => way * (value - values[i]!) >= -0.01)).toBe(true)
     }
 
-    story("fades Back in and out and turns Next into Submit with the switch", async ({ mount, page }) => {
+    test("fades Back in and out and turns Next into Submit with the switch", async ({ mount, page }) => {
       const component = await mount("session-question-switch--question-series")
       const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
       const back = question.locator('[data-slot="question-footer-back"]')
@@ -1103,7 +1103,7 @@ story.describe("with the new question UI experiment enabled", () => {
       await expect(back).toHaveAttribute("inert", "")
     })
 
-    story("stops a switch where it is when the knob turns off", async ({ mount }) => {
+    test("stops a switch where it is when the knob turns off", async ({ mount }) => {
       const component = await mount("session-question-switch--question-series")
       const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
       await expect(question.getByRole("radio").first()).toBeFocused()
@@ -1140,7 +1140,7 @@ story.describe("with the new question UI experiment enabled", () => {
       expect(frames.after).toEqual({ animations: 0, heights: 0, ghosts: 0 })
     })
 
-    story("lands the composer's switch to a question at once when the knob turns off", async ({ mount }) => {
+    test("lands the composer's switch to a question at once when the knob turns off", async ({ mount }) => {
       const component = await mount("session-composer-docks--empty")
       await expect(component.locator('[data-slot="composer-face"]')).toHaveCount(1)
 
@@ -1179,7 +1179,7 @@ story.describe("with the new question UI experiment enabled", () => {
     })
   })
 
-  story(
+  test(
     "switches questions, folds and submits on the same frame with the dock's motion off",
     async ({ mount, page }) => {
       const component = await mount("session-question-switch--question-series")
@@ -1277,7 +1277,7 @@ story.describe("with the new question UI experiment enabled", () => {
     },
   )
 
-  story("toggles checkboxes with Space on key down and moves focus with arrows", async ({ mount, page }) => {
+  test("toggles checkboxes with Space on key down and moves focus with arrows", async ({ mount, page }) => {
     const component = await mount("app-current-session-surface--question-request")
     const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
     await question.getByRole("button", { name: "Next", exact: true }).click()
@@ -1301,7 +1301,7 @@ story.describe("with the new question UI experiment enabled", () => {
     await expect(files).toBeChecked()
   })
 
-  story("ignores modified, out-of-range, and repeated number shortcuts", async ({ mount, page }) => {
+  test("ignores modified, out-of-range, and repeated number shortcuts", async ({ mount, page }) => {
     const component = await mount("app-current-session-surface--question-request")
     const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
     const focused = question.getByRole("radio", { name: /Focused/ })
@@ -1323,7 +1323,7 @@ story.describe("with the new question UI experiment enabled", () => {
     await page.keyboard.up("2")
   })
 
-  story("types digits into the custom answer without selecting numbered options", async ({ mount }) => {
+  test("types digits into the custom answer without selecting numbered options", async ({ mount }) => {
     const component = await mount("app-current-session-surface--question-request")
     const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
     const focused = question.getByRole("radio", { name: /Focused/ })
@@ -1341,7 +1341,7 @@ story.describe("with the new question UI experiment enabled", () => {
     await expect(question.getByRole("radio", { name: /Wide/ })).not.toBeChecked()
   })
 
-  story("leaves Enter and Escape to an IME composition in the custom answer", async ({ mount }) => {
+  test("leaves Enter and Escape to an IME composition in the custom answer", async ({ mount }) => {
     const component = await mount("app-current-session-surface--question-request")
     const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
     const toggle = question.getByRole("radio", { name: "Type your own answer…", exact: true })
@@ -1368,7 +1368,7 @@ story.describe("with the new question UI experiment enabled", () => {
     await expect(question).toBeVisible()
   })
 
-  story("shows question navigation shortcuts in buttons and tooltips", async ({ mount, page }) => {
+  test("shows question navigation shortcuts in buttons and tooltips", async ({ mount, page }) => {
     const component = await mount("app-current-session-surface--question-request")
     const mac = await page.evaluate(() => /Mac|iPhone|iPad|iPod/.test(navigator.platform))
     // Enter submits by default, and Cmd/Ctrl+Enter still does.
@@ -1400,7 +1400,7 @@ story.describe("with the new question UI experiment enabled", () => {
     await expect(next).toBeVisible()
   })
 
-  story("keeps the custom answer input and dock geometry stable while editing", async ({ mount }) => {
+  test("keeps the custom answer input and dock geometry stable while editing", async ({ mount }) => {
     const component = await mount("app-current-session-surface--question-request")
     const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
     const row = question.locator('[data-slot="question-option"][data-custom="true"]')
@@ -1442,7 +1442,7 @@ story.describe("with the new question UI experiment enabled", () => {
     await node.dispose()
   })
 
-  story("marks one-answer questions with round keys and many-answer questions with square keys", async ({ mount }) => {
+  test("marks one-answer questions with round keys and many-answer questions with square keys", async ({ mount }) => {
     const component = await mount("app-current-session-surface--question-request")
     const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
     const keys = question.locator('[data-slot="question-option-key"]')
@@ -1462,7 +1462,7 @@ story.describe("with the new question UI experiment enabled", () => {
     await expect(question.getByText("Pick any", { exact: true })).toBeVisible()
   })
 
-  story("toggles a lone many-answer question and sends it with Enter", async ({ mount, page }) => {
+  test("toggles a lone many-answer question and sends it with Enter", async ({ mount, page }) => {
     const component = await mount("app-current-session-surface--question-multi-select")
     const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
     const files = question.getByRole("checkbox", { name: "Changed files", exact: true })
@@ -1525,7 +1525,7 @@ story.describe("with the new question UI experiment enabled", () => {
       return { top: /linear-gradient\((to bottom, )?transparent/.test(mask), bottom: mask.includes("to top") }
     })
 
-  story("caps a long list of answers to the panel and scrolls them inside it", async ({ mount }) => {
+  test("caps a long list of answers to the panel and scrolls them inside it", async ({ mount }) => {
     const question = await longList(mount)
     const rest = await fit(question)
     expect(rest.within).toBe(true)
@@ -1533,7 +1533,7 @@ story.describe("with the new question UI experiment enabled", () => {
     await expect(question.getByRole("checkbox", { name: /Footer/ })).not.toBeInViewport()
   })
 
-  story("scrolls the highlighted answer into view with the keys", async ({ mount, page }) => {
+  test("scrolls the highlighted answer into view with the keys", async ({ mount, page }) => {
     const question = await longList(mount)
     const footer = question.getByRole("checkbox", { name: /Footer/ })
 
@@ -1547,7 +1547,7 @@ story.describe("with the new question UI experiment enabled", () => {
     expect((await fit(question)).top).toBe(0)
   })
 
-  story("feathers only the edges of the answers with more past them", async ({ mount }) => {
+  test("feathers only the edges of the answers with more past them", async ({ mount }) => {
     const question = await longList(mount)
 
     // Scrolls to a share of the way down the list.
@@ -1567,7 +1567,7 @@ story.describe("with the new question UI experiment enabled", () => {
     expect(await edges(0)).toEqual({ top: false, bottom: true })
   })
 
-  story("leaves a list that fits without feathered edges", async ({ mount }) => {
+  test("leaves a list that fits without feathered edges", async ({ mount }) => {
     const component = await mount("session-question-switch--question-series")
     const question = component.locator('[data-component="dock-prompt"][data-kind="question"]')
     await expect(question.getByRole("radio").first()).toBeFocused()
@@ -1576,7 +1576,7 @@ story.describe("with the new question UI experiment enabled", () => {
       .toBe("")
   })
 
-  story(
+  test(
     "caps a long list to the panel in the app's layout, where the dock overflows a zero-height row",
     async ({ mount }) => {
       const question = await longList(mount)
@@ -1601,7 +1601,7 @@ story.describe("with the new question UI experiment enabled", () => {
     },
   )
 
-  story("brings the picked answer back into view after switching questions", async ({ mount, page }) => {
+  test("brings the picked answer back into view after switching questions", async ({ mount, page }) => {
     const question = await longList(mount)
     const footer = question.getByRole("checkbox", { name: /Footer/ })
     const title = question.locator('[data-slot="question-header-title"]')
@@ -1619,7 +1619,7 @@ story.describe("with the new question UI experiment enabled", () => {
     expect(await clear(footer)).toBe(true)
   })
 
-  story("sizes the answers box to each question with the dock's motion off", async ({ mount, page }) => {
+  test("sizes the answers box to each question with the dock's motion off", async ({ mount, page }) => {
     const question = await longList(mount)
     const options = question.locator('[data-slot="question-options"]')
     const rest = await fit(question)
@@ -1638,12 +1638,12 @@ story.describe("with the new question UI experiment enabled", () => {
     expect((await fit(question)).height).toBeCloseTo(rest.height, 0)
   })
 
-  story.describe("a long list with the question dock's motion on", () => {
-    story.beforeEach(({ page }) =>
+  test.describe("a long list with the question dock's motion on", () => {
+    test.beforeEach(({ page }) =>
       page.addInitScript(() => localStorage.setItem("opencode.motion.v2", JSON.stringify({ "question.motion": 1 }))),
     )
 
-    story("restores a long list without growing past where it rests", async ({ mount }) => {
+    test("restores a long list without growing past where it rests", async ({ mount }) => {
       const question = await longList(mount)
       const rest = await fit(question)
       await question.getByRole("button", { name: "Minimize question" }).click()

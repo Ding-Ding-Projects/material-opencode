@@ -1,22 +1,22 @@
 import type { JsonValue } from "@opencode/client/promise"
 import { describe, expect, test } from "bun:test"
-import { storyTool } from "../storybook/current-session-scenarios"
+import { labTool } from "../lab/current-session-scenarios"
 import { factsOf, sameFileFact, summarize, type FileFact } from "./facts"
 import { categoryOf } from "./place"
 
 describe("timeline facts", () => {
   test("names facts by stable ids", () => {
-    const part = { ...storyTool("p1", "edit", "completed", { path: "/repo/a.ts" }), messageID: "msg_1" }
+    const part = { ...labTool("p1", "edit", "completed", { path: "/repo/a.ts" }), messageID: "msg_1" }
 
     expect(factsOf([part]).map((fact) => fact.id)).toEqual(["msg_1:p1", "msg_1:p1:file:/repo/a.ts"])
   })
 
   test("names calls by their current tool and mode", () => {
     const facts = factsOf([
-      storyTool("b1", "bash", "completed", { command: "ls" }),
-      storyTool("t1", "task", "running", { description: "look" }),
-      storyTool("p1", "apply_patch", "completed", {}, { metadata: { files: [{ file: "/repo/z.ts", additions: 2 }] } }),
-      storyTool("x1", "custom", "error", {}),
+      labTool("b1", "bash", "completed", { command: "ls" }),
+      labTool("t1", "task", "running", { description: "look" }),
+      labTool("p1", "apply_patch", "completed", {}, { metadata: { files: [{ file: "/repo/z.ts", additions: 2 }] } }),
+      labTool("x1", "custom", "error", {}),
     ])
 
     expect(
@@ -35,11 +35,11 @@ describe("timeline facts", () => {
   test("counts each file and read once", () => {
     const summary = summarize(
       factsOf([
-        storyTool("r1", "read", "completed", { path: "/repo/a.ts" }),
-        storyTool("r2", "read", "completed", { path: "/repo/a.ts", offset: 4 }),
-        storyTool("e1", "edit", "completed", { path: "/repo/a.ts" }),
-        storyTool("e2", "write", "completed", { path: "/repo/a.ts" }),
-        storyTool("k1", "skill", "completed", { name: "review" }),
+        labTool("r1", "read", "completed", { path: "/repo/a.ts" }),
+        labTool("r2", "read", "completed", { path: "/repo/a.ts", offset: 4 }),
+        labTool("e1", "edit", "completed", { path: "/repo/a.ts" }),
+        labTool("e2", "write", "completed", { path: "/repo/a.ts" }),
+        labTool("k1", "skill", "completed", { name: "review" }),
         { type: "reasoning", id: "t1", text: "hmm" },
       ]),
     )
@@ -56,9 +56,9 @@ describe("timeline facts", () => {
   })
 
   test("follows a part updated in place", () => {
-    const part = storyTool("s1", "shell", "running", { command: "false" })
+    const part = labTool("s1", "shell", "running", { command: "false" })
     const before = summarize(factsOf([part]))
-    Object.assign(part, storyTool("s1", "shell", "error", { command: "false" }))
+    Object.assign(part, labTool("s1", "shell", "error", { command: "false" }))
 
     expect(before.failed).toBe(0)
     expect(summarize(factsOf([part])).failed).toBe(1)
@@ -66,7 +66,7 @@ describe("timeline facts", () => {
 
   test("reads a script's calls, a search's matches and a provider each on its own", () => {
     const [script] = factsOf([
-      storyTool(
+      labTool(
         "x1",
         "execute",
         "completed",
@@ -92,7 +92,7 @@ describe("timeline facts", () => {
   ]
 
   const scriptFiles = (status: "running" | "error" | "completed", metadata: Record<string, JsonValue>) =>
-    factsOf([storyTool("x", "execute", status, { code: "1" }, { metadata })]).filter(
+    factsOf([labTool("x", "execute", status, { code: "1" }, { metadata })]).filter(
       (fact): fact is FileFact => fact.kind === "file",
     )
 

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import { useI18n } from "@opencode/ui/context/i18n"
-import { storyTool } from "../../storybook/current-session-scenarios"
+import { labTool } from "../../lab/current-session-scenarios"
 import { factsOf, type FileFact } from "../../timeline/facts"
 import { contextGroupLabel } from "../../tools/context-group-label"
 import { activityLabel, activityText, usedLabel } from "./activity-label"
@@ -10,7 +10,7 @@ import type { ActivityGroupPart } from "./context-group"
 
 const i18n = useI18n()
 
-const script = storyTool(
+const script = labTool(
   "exec_1",
   "execute",
   "completed",
@@ -61,8 +61,8 @@ describe("script labels", () => {
   })
 
   test("a hidden script's changes count as a patch beside the other calls in their group", () => {
-    const read = storyTool("read_1", "read", "completed", { path: "/repo/z.ts" })
-    const patch = storyTool("patch_2", "patch", "completed", {}, { metadata: { files: [{ file: "/repo/d.ts" }] } })
+    const read = labTool("read_1", "read", "completed", { path: "/repo/z.ts" })
+    const patch = labTool("patch_2", "patch", "completed", {}, { metadata: { files: [{ file: "/repo/d.ts" }] } })
 
     expect(contextGroupLabel([read, ...files], i18n).text).toBe("Used 2 Read, Patch")
     expect(contextGroupLabel([...files, patch], i18n).text).toBe("Used 2 Patch")
@@ -73,7 +73,7 @@ describe("script labels", () => {
   test("a script moved to the background, or run as a job, has no changes to show", () => {
     const changed = (metadata: { background?: boolean; jobID?: string }) =>
       factsOf([
-        storyTool(
+        labTool(
           "exec_2",
           "execute",
           "completed",

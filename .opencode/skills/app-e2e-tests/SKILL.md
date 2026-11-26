@@ -1,6 +1,6 @@
 ---
 name: app-e2e-tests
-description: Use when writing, changing, reviewing, or debugging Playwright e2e tests in packages/app/e2e (regression keepers and user stories). Covers the mocked opencode server harness and the Bun static server, per-test isolation, page-load and route cost, the suite-wide service-worker block, races with first mount, hover, measurement, clock, dialogs and shortcuts, projects, shards and worker scheduling, rehearsing Windows timing locally, and diagnosing a CI flake from its artifacts. Not for component tests (stories mounted on packages/stories) or the strobe benchmarks in packages/app/perf.
+description: Use when writing, changing, reviewing, or debugging Playwright e2e tests in packages/app/e2e (regression keepers and user stories). Covers the mocked opencode server harness and the Bun static server, per-test isolation, page-load and route cost, the suite-wide service-worker block, races with first mount, hover, measurement, clock, dialogs and shortcuts, projects, shards and worker scheduling, rehearsing Windows timing locally, and diagnosing a CI flake from its artifacts. Not for component tests (pages mounted on packages/lab) or the strobe benchmarks in packages/app/perf.
 ---
 
 # App e2e tests
@@ -122,7 +122,7 @@ Run from `packages/app`:
 
 ## When CI flakes
 
-- **Find it.** e2e runs on every push to dev and beta, on nightly and manual runs, and as the gate `release.yml` calls before a stable release. Pull requests never run it. On a push the `affected` gate still skips it when nothing in `@opencode/app` or `@opencode/stories`, or their workspace dependencies, changed (`.github/workflows/check-test.yml`).
+- **Find it.** e2e runs on every push to dev and beta, on nightly and manual runs, and as the gate `release.yml` calls before a stable release. Pull requests never run it. On a push the `affected` gate still skips it when nothing in `@opencode/app` or `@opencode/lab`, or their workspace dependencies, changed (`.github/workflows/check-test.yml`).
   - Each OS has the legs `app-1` and `app-2` (the shards), `session-ui-components` and `app-components`.
   - The `e2e (linux)` and `e2e (windows)` checks only aggregate those legs.
   - A pass on retry leaves a leg green. Check each Windows shard report's Flaky list, and make sure your new tests are not on it.

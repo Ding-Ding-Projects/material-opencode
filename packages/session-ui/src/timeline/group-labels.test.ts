@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import { useI18n } from "@opencode/ui/context/i18n"
-import { storyTool } from "../storybook/current-session-scenarios"
+import { labTool } from "../lab/current-session-scenarios"
 import { contextGroupLabel } from "../tools/context-group-label"
 import type { ContextGroupPart } from "../tools/tool-renderer"
 import { labelGroups } from "./group-label-fixtures"
@@ -27,7 +27,7 @@ describe("group labels", () => {
   test("the current timeline counts a user shell as a Shell call", () => {
     const parts: ContextGroupPart[] = [
       { type: "shell", id: "u1", render: () => null },
-      storyTool("r1", "read", "completed", { path: "/repo/a.ts" }),
+      labTool("r1", "read", "completed", { path: "/repo/a.ts" }),
       { type: "notice", id: "n1", render: () => null },
     ]
 
