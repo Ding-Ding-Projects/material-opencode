@@ -2,8 +2,9 @@
 name: material-site
 
 on:
+  # The github-pages environment only accepts the default branch.
   push:
-    branches: [dev, material-redesign]
+    branches: [dev]
     paths: [site/**, .github/workflows/material-site.yml]
   workflow_dispatch:
 
