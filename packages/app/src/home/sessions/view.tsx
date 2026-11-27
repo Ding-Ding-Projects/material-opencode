@@ -1035,7 +1035,15 @@ function HomeSessionProjectName(props: { name: string; search?: boolean }) {
 
 function HomeSessionsEmpty(props: { onNewSession?: () => void; language: ReturnType<typeof useLanguage> }) {
   return (
-    <div class="flex min-h-full flex-col items-center gap-4 px-6 pt-[52px] text-center">
+    <div data-slot="home-sessions-empty" class="flex min-h-full flex-col items-center gap-4 px-6 pt-[52px] text-center">
+      <svg data-slot="home-sessions-empty-art" viewBox="0 0 160 120" aria-hidden="true">
+        <circle data-slot="orbit" cx="80" cy="60" r="44" />
+        <circle data-slot="orbit" cx="80" cy="60" r="28" />
+        <rect data-slot="core" x="62" y="42" width="36" height="36" rx="12" />
+        <path data-slot="glyph" d="M73 55l-5 5 5 5M87 55l5 5-5 5M82 52l-4 16" />
+        <circle data-slot="satellite" cx="124" cy="60" r="6" />
+        <circle data-slot="satellite-2" cx="80" cy="32" r="4" />
+      </svg>
       <div
         class={`
           shrink-0 text-[13px] leading-text-compact tracking-[-0.04px]

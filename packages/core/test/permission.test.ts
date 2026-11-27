@@ -5,6 +5,8 @@ import { Database } from "@opencode/core/database/database"
 import { AppNodeBuilder } from "@opencode/core/effect/app-node-builder"
 import { LayerNode } from "@opencode/util/effect/layer-node"
 import { Bus } from "@opencode/core/bus"
+import { Config } from "@opencode/core/config"
+import { Document, Info } from "@opencode/schema/config"
 import { Location } from "@opencode/core/location"
 import { Permission } from "@opencode/core/permission"
 import { PermissionTable } from "@opencode/core/permission/sql"
@@ -27,7 +29,7 @@ const current = Layer.succeed(
   Location.Service,
   Location.Service.of(location({ directory: AbsolutePath.make("/project") })),
 )
-const it = testEffect(
+const graph = (config: Layer.Layer<Config.Service | Config.Test> = Config.testLayer()) =>
   AppNodeBuilder.build(
     LayerNode.group([
       Database.node,
@@ -38,9 +40,30 @@ const it = testEffect(
       PluginHooks.node,
       Permission.node,
     ]),
-    [Location.node.replace(current)],
-  ),
+    [Location.node.replace(current), Config.node.replace(config)],
+  )
+const it = testEffect(graph())
+const bypass = testEffect(
+  graph(Config.testLayer([new Document({ type: "document", info: new Info({ bypass_permissions: true }) })])),
 )
+
+describe("Permission bypass mode", () => {
+  bypass.live("allows a request that would ask, and keeps configured denies", () =>
+    Effect.gen(function* () {
+      yield* setup([
+        { action: "*", resource: "*", effect: "ask" },
+        { action: "edit", resource: "secrets/*", effect: "deny" },
+      ])
+      const service = yield* Permission.Service
+      expect(yield* service.ask(assertion({ action: "shell", resources: ["rm -rf build"] }))).toMatchObject({
+        effect: "allow",
+      })
+      expect(yield* service.ask(assertion({ action: "edit", resources: ["secrets/key.pem"] }))).toMatchObject({
+        effect: "deny",
+      })
+    }),
+  )
+})
 
 function setup(rules: Permission.Ruleset = [], sessionID = Session.ID.make("ses_test")) {
   return Effect.gen(function* () {

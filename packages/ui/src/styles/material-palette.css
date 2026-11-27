@@ -1,0 +1,54 @@
+/*
+ * Material Expressive palette. Unlayered on purpose: the active theme writes its tokens in an unlayered `:root` rule,
+ * so only an unlayered rule with a more specific selector can retint them. It applies to the default theme only, so a
+ * theme the person picks in Settings > Appearance keeps its own colours, and Classic keeps the original palette.
+ * The semantic tokens refer to these scales, so retinting them carries the tonal surfaces through the whole app.
+ */
+:root[data-design="material"][data-theme="oc-2"] {
+  --v2-grey-50: #FFFBFF;
+  --v2-grey-100: #FEF7FF;
+  --v2-grey-200: #F7F2FA;
+  --v2-grey-300: #F3EDF7;
+  --v2-grey-400: #E6E0E9;
+  --v2-grey-500: #CAC4D0;
+  --v2-grey-600: #938F99;
+  --v2-grey-700: #79747E;
+  --v2-grey-800: #49454F;
+  --v2-grey-900: #36343B;
+  --v2-grey-1000: #2B2930;
+  --v2-grey-1100: #1D1B20;
+  --v2-grey-1200: #141218;
+  --v2-blue-100: #F6EDFF;
+  --v2-blue-200: #EADDFF;
+  --v2-blue-300: #D0BCFF;
+  --v2-blue-400: #B69DF8;
+  --v2-blue-500: #9A82DB;
+  --v2-blue-600: #6750A4;
+  --v2-blue-700: #5D4598;
+  --v2-blue-800: #4F378B;
+  --v2-blue-900: #381E72;
+  --v2-blue-1000: #2B0F66;
+  --v2-blue-1100: #21005D;
+  --v2-blue-1200: #160041;
+  --v2-cyan-100: #E0F7F3;
+  --v2-cyan-200: #B2EBE2;
+  --v2-cyan-300: #80DED0;
+  --v2-cyan-400: #4DD0BD;
+  --v2-cyan-500: #26C6AE;
+  --v2-cyan-600: #00BFA5;
+  --v2-cyan-700: #00A88F;
+  --v2-cyan-800: #00897B;
+  --v2-cyan-900: #00796B;
+  --v2-cyan-1000: #00695C;
+  --v2-cyan-1100: #004D40;
+  --v2-cyan-1200: #00332B;
+}
+
+/* The window behind the panels is the tonal surface container, so the panels read as raised surfaces on it. */
+:root[data-design="material"][data-theme="oc-2"][data-color-scheme="light"] {
+  --v2-background-bg-deep: var(--v2-grey-300);
+}
+
+:root[data-design="material"][data-theme="oc-2"][data-color-scheme="dark"] {
+  --v2-background-bg-deep: var(--v2-grey-1200);
+}

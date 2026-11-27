@@ -2,6 +2,7 @@
 
 @import "./colors.css" layer(theme);
 @import "./theme.css" layer(theme);
+@import "./material-palette.css";
 
 @import "./base.css" layer(base);
 @import "./scrollbar.css" layer(base);
@@ -40,3 +41,4 @@
 
 @import "./utilities.css" layer(utilities);
 @import "./animations.css" layer(utilities);
+@import "./material.css" layer(utilities);

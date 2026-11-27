@@ -43,4 +43,17 @@ export const ConfigGroup = HttpApiGroup.make("server.config")
       }),
     ),
   )
+  .add(
+    HttpApiEndpoint.post("config.edit", "/api/experimental/config/edit", {
+      payload: Config.EditRequest,
+      success: Config.EditResult,
+    }).annotateMerge(
+      OpenApi.annotations({
+        identifier: "experimental.config.edit",
+        summary: "Edit global configuration",
+        description:
+          "Apply JSON-path edits to the highest-precedence global configuration document, preserving comments and unrelated content. The result is validated and written only when valid and not a dry run. Experimental: may change without compatibility guarantees.",
+      }),
+    ),
+  )
   .annotateMerge(OpenApi.annotations({ title: "config", description: "Location-scoped configuration routes." }))

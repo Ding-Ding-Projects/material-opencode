@@ -62,6 +62,10 @@ export class Info extends Schema.Class<Info>("Config.Info")({
   permissions: Permission.Ruleset.pipe(optional).annotate({
     description: "Ordered tool permission rules applied to agent tool use",
   }),
+  bypass_permissions: Schema.Boolean.pipe(optional).annotate({
+    description:
+      "Full bypass mode: every tool request that would ask for approval is allowed without asking. Configured deny rules and managed policies still apply. Use only in a sandbox or on code you trust.",
+  }),
   policies: ConfigPolicy.Info.pipe(Schema.Array, optional).annotate({
     description: "Ordered policies controlling access to providers, tools, and integrations",
   }),
@@ -124,6 +128,36 @@ export const Patch = Schema.Struct({
   shell: Schema.NullOr(Schema.String),
 }).annotate({ identifier: "Config.Patch" })
 export interface Patch extends Schema.Schema.Type<typeof Patch> {}
+
+export const EditPath = Schema.Array(Schema.Union([Schema.String, Schema.Number])).annotate({
+  identifier: "Config.EditPath",
+  description: "JSON path to a configuration value, for example [\"mcp\", \"github\", \"enabled\"]",
+})
+
+export const Edit = Schema.Struct({
+  path: EditPath,
+  value: Schema.Json.pipe(optional).annotate({
+    description: "New JSON value. Omit to remove the key from the document",
+  }),
+}).annotate({ identifier: "Config.Edit" })
+export interface Edit extends Schema.Schema.Type<typeof Edit> {}
+
+export const EditRequest = Schema.Struct({
+  edits: Schema.Array(Edit),
+  dryRun: Schema.Boolean.pipe(optional).annotate({
+    description: "Return the resulting document and issues without writing it",
+  }),
+}).annotate({ identifier: "Config.EditRequest" })
+export interface EditRequest extends Schema.Schema.Type<typeof EditRequest> {}
+
+export const EditResult = Schema.Struct({
+  path: Schema.String,
+  before: Schema.String,
+  after: Schema.String,
+  issues: Schema.Array(Schema.String),
+  written: Schema.Boolean,
+}).annotate({ identifier: "Config.EditResult" })
+export interface EditResult extends Schema.Schema.Type<typeof EditResult> {}
 
 export class Document extends Schema.Class<Document>("Config.Document")({
   type: Schema.Literal("document"),

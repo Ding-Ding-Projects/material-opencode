@@ -8,6 +8,11 @@ export const fonts = {
   license,
   families: [
     {
+      name: "Roboto Flex",
+      url: "https://github.com/googlefonts/roboto-flex",
+      copyright: ["Copyright 2017 The Roboto Flex Project Authors (https://github.com/googlefonts/roboto-flex)"],
+    },
+    {
       name: "Carlito",
       url: "https://github.com/googlefonts/carlito",
       copyright: [

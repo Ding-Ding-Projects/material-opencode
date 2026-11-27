@@ -431,6 +431,8 @@ export type ConfigModelReasoning =
 
 export type ConfigShellOption = { path: string; name: string; acceptable: boolean }
 
+export type ConfigEditResult = { path: string; before: string; after: string; issues: Array<string>; written: boolean }
+
 export type LocationPublicRef = { directory: AbsolutePath }
 
 export type FileSystemWrite = { path: AbsolutePath }
@@ -2595,6 +2597,7 @@ export type ConfigEntry =
         timezone?: string
         automations?: boolean
         permissions?: PermissionRuleset
+        bypass_permissions?: boolean
         policies?: Array<{
           action:
             | "provider.use"
@@ -5258,6 +5261,16 @@ export type ConfigShellsOutput = Array<ConfigShellOption>
 export type ExperimentalConfigUpdateInput = { readonly shell: string | null }
 
 export type ExperimentalConfigUpdateOutput = void
+
+export type ExperimentalConfigEditInput = {
+  readonly edits: ReadonlyArray<{
+    readonly path: ReadonlyArray<string | number | "Infinity" | "-Infinity" | "NaN">
+    readonly value?: JsonValue
+  }>
+  readonly dryRun?: boolean | undefined
+}
+
+export type ExperimentalConfigEditOutput = ConfigEditResult
 
 /** @deprecated Use `ExperimentalSessionStatsInput`. Removed in the next minor. */
 export type SessionStatsInput = ExperimentalSessionStatsInput

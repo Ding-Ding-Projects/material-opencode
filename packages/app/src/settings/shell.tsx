@@ -25,6 +25,7 @@ import { useWorkspacesPrefetch } from "./workspaces/queries"
 import { SettingsProjects } from "./workspaces/projects"
 import { SettingsExtensions } from "./providers/extensions"
 import { SettingsAbout } from "./about/about"
+import { SettingsConfiguration } from "./configuration/configuration"
 import { SettingsServerDataScope } from "./server-scope"
 import { SettingsNavigation, SettingsPanel, type SettingsNavGroup } from "./navigation"
 import { SettingsProjectGeneral } from "./workspaces/project"
@@ -46,6 +47,7 @@ const serverTabs = [
   { value: "providers", icon: pageIcons.providers, label: "settings.providers.title" },
   { value: "models", icon: pageIcons.models, label: "settings.models.title" },
   { value: "extensions", icon: pageIcons.extensions, label: "settings.tab.extensions" },
+  { value: "configuration", icon: pageIcons.configuration, label: "settings.tab.configuration" },
   { value: "projects", icon: pageIcons.projects, label: "settings.tab.projects" },
   { value: "workspaces", icon: pageIcons.workspaces, label: "settings.tab.workspaces" },
 ] as const
@@ -55,6 +57,7 @@ const serverPages = {
   providers: { title: "settings.providers.title", description: "settings.providers.description" },
   models: { title: "settings.models.title", description: "settings.models.description" },
   extensions: { title: "settings.tab.extensions", description: "settings.extensions.description" },
+  configuration: { title: "settings.configuration.title", description: "settings.configuration.description" },
   projects: { title: "settings.projects.title", description: "settings.projects.description" },
   workspaces: { title: "settings.tab.workspaces", description: "settings.workspaces.description" },
 } as const
@@ -319,6 +322,9 @@ function RootSettings() {
                 headerAction={<SettingsServerSwitcher />}
                 onSubtab={(value) => surface.subtab(value)}
               />
+            </SettingsPanel>
+            <SettingsPanel value="configuration">
+              <SettingsConfiguration headerAction={<SettingsServerSwitcher />} />
             </SettingsPanel>
             <SettingsPanel value="projects">
               <SettingsProjects

@@ -164,6 +164,8 @@ const appearanceSchema = Persistence.struct({
   tabGrouping: Persistence.optional(Schema.Literals(["none", "project", "server"])),
   sidebarOpen: Persistence.optional(Schema.Boolean),
   reduceMotion: Schema.Literals(["system", "on", "off"]),
+  // Material Expressive is the default look; Classic keeps the original shapes and motion.
+  design: Persistence.optional(Schema.Literals(["material", "classic"])),
 })
 
 const permissionsSchema = Persistence.struct({
@@ -390,7 +392,9 @@ export const { use: useSettings, provider: SettingsProvider } = createSimpleCont
       const root = document.documentElement
       const mono = monoFontFamily(store.appearance?.mono)
       root.style.setProperty("--font-family-mono", mono)
-      root.style.setProperty("--font-family-sans", sansFontFamily(store.appearance?.sans))
+      // Material Expressive uses Roboto Flex until the person picks a UI font of their own.
+      const material = (store.appearance?.design ?? "material") === "material"
+      root.style.setProperty("--font-family-sans", sansFontFamily(store.appearance?.sans || (material ? "Roboto Flex" : undefined)))
       // Inline code can first appear during history backfill. Load its selected
       // face with the shell so that font discovery does not resize that mount.
       void document.fonts?.load(`440 13px ${mono}`).catch(() => undefined)
@@ -404,6 +408,14 @@ export const { use: useSettings, provider: SettingsProvider } = createSimpleCont
       if (typeof document === "undefined") return
       const reduce = reduceMotion() === "system" ? systemReducedMotion() : reduceMotion() === "on"
       document.documentElement.dataset.motion = reduce ? "reduce" : "full"
+    })
+
+    const design = () => store.appearance?.design ?? "material"
+
+    // The Material Expressive layer in @opencode/ui keys off this attribute.
+    createEffect(() => {
+      if (typeof document === "undefined") return
+      document.documentElement.dataset.design = design()
     })
 
     const timelineWidth = withFallback(() => store.general?.timelineWidth, defaultSettings.general.timelineWidth)
@@ -565,6 +577,10 @@ export const { use: useSettings, provider: SettingsProvider } = createSimpleCont
         reduceMotion,
         setReduceMotion(value: ReduceMotion) {
           setStore("appearance", "reduceMotion", value)
+        },
+        design,
+        setDesign(value: "material" | "classic") {
+          setStore("appearance", "design", value)
         },
       },
       keybinds: {

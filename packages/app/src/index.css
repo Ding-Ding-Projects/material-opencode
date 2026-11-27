@@ -17,6 +17,16 @@
   initial-value: 0px;
 }
 
+/* Roboto Flex is the Material Expressive design's UI face (variable weight, latin subset, SIL OFL 1.1). It applies only
+   while that design is on and no UI font is chosen in Settings > Appearance. */
+@font-face {
+  font-family: "Roboto Flex";
+  src: url("./assets/fonts/RobotoFlex-latin.woff2") format("woff2");
+  font-weight: 100 1000;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
   font-family: "Inter";
   src: url("/assets/Inter.ttf") format("truetype");

@@ -1,0 +1,606 @@
+/*
+ * Material Expressive design layer. The app sets `data-design="material"` on the root element unless the person
+ * chose Classic in Settings > Appearance; every rule here is scoped to that attribute so Classic is unchanged.
+ * Shapes follow the Material 3 shape scale, motion uses its expressive spring easings, and every transition stops
+ * when `data-motion="reduce"` is set (the app's reduced-motion setting, which follows the system by default).
+ */
+
+:root[data-design="material"] {
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
+
+  --md-shape-small: 8px;
+  --md-shape-medium: 12px;
+  --md-shape-large: 16px;
+  --md-shape-extra-large: 28px;
+  --md-shape-full: 999px;
+
+  --md-ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --md-ease-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-ease-spatial: cubic-bezier(0.34, 1.36, 0.64, 1);
+  --md-duration-short: 150ms;
+  --md-duration-medium: 300ms;
+  --md-duration-long: 500ms;
+
+  /* A tonal tint of the theme's accent, used for selected and hovered surfaces. */
+  --md-tint: color-mix(in oklab, var(--v2-background-bg-accent, #6750a4) 12%, transparent);
+  --md-tint-strong: color-mix(in oklab, var(--v2-background-bg-accent, #6750a4) 22%, transparent);
+}
+
+:root[data-design="material"] [data-component="button-v2"] {
+  border-radius: var(--md-shape-full);
+  transition:
+    background-color var(--md-duration-short) var(--md-ease-emphasized),
+    box-shadow var(--md-duration-short) var(--md-ease-emphasized),
+    transform var(--md-duration-short) var(--md-ease-spatial);
+}
+
+:root[data-design="material"] [data-component="button-v2"]:active:not([data-disabled], :disabled) {
+  transform: scale(0.97);
+}
+
+:root[data-design="material"] [data-component="icon-button-v2"] {
+  border-radius: var(--md-shape-full);
+  transition:
+    background-color var(--md-duration-short) var(--md-ease-emphasized),
+    transform var(--md-duration-short) var(--md-ease-spatial);
+}
+
+:root[data-design="material"] [data-component="icon-button-v2"]:active:not([data-disabled], :disabled) {
+  transform: scale(0.92);
+}
+
+:root[data-design="material"] :is([data-component="text-input-v2"], [data-component="select-v2"], [data-component="textarea-v2"]) {
+  border-radius: var(--md-shape-medium);
+  transition:
+    box-shadow var(--md-duration-short) var(--md-ease-emphasized),
+    background-color var(--md-duration-short) var(--md-ease-emphasized);
+}
+
+:root[data-design="material"] :is([data-component="menu-v2-content"], [data-component="tooltip-v2"]) {
+  border-radius: var(--md-shape-large);
+}
+
+:root[data-design="material"] [data-component="menu-v2-item"] {
+  border-radius: var(--md-shape-small);
+}
+
+:root[data-design="material"] [data-component="dialog-v2"] {
+  border-radius: var(--md-shape-extra-large);
+}
+
+:root[data-design="material"] [data-component="tag"] {
+  border-radius: var(--md-shape-small);
+}
+
+:root[data-design="material"] [data-component="settings-list"] {
+  border-radius: var(--md-shape-extra-large);
+  animation: md-rise var(--md-duration-long) var(--md-ease-emphasized-decelerate) both;
+}
+
+:root[data-design="material"] .settings-section:nth-child(2) [data-component="settings-list"] {
+  animation-delay: 60ms;
+}
+
+:root[data-design="material"] .settings-section:nth-child(3) [data-component="settings-list"] {
+  animation-delay: 120ms;
+}
+
+:root[data-design="material"] [data-component="tabs-v2"] [role="tab"] {
+  border-radius: var(--md-shape-full);
+}
+
+:root[data-design="material"] :focus-visible {
+  outline-offset: 2px;
+}
+
+/*
+ * Material components. Every shared control takes its Material 3 form: filled, tonal, outlined and text buttons,
+ * the Material switch (52x32 track, growing thumb), filled text fields with an active indicator, outlined segmented
+ * buttons with a tonal selection, rounded checkboxes and an inverse-surface tooltip.
+ */
+:root[data-design="material"] [data-component="button-v2"] {
+  min-height: 36px;
+  padding-inline: 18px;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.1px;
+}
+
+:root[data-design="material"] [data-component="button-v2"][data-size="small"] {
+  min-height: 32px;
+  padding-inline: 14px;
+}
+
+:root[data-design="material"] :is([data-component="button-v2"][data-variant="submit"], [data-component="icon-button-v2"][data-variant="submit"]) {
+  background: var(--v2-background-bg-accent);
+  background-image: none;
+  color: #fff;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+:root[data-design="material"] [data-component="button-v2"][data-variant="submit"]:hover:not(:disabled) {
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.18), 0 4px 8px rgb(0 0 0 / 0.1);
+  background: color-mix(in oklab, var(--v2-background-bg-accent) 90%, #fff);
+}
+
+:root[data-design="material"] [data-component="button-v2"][data-variant="neutral"] {
+  background: var(--md-tint-strong);
+  box-shadow: none;
+  color: var(--v2-text-text-base);
+}
+
+:root[data-design="material"] [data-component="button-v2"][data-variant="neutral"]:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--v2-background-bg-accent) 30%, transparent);
+}
+
+:root[data-design="material"] [data-component="button-v2"][data-variant="outline"] {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--v2-border-border-strong);
+  color: var(--v2-text-text-accent, var(--v2-background-bg-accent));
+}
+
+:root[data-design="material"] [data-component="button-v2"][data-variant="outline"]:hover:not(:disabled) {
+  background: var(--md-tint);
+}
+
+:root[data-design="material"] [data-component="button-v2"]:is([data-variant="ghost"], [data-variant="ghost-muted"], [data-variant="ghost-faint"]):hover:not(:disabled) {
+  background: var(--md-tint);
+}
+
+:root[data-design="material"] [data-component="icon-button-v2"]:not([data-variant="submit"], [data-variant="contrast"]):hover:not(:disabled) {
+  background: var(--md-tint);
+}
+
+:root[data-design="material"] [data-component="switch"] [data-slot="switch-control"] {
+  width: 52px;
+  height: 32px;
+  padding: 0 6px;
+  border-radius: var(--md-shape-full);
+  background: var(--v2-background-bg-layer-03);
+  box-shadow: inset 0 0 0 2px var(--v2-border-border-strong);
+}
+
+:root[data-design="material"] [data-component="switch"] [data-slot="switch-thumb"] {
+  width: 16px;
+  height: 16px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--v2-icon-icon-muted, #79747e);
+  box-shadow: none;
+}
+
+:root[data-design="material"] [data-component="switch"]:hover:not([data-disabled], [data-readonly]) [data-slot="switch-thumb"] {
+  width: 16px;
+  border-radius: 50%;
+}
+
+:root[data-design="material"] [data-component="switch"][data-checked] [data-slot="switch-control"] {
+  padding-inline: 4px;
+  background: var(--v2-background-bg-accent);
+  box-shadow: none;
+}
+
+:root[data-design="material"] [data-component="switch"][data-checked] [data-slot="switch-thumb"] {
+  width: 24px;
+  height: 24px;
+  transform: translateX(20px);
+  background: #fff;
+  border-radius: 50%;
+}
+
+:root[data-design="material"] [data-component="switch"]:active:not([data-disabled]) [data-slot="switch-thumb"] {
+  width: 28px;
+  height: 28px;
+}
+
+:root[data-design="material"] :is([data-component="text-input-v2"], [data-component="select-v2"], [data-component="textarea-v2"]) {
+  border-radius: var(--md-shape-small) var(--md-shape-small) 0 0;
+  background: var(--v2-background-bg-layer-02);
+  box-shadow: inset 0 -1px 0 var(--v2-border-border-strong);
+}
+
+:root[data-design="material"] :is([data-component="text-input-v2"], [data-component="textarea-v2"]):focus-within,
+:root[data-design="material"] [data-component="select-v2"]:is(:focus-visible, [data-expanded]) {
+  background: var(--v2-background-bg-layer-03);
+  box-shadow: inset 0 -2px 0 var(--v2-background-bg-accent);
+}
+
+:root[data-design="material"] [data-component="text-input-v2"][data-invalid] {
+  box-shadow: inset 0 -2px 0 var(--v2-state-fg-danger, #b3261e);
+}
+
+:root[data-design="material"] [data-slot="home-session-search-field"] {
+  box-shadow: var(--v2-elevation-raised);
+}
+
+:root[data-design="material"] [data-slot="segmented-control-v2"] {
+  height: 36px;
+  padding: 0;
+  border-radius: var(--md-shape-full);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--v2-border-border-strong);
+  overflow: hidden;
+}
+
+:root[data-design="material"] [data-slot="segmented-control-v2-indicator"] {
+  border-radius: 0;
+  background: var(--md-tint-strong);
+  box-shadow: none;
+}
+
+:root[data-design="material"] [data-slot="segmented-control-v2-item"] {
+  padding-inline: 16px;
+  font-weight: var(--font-weight-medium);
+}
+
+:root[data-design="material"] [data-component="checkbox"] [data-slot="checkbox-checkbox-control"] {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  transition:
+    background-color var(--md-duration-short) var(--md-ease-emphasized),
+    transform var(--md-duration-short) var(--md-ease-spatial);
+}
+
+:root[data-design="material"] [data-component="checkbox"][data-checked] [data-slot="checkbox-checkbox-control"] {
+  background: var(--v2-background-bg-accent);
+}
+
+:root[data-design="material"] [data-component="tooltip-v2"] {
+  padding: 6px 10px;
+  border-radius: var(--md-shape-small);
+  background: var(--v2-background-bg-inverse);
+  color: var(--v2-text-text-inverse);
+}
+
+:root[data-design="material"] [data-component="menu-v2-content"] {
+  padding: 6px;
+  background: var(--v2-background-bg-layer-02);
+  box-shadow: var(--v2-elevation-floating);
+}
+
+:root[data-design="material"] [data-component="menu-v2-item"] {
+  min-height: 36px;
+}
+
+/*
+ * Chat: tonal user bubbles, a Material composer card with a filled send action, and a tinted wordmark over a glowing
+ * backdrop on a new session. Timeline rows only change colour and corner shape, so nothing above the reader moves.
+ */
+:root[data-design="material"] [data-component="user-message"] [data-slot="user-message-text"] {
+  background: color-mix(in oklab, var(--v2-background-bg-accent) 16%, var(--v2-background-bg-base));
+  border-radius: 20px;
+  border-start-end-radius: calc(20px - 14px * var(--user-run-top, 0));
+  border-end-end-radius: calc(20px - 14px * var(--user-run-bottom, 0));
+}
+
+:root[data-design="material"] [data-component="composer"] {
+  border-radius: var(--md-shape-extra-large);
+  background: var(--v2-background-bg-layer-01);
+  box-shadow:
+    inset 0 0 0 1px var(--v2-border-border-muted),
+    var(--v2-elevation-raised);
+  transition: box-shadow var(--md-duration-medium) var(--md-ease-emphasized);
+}
+
+:root[data-design="material"] [data-component="composer"]:focus-within {
+  box-shadow:
+    inset 0 0 0 2px var(--v2-background-bg-accent),
+    var(--v2-elevation-floating);
+}
+
+:root[data-design="material"] [data-component="composer"] [data-slot="composer-controls"] [data-component="button-v2"] {
+  border-radius: var(--md-shape-small);
+  box-shadow: inset 0 0 0 1px var(--v2-border-border-base);
+}
+
+:root[data-design="material"] [data-component="new-session-wordmark"] {
+  color: color-mix(in oklab, var(--v2-background-bg-accent) 55%, var(--v2-background-bg-base));
+}
+
+:root[data-design="material"] [data-component="new-session"] {
+  border-radius: var(--md-shape-extra-large);
+}
+
+:root[data-design="material"] [data-component="new-session"]::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 34%;
+  width: min(900px, 90%);
+  height: 420px;
+  translate: -50% 0;
+  pointer-events: none;
+  background:
+    radial-gradient(closest-side, color-mix(in oklab, var(--v2-background-bg-accent) 22%, transparent), transparent),
+    radial-gradient(closest-side at 70% 60%, color-mix(in oklab, var(--v2-cyan-700, #00897b) 16%, transparent), transparent);
+  filter: blur(24px);
+  animation: md-glow 9s ease-in-out infinite;
+}
+
+@keyframes md-glow {
+  50% {
+    transform: scale(1.12);
+    opacity: 0.7;
+  }
+}
+
+[data-slot="new-session-starters"] {
+  display: none;
+}
+
+:root[data-design="material"] [data-slot="new-session-starters"] {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+:root[data-design="material"] [data-slot="new-session-starter"] {
+  min-height: 36px;
+  padding: 0 16px;
+  border-radius: var(--md-shape-small);
+  border: 1px solid var(--v2-border-border-base);
+  background: var(--v2-background-bg-base);
+  color: var(--v2-text-text-base);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  animation: md-rise var(--md-duration-long) var(--md-ease-emphasized-decelerate) both;
+  transition:
+    background-color var(--md-duration-short) var(--md-ease-emphasized),
+    transform var(--md-duration-short) var(--md-ease-spatial);
+}
+
+:root[data-design="material"] [data-slot="new-session-starter"]:nth-child(2) {
+  animation-delay: 60ms;
+}
+
+:root[data-design="material"] [data-slot="new-session-starter"]:nth-child(3) {
+  animation-delay: 120ms;
+}
+
+:root[data-design="material"] [data-slot="new-session-starter"]:nth-child(4) {
+  animation-delay: 180ms;
+}
+
+:root[data-design="material"] [data-slot="new-session-starter"]:hover {
+  background: var(--md-tint);
+}
+
+:root[data-design="material"] [data-slot="new-session-starter"]:active {
+  transform: scale(0.96);
+}
+
+/* Surfaces: large-radius panels with tonal elevation instead of hairline boxes. */
+:root[data-design="material"] [data-slot="home-panel"] {
+  border-radius: var(--md-shape-extra-large);
+}
+
+:root[data-design="material"] .settings-tab-title {
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: -0.2px;
+}
+
+:root[data-design="material"] .settings-nav-groups [data-slot="tabs-v2-trigger-wrapper"] {
+  border-radius: var(--md-shape-full);
+  transition:
+    background-color var(--md-duration-short) var(--md-ease-emphasized),
+    color var(--md-duration-short) var(--md-ease-emphasized),
+    transform var(--md-duration-short) var(--md-ease-spatial);
+}
+
+:root[data-design="material"] .settings-nav-groups [data-slot="tabs-v2-trigger-wrapper"]:has([data-selected]) {
+  background: var(--md-tint-strong);
+}
+
+:root[data-design="material"] .settings-nav-groups [data-slot="tabs-v2-trigger-wrapper"]:active {
+  transform: scale(0.98);
+}
+
+:root[data-design="material"] [data-component="settings-list"] {
+  background-color: color-mix(in oklab, var(--v2-background-bg-layer-01) 85%, var(--md-tint));
+  box-shadow: inset 0 0 0 1px var(--v2-border-border-muted);
+  padding-inline: 24px;
+}
+
+:root[data-design="material"] [data-component="settings-row"] {
+  transition: background-color var(--md-duration-short) var(--md-ease-emphasized);
+}
+
+:root[data-design="material"] [data-component="switch"] [data-slot="switch-control"] {
+  transition:
+    background-color var(--md-duration-medium) var(--md-ease-emphasized),
+    box-shadow var(--md-duration-medium) var(--md-ease-emphasized);
+}
+
+:root[data-design="material"] [data-component="switch"] [data-slot="switch-thumb"] {
+  transition: transform var(--md-duration-medium) var(--md-ease-spatial);
+}
+
+/* Home: Material search bar, a navigation-drawer card for projects, and an animated empty-state graphic. */
+:root[data-design="material"] [data-slot="home-session-search-field"] {
+  height: 56px;
+  padding-inline: 20px 12px;
+  border-radius: var(--md-shape-full);
+  background: var(--v2-background-bg-layer-02);
+  box-shadow: var(--v2-elevation-raised);
+  font-size: 16px;
+  transition:
+    box-shadow var(--md-duration-medium) var(--md-ease-emphasized),
+    background-color var(--md-duration-short) var(--md-ease-emphasized);
+}
+
+:root[data-design="material"] [data-slot="home-session-search-field"]:focus-within {
+  box-shadow:
+    0 0 0 2px var(--v2-background-bg-accent),
+    var(--v2-elevation-floating);
+}
+
+:root[data-design="material"] [data-slot="home-projects-panel"] {
+  padding: 20px 12px;
+  border-radius: var(--md-shape-extra-large);
+  background: color-mix(in oklab, var(--v2-background-bg-layer-02) 80%, transparent);
+  box-shadow: inset 0 0 0 1px var(--v2-border-border-muted);
+}
+
+:root[data-design="material"] [data-slot="home-project-nav-button"] {
+  border-radius: var(--md-shape-full);
+}
+
+[data-slot="home-sessions-empty-art"] {
+  display: none;
+}
+
+:root[data-design="material"] [data-slot="home-sessions-empty-art"] {
+  display: block;
+  width: 160px;
+  height: 120px;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: md-rise var(--md-duration-long) var(--md-ease-emphasized-decelerate) both;
+}
+
+:root[data-design="material"] [data-slot="home-sessions-empty-art"] [data-slot="orbit"] {
+  stroke: var(--v2-border-border-base);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 6;
+  transform-origin: 80px 60px;
+  animation: md-spin 24s linear infinite;
+}
+
+:root[data-design="material"] [data-slot="home-sessions-empty-art"] [data-slot="core"] {
+  fill: var(--md-tint-strong);
+  stroke: var(--v2-background-bg-accent);
+  stroke-width: 1.5;
+  transform-origin: 80px 60px;
+  animation: md-breathe 4s var(--md-ease-emphasized) infinite;
+}
+
+:root[data-design="material"] [data-slot="home-sessions-empty-art"] [data-slot="glyph"] {
+  stroke: var(--v2-background-bg-accent);
+  stroke-width: 2.5;
+}
+
+:root[data-design="material"] [data-slot="home-sessions-empty-art"] :is([data-slot="satellite"], [data-slot="satellite-2"]) {
+  fill: var(--v2-cyan-700, #00897b);
+  transform-origin: 80px 60px;
+  animation: md-spin 9s linear infinite;
+}
+
+:root[data-design="material"] [data-slot="home-sessions-empty-art"] [data-slot="satellite-2"] {
+  fill: var(--v2-orange-500, #ff8a65);
+  animation-duration: 6s;
+  animation-direction: reverse;
+}
+
+@keyframes md-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes md-breathe {
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+/*
+ * Dramatic backdrop graphics: slow drifting tonal shapes behind Home and Settings. They sit under the content,
+ * never take input, and stop (staying as a still tint) when motion is reduced.
+ */
+:root[data-design="material"] :is([data-slot="home-panel"], .settings-screen) {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+:root[data-design="material"] :is([data-slot="home-panel"], .settings-screen)::before,
+:root[data-design="material"] :is([data-slot="home-panel"], .settings-screen)::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 42% 58% 63% 37% / 45% 40% 60% 55%;
+  filter: blur(48px);
+  opacity: 0.55;
+}
+
+:root[data-design="material"] :is([data-slot="home-panel"], .settings-screen)::before {
+  width: 520px;
+  height: 520px;
+  right: -200px;
+  top: 30%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    color-mix(in oklab, var(--v2-background-bg-accent, #6750a4) 45%, transparent),
+    transparent 70%
+  );
+  animation: md-drift 22s ease-in-out infinite;
+}
+
+:root[data-design="material"] :is([data-slot="home-panel"], .settings-screen)::after {
+  width: 420px;
+  height: 420px;
+  left: -140px;
+  bottom: -180px;
+  background: radial-gradient(
+    circle at 60% 40%,
+    color-mix(in oklab, var(--v2-cyan-500, #00897b) 35%, transparent),
+    transparent 70%
+  );
+  animation: md-drift-2 28s ease-in-out infinite;
+}
+
+:root[data-design="material"] [data-slot="home-panel"] > * {
+  animation: md-rise var(--md-duration-long) var(--md-ease-emphasized-decelerate) both;
+}
+
+@keyframes md-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate(-6%, 8%) scale(1.15) rotate(25deg);
+  }
+}
+
+@keyframes md-drift-2 {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(8%, -6%) rotate(-35deg);
+  }
+}
+
+@keyframes md-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+:root[data-design="material"][data-motion="reduce"] *,
+:root[data-design="material"][data-motion="reduce"] *::before,
+:root[data-design="material"][data-motion="reduce"] *::after {
+  animation: none !important;
+  transition: none !important;
+}

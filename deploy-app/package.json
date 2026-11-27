@@ -1,0 +1,62 @@
+{
+  "name": "material-opencode-deploy",
+  "productName": "Material OpenCode Deploy",
+  "version": "0.1.0",
+  "description": "One-click deployment of the Material OpenCode web app and appliance image",
+  "private": true,
+  "main": "dist/main.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "bun build src/main.ts src/preload.ts --outdir dist --target node --format cjs --external electron && bun build src/renderer/app.ts --outdir dist/renderer --target browser && cp src/renderer/index.html src/renderer/styles.css dist/renderer/",
+    "test": "bun test src",
+    "start": "bun run build && electron .",
+    "dist:win": "bun run build && bun run bundle && electron-builder --win portable --x64 --publish never",
+    "dist:linux": "bun run build && bun run bundle && electron-builder --linux AppImage --x64 --publish never",
+    "bundle": "bun scripts/bundle-source.ts",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "qrcode": "1.5.4"
+  },
+  "devDependencies": {
+    "@types/qrcode": "1.5.5",
+    "electron": "45.5.0",
+    "electron-builder": "26.18.0",
+    "@types/bun": "1.3.5",
+    "typescript": "5.9.3"
+  },
+  "build": {
+    "appId": "io.github.dingdingprojects.materialopencode.deploy",
+    "productName": "Material OpenCode Deploy",
+    "files": [
+      "dist/**",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "portable",
+      "artifactName": "MaterialOpenCodeDeploy-${version}-portable.exe",
+      "signAndEditExecutable": false
+    },
+    "linux": {
+      "target": "AppImage",
+      "artifactName": "MaterialOpenCodeDeploy-${version}.AppImage",
+      "category": "Development"
+    },
+    "portable": {
+      "requestExecutionLevel": "user"
+    },
+    "extraResources": [
+      {
+        "from": "resources",
+        "to": ".",
+        "filter": [
+          "source.tar.gz",
+          "source.json"
+        ]
+      }
+    ]
+  }
+}

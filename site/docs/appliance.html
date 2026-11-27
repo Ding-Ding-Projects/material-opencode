@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Appliance image — Material OpenCode</title>
+    <meta name="description" content="The Material OpenCode appliance: a minimal Linux image that boots into the app on PCs, VirtualBox and Raspberry Pi 4." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Appliance image — Material OpenCode" />
+    <meta property="og:description" content="The Material OpenCode appliance: a minimal Linux image that boots into the app on PCs, VirtualBox and Raspberry Pi 4." />
+    <meta property="og:image" content="https://ding-ding-projects.github.io/material-opencode/assets/home-light.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="../assets/site.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap">
+        <a class="brand" href="../">
+          <span class="brand-mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4" /></svg>
+          </span>
+          Material OpenCode
+        </a>
+        <nav class="links" aria-label="Site">
+          <a href="../">Home</a>
+          <a href="../docs.html" aria-current="page">Docs</a>
+          <a href="https://github.com/Ding-Ding-Projects/material-opencode">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap docs">
+      <aside aria-label="On this page">
+        <strong class="aside-title">On this page</strong>
+        <a href="#what">What it is</a>
+        <a href="#images">Images</a>
+        <a href="#boot">Boot it</a>
+        <a href="#commands">Commands</a>
+        <strong class="aside-title">All guides</strong>
+        <a href="design.html">Material Expressive design</a>
+        <a href="configuration.html">Configuration studio</a>
+        <a href="bypass.html">Full bypass permissions mode</a>
+        <a href="chat.html">Material chat</a>
+        <a href="docker.html">Web app in Docker</a>
+        <a href="appliance.html" aria-current="page">Appliance image</a>
+        <a href="deploy.html">Deploy desktop app</a>
+      </aside>
+      <article>
+        <h1>Appliance image</h1>
+<h2 id="what">What it is</h2>
+<p>The appliance is a minimal Alpine Linux image that boots straight into Docker and starts the app. The app image is already inside, so it works offline.</p>
+<h2 id="images">Images</h2>
+<ul>
+<li>x86_64 UEFI as a raw disk image, for USB drives and spare PCs.</li>
+<li>x86_64 as a VDI for VirtualBox, with EFI turned on.</li>
+<li>x86_64 as a VMDK for VMware Workstation.</li>
+<li>Generic arm64 UEFI.</li>
+<li>Raspberry Pi 4 and 400, with UEFI firmware on the boot partition.</li>
+</ul>
+<p>Get them from the <a href="https://github.com/Ding-Ding-Projects/material-opencode/releases/latest">latest release</a>. Each image has a checksum file.</p>
+<h2 id="boot">Boot it</h2>
+<ol>
+<li>In VirtualBox, import the VDI, turn on EFI (<em>Settings &rsaquo; System</em>) and use a bridged network. For hardware, write the raw image to a USB drive or SD card.</li>
+<li>Boot it. The console shows the address to open.</li>
+<li>Log in on the console as <code>root</code> and run <code>material-opencode password</code> to see the server password.</li>
+</ol>
+<h2 id="commands">Commands</h2>
+<pre><code>material-opencode password   # show the server password
+material-opencode url        # show the address
+material-opencode update     # pull the newest app image and restart
+material-opencode logs       # follow the app log</code></pre>
+      </article>
+    </main>
+
+    <footer class="wrap">
+      Material OpenCode is a fork of <a href="https://github.com/anomalyco/opencode">OpenCode</a> under the MIT license.
+    </footer>
+  </body>
+</html>

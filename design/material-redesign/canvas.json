@@ -1,0 +1,648 @@
+{
+ "v": 3,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-11-27T04:00:00Z"
+ },
+ "title": "Material OpenCode redesign",
+ "launch": {
+  "view": "canvas",
+  "page": "shell"
+ },
+ "pages": [
+  {
+   "id": "shell",
+   "name": "App shell"
+  },
+  {
+   "id": "config",
+   "name": "Configuration studio"
+  },
+  {
+   "id": "hosting",
+   "name": "Web app in Docker and appliance image"
+  },
+  {
+   "id": "site",
+   "name": "Docs site"
+  },
+  {
+   "id": "chat",
+   "name": "Chat (session timeline and composer)"
+  },
+  {
+   "id": "components",
+   "name": "Material Design 3 controls"
+  },
+  {
+   "id": "deploy",
+   "name": "Deploy desktop app"
+  }
+ ],
+ "boards": {
+  "Main.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 980,
+   "title": "Home and projects (app front door)",
+   "page": "shell",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "Session.dc.html": {
+   "x": 1920,
+   "y": 0,
+   "w": 1440,
+   "h": 960,
+   "title": "Session workspace",
+   "page": "shell",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "Palette.dc.html": {
+   "x": 3840,
+   "y": 0,
+   "w": 1440,
+   "h": 1000,
+   "title": "Command palette (Ctrl+Shift+F)",
+   "page": "shell",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "ShellStages.dc.html": {
+   "x": 5760,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "Shell stages: loading, empty, offline, error",
+   "page": "shell",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "ConfigOverview.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 1020,
+   "title": "Configuration studio overview",
+   "page": "config",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "ConfigGeneral.dc.html": {
+   "x": 1920,
+   "y": 0,
+   "w": 1440,
+   "h": 1500,
+   "title": "Configuration: General",
+   "page": "config",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "ConfigPermissions.dc.html": {
+   "x": 3840,
+   "y": 0,
+   "w": 1440,
+   "h": 1660,
+   "title": "Configuration: Permissions and policies",
+   "page": "config",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "ConfigAgents.dc.html": {
+   "x": 5760,
+   "y": 0,
+   "w": 1440,
+   "h": 2820,
+   "title": "Configuration: Agents and commands",
+   "page": "config",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "ConfigMcp.dc.html": {
+   "x": 0,
+   "y": 2940,
+   "w": 1440,
+   "h": 3500,
+   "title": "Configuration: MCP servers and providers",
+   "page": "config",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "ConfigTools.dc.html": {
+   "x": 1920,
+   "y": 2940,
+   "w": 1440,
+   "h": 2860,
+   "title": "Configuration: LSP, formatters, tool output, watcher, compaction, warming",
+   "page": "config",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "ConfigSave.dc.html": {
+   "x": 3840,
+   "y": 2940,
+   "w": 1440,
+   "h": 1220,
+   "title": "Configuration: save flow, validation error, saved",
+   "page": "config",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "ConfigBypass.dc.html": {
+   "x": 5760,
+   "y": 2940,
+   "w": 1440,
+   "h": 1080,
+   "title": "Configuration studio — full bypass permissions mode",
+   "page": "config",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "HostSetup.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "First-run owner registration and setup (web app in Docker)",
+   "page": "hosting",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "HostDashboard.dc.html": {
+   "x": 1920,
+   "y": 0,
+   "w": 1440,
+   "h": 1100,
+   "title": "Server host status (web app in Docker)",
+   "page": "hosting",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "ApplianceBoot.dc.html": {
+   "x": 3840,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "Boot console (appliance image)",
+   "page": "hosting",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "DeployApp.dc.html": {
+   "x": 5760,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "One-click deploy app",
+   "page": "hosting",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "SiteHome.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 2500,
+   "title": "Landing page (docs site)",
+   "page": "site",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "SiteDocs.dc.html": {
+   "x": 1920,
+   "y": 0,
+   "w": 1440,
+   "h": 2020,
+   "title": "Docs article: Configuration studio (docs site)",
+   "page": "site",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "SitePhone.dc.html": {
+   "x": 3840,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Landing page on mobile (390 x 844)",
+   "page": "site",
+   "is_interactive": true
+  },
+  "ChatNewSession.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "New session screen",
+   "page": "chat",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "ChatSession.dc.html": {
+   "x": 1920,
+   "y": 0,
+   "w": 1440,
+   "h": 1040,
+   "title": "Running session",
+   "page": "chat",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "ChatComposerStates.dc.html": {
+   "x": 3840,
+   "y": 0,
+   "w": 1440,
+   "h": 1080,
+   "title": "Composer states",
+   "page": "chat",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "Controls.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 1180,
+   "title": "Material Design 3 control set",
+   "page": "components",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "DeployHome.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1280,
+   "h": 800,
+   "title": "Deploy desktop app: target picker",
+   "page": "deploy",
+   "is_interactive": true
+  },
+  "DeployRun.dc.html": {
+   "x": 1760,
+   "y": 0,
+   "w": 1280,
+   "h": 800,
+   "title": "Deploy desktop app: deployment in progress",
+   "page": "deploy",
+   "is_interactive": true
+  },
+  "DeployInstances.dc.html": {
+   "x": 3520,
+   "y": 0,
+   "w": 1280,
+   "h": 800,
+   "title": "Deploy desktop app: instance manager",
+   "page": "deploy",
+   "is_interactive": true
+  },
+  "DeployFlash.dc.html": {
+   "x": 5280,
+   "y": 0,
+   "w": 1280,
+   "h": 800,
+   "title": "Deploy desktop app: USB and SD flashing",
+   "page": "deploy",
+   "is_interactive": true
+  },
+  "DeployNewInstance.dc.html": {
+   "x": 0,
+   "y": 920,
+   "w": 1280,
+   "h": 800,
+   "title": "Deploy desktop app: new instance form",
+   "page": "deploy",
+   "is_interactive": true
+  },
+  "DeploySetupTui.dc.html": {
+   "x": 1760,
+   "y": 920,
+   "w": 1280,
+   "h": 800,
+   "title": "One-command setup in the terminal (web app in Docker)",
+   "page": "deploy",
+   "is_interactive": true
+  }
+ },
+ "order": [
+  "Main.dc.html",
+  "Session.dc.html",
+  "Palette.dc.html",
+  "ShellStages.dc.html",
+  "ConfigOverview.dc.html",
+  "ConfigGeneral.dc.html",
+  "ConfigPermissions.dc.html",
+  "ConfigAgents.dc.html",
+  "ConfigMcp.dc.html",
+  "ConfigTools.dc.html",
+  "ConfigSave.dc.html",
+  "ConfigBypass.dc.html",
+  "HostSetup.dc.html",
+  "HostDashboard.dc.html",
+  "ApplianceBoot.dc.html",
+  "DeployApp.dc.html",
+  "SiteHome.dc.html",
+  "SiteDocs.dc.html",
+  "SitePhone.dc.html",
+  "ChatNewSession.dc.html",
+  "ChatSession.dc.html",
+  "ChatComposerStates.dc.html",
+  "Controls.dc.html",
+  "DeployHome.dc.html",
+  "DeployRun.dc.html",
+  "DeployInstances.dc.html",
+  "DeployFlash.dc.html",
+  "DeployNewInstance.dc.html",
+  "DeploySetupTui.dc.html"
+ ],
+ "notes": {
+  "note-Main": {
+   "x": 1480,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the app front door. New-session hero with prompt, project, agent and model pickers; recent sessions; projects.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). items (0 to 6) changes the recent-session list; 0 gives the empty list card. Hover rows and tiles; focus the prompt.\nStands for: the home route in packages/app (home/, new-session/). The search bar opens the palette board.\nMotion: drifting tonal shapes behind the hero (dramatic); staggered rise on panels; shape-morph on hover and press.\nUnbuilt, unverified: this layout is a proposal. Session rows, status chips and the project list use sample data. Nothing here is wired to the server.",
+   "page": "shell",
+   "fill": "purple"
+  },
+  "note-Session": {
+   "x": 3400,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: one session. Timeline with tool calls, a permission request, composer, and a side panel with tabs, changed files and a diff.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: permission, streaming, idle. items (0 to 6) changes the file list. The agent and diff-layout segmented buttons respond.\nStands for: session/ in packages/app. The permission card uses the real replies (once, always, reject) and the real permissions key.\nMotion: permission card pulses until answered (dramatic); flowing progress and blinking caret while streaming; rise on entry.\nUnbuilt, unverified: side-panel tabs other than Changes are not drawn. The diff and transcript are sample content. The context meter is a placeholder figure.",
+   "page": "shell",
+   "fill": "purple"
+  },
+  "note-Palette": {
+   "x": 5320,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the palette over a dimmed home screen. Settings results carry live controls (segmented, switch, slider) beside commands, sessions and files.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: results, no-results, regex-error. items (0 to 6) changes the command list. Drag the slider, flip the switch, pick an update mode.\nStands for: home/start/command-palette.tsx plus the settings search index. Editing a setting inside search results is new.\nMotion: scrim fade and spring-in of the dialog; error pulse on the regex-error banner.\nUnbuilt, unverified: inline setting controls in the palette, the regex toggle and the Ctrl+Shift+F binding are proposals. No global key handler exists on the board.",
+   "page": "shell",
+   "fill": "purple"
+  },
+  "note-ShellStages": {
+   "x": 7240,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the four whole-screen stages of the app shell.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: loading, empty, offline, error.\nStands for: session/route-error.tsx, server-unavailable-panel.tsx and the first-run empty home.\nMotion: shimmer skeleton and flowing connect bar (loading); slow shape drift (empty); flowing retry bar (offline); alarm pulse on the error icon (dramatic).\nUnbuilt, unverified: copy and layout are proposals. The stack trace is sample text with a placeholder session id. Auto-retry timing is not specified.",
+   "page": "shell",
+   "fill": "purple"
+  },
+  "title-shell": {
+   "x": 0,
+   "y": -320,
+   "text": "App shell",
+   "kind": "title1",
+   "maxW": 7600,
+   "page": "shell"
+  },
+  "note-ConfigOverview": {
+   "x": 1480,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the entry to settings. Twelve categories with their real config keys, the search field with regex toggle, and the source-layer legend (Default, Global, Project).\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: browse, search (regex on, matching keys listed). items (0 to 6) changes the result count. Scope segmented responds.\nStands for: packages/app/src/settings (search-catalog.ts, search-index.ts) over packages/schema/src/config.ts.\nMotion: staggered rise of category tiles; tile shape-morph on hover.\nUnbuilt, unverified: the category grouping, the per-category counts and regex search are proposals; counts are sample data.",
+   "page": "config",
+   "fill": "purple"
+  },
+  "note-ConfigGeneral": {
+   "x": 3400,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: top-level keys with rich controls: shell, model (+ variant), default_agent, username, timezone, update, share, enterprise.url, snapshots, automations, worktree.directory.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). Click segmented options and switches; hover or focus an info button for the schema description; every row has a source badge and a reset.\nStands for: Config.Info in packages/schema/src/config.ts. Types under each label are the real schema types.\nMotion: staggered section rise; springy switch thumb and segmented check; hover and press on every control.\nUnbuilt, unverified: pickers open nothing on the board. Which layer each value comes from is sample data. Shell detection count is a placeholder.",
+   "page": "config",
+   "fill": "purple"
+  },
+  "note-ConfigPermissions": {
+   "x": 5320,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the ordered permissions rule builder (drag handle, tool chip, pattern field, allow / ask / deny) with an add row and a Try a call checker; then the policies list.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). items (0 to 8) changes the number of rules; 0 shows the empty state. Change an effect or edit a pattern.\nStands for: Permission.Ruleset (action, resource, effect) where the last matching rule wins (core/permission/policy.ts findLast), and ConfigPolicy actions.\nMotion: rules slide on hover; effect colours animate; staggered rise.\nUnbuilt, unverified: drag reordering is drawn, not working. The Try a call result is static sample output. Tool list for the picker is not defined.",
+   "page": "config",
+   "fill": "purple"
+  },
+  "note-ConfigAgents": {
+   "x": 7240,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: agents as cards (build, reviewer) with model, mode, temperature, step limit, colour swatches, hidden, description, system prompt and per-agent tool permissions; then the commands record.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). items (0 to 4) changes the command rows. Drag sliders (the number field follows), pick a swatch, change a tool permission.\nStands for: ConfigAgent.Info and ConfigCommand.Info. The schema has no temperature or tools keys, so temperature is shown as request.body.temperature and tool toggles as the agent permissions ruleset.\nMotion: swatch shape-morph when chosen; slider thumb squeeze; staggered card rise.\nUnbuilt, unverified: whether request.body.temperature reaches every provider is not checked. The plan agent card is collapsed into a chip.",
+   "page": "config",
+   "fill": "purple"
+  },
+  "note-ConfigMcp": {
+   "x": 1480,
+   "y": 2940,
+   "w": 360,
+   "text": "Shows: mcp.timeout sliders; a local server (command chips, cwd, environment editor, Code Mode, protocol, pool) and a remote server (url, sign-in variant, headers) with status dots; collapsed servers; two provider cards.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). items (0 to 5) changes the collapsed server list. Switch transport, edit key/value rows, drag timeouts.\nStands for: Mcp.LocalConfig / RemoteConfig / OAuthConfig, the Mcp status union (connected, pending, disabled, failed, needs_auth) and ConfigProvider.Info.\nMotion: live ping on connected dots; springy controls; staggered rise.\nUnbuilt, unverified: switching transport does not swap the form on the board. Provider key detection and model lists are sample data. No secret value is ever shown; only variable names.",
+   "page": "config",
+   "fill": "purple"
+  },
+  "note-ConfigTools": {
+   "x": 3400,
+   "y": 2940,
+   "w": 360,
+   "text": "Shows: lsp and formatter (All built-in / Off / Per entry, then per-language rows), tool_output sliders, watcher.ignore chips, compaction and warming.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). Drag any slider, toggle a language server, change the warming variant.\nStands for: ConfigLSP, ConfigFormatter, ConfigToolOutput (defaults 2000 lines, 51200 bytes), ConfigWatcher, ConfigCompaction, ConfigWarming.\nMotion: staggered section rise; control transitions throughout.\nUnbuilt, unverified: this board stacks sections from four categories for review; in the app each sits under its own category. Built-in server and formatter names and commands are illustrative.",
+   "page": "config",
+   "fill": "purple"
+  },
+  "note-ConfigSave": {
+   "x": 5320,
+   "y": 2940,
+   "w": 360,
+   "text": "Shows: how edits are saved. Pending-changes bar, JSONC diff review drawer, validation error stage, and the saved stage.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: pending, review, invalid, saved.\nStands for: the config document write path (server handlers/config.ts) and the config.updated event. Only changed keys are rewritten.\nMotion: bar springs up; drawer slides in; alarm pulse on the invalid card (dramatic); check pop with a burst of shapes on saved (dramatic).\nUnbuilt, unverified: comment-preserving JSONC writes, per-key revert, Undo, and whether running sessions pick up changes are not confirmed.",
+   "page": "config",
+   "fill": "purple"
+  },
+  "note-ConfigBypass": {
+   "x": 7240,
+   "y": 2940,
+   "w": 360,
+   "text": "Shows: the bypass_permissions switch in Permissions and policies (config key, default off), with what still applies: configured deny rules and managed policies.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: off, keys, slider, confirmed, on. In keys, press Turn key 1 and Turn key 2 (each works on its own); both unlock the slider; drag it to the end for the confirmed state. Emergency exit resets it. on shows the warning banner with Turn off.\nStands for: bypass_permissions in packages/schema/src/config.ts and the ask-to-allow check in core/src/permission.ts; the settings surface is settings/configuration/configuration.tsx.\nMotion: key-rotate and pop when a key turns; flowing striped fill while the slider is dragged (dramatic); burst of shapes on Confirmed (dramatic, celebratory); pulsing rings on the warning mark and alarm pulse on the banner (dramatic); drawer slide.\nUnbuilt, unverified: the two-key and slider confirmation and the banner layout are this design. The slider does not snap back if released early, and Save does not write anything on the board.",
+   "page": "config",
+   "fill": "purple"
+  },
+  "title-config": {
+   "x": 0,
+   "y": -320,
+   "text": "Configuration studio",
+   "kind": "title1",
+   "maxW": 7600,
+   "page": "config"
+  },
+  "note-HostSetup": {
+   "x": 1480,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: first run of the web app in Docker. Step rail and the current step: owner account, server settings, model provider, ready.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: owner, server, provider, done. The port slider and segmented options respond.\nStands for: hosting/ in the repository (compose.yaml, setup.ts, port 4096). Today the server uses one password from hosting/.env; owner accounts are new.\nMotion: flowing progress under the active step (dramatic); check pop on done; staggered rise.\nUnbuilt, unverified: accounts, the first-account-is-owner rule, and the credential store wording are proposals. No secret is displayed.",
+   "page": "hosting",
+   "fill": "teal"
+  },
+  "note-HostDashboard": {
+   "x": 3400,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the host dashboard. LAN address with QR placeholder, health checks, version and update mode, storage, people.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: healthy, updating, degraded. items (0 to 6) changes the health list.\nStands for: the container health check in hosting/Dockerfile and the update config key.\nMotion: live ping on healthy; flowing update bar (dramatic); alarm pulse on the degraded error card (dramatic); storage meter grows in.\nUnbuilt, unverified: no dashboard exists yet. Storage figures, people and check names are sample data; version is a placeholder. The QR block is a placeholder pattern, not a real code.",
+   "page": "hosting",
+   "fill": "teal"
+  },
+  "note-ApplianceBoot": {
+   "x": 5320,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the only screen the appliance image draws: boot log on the left, address and QR on the right.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: booting, ready, error. dark changes the side panel; the console stays dark on purpose.\nStands for: appliance/rootfs (OpenRC service, /etc/issue banner with Open the app and the material-opencode helper).\nMotion: flowing progress on the active boot step (dramatic); address pops in when ready; alarm pulse on the no-network error; caret blink.\nUnbuilt, unverified: the graphical side panel and QR are proposals; today the banner is text only. The QR block is a placeholder pattern.",
+   "page": "hosting",
+   "fill": "teal"
+  },
+  "note-DeployApp": {
+   "x": 7240,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the deploy app. Target list (this PC with Docker, SSH host, VirtualBox, USB flash, Raspberry Pi) and the form for the chosen target.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: choose, deploying, erase-confirm, done. erase-confirm shows the super-confirmation before a card is wiped.\nStands for: hosting/host.sh and host.bat for the PC path and appliance/build.sh for images.\nMotion: flowing progress on the active deploy step (dramatic); alarm pulse on the erase dialog (dramatic); check pop on done.\nUnbuilt, unverified: the deploy app does not exist. Choosing a target does not swap the form on the board. Drive detection and the typed-name check are drawn only.",
+   "page": "hosting",
+   "fill": "teal"
+  },
+  "title-hosting": {
+   "x": 0,
+   "y": -320,
+   "text": "Web app in Docker and appliance image",
+   "kind": "title1",
+   "maxW": 7600,
+   "page": "hosting"
+  },
+  "note-SiteHome": {
+   "x": 1480,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the docs site landing page. Hero with download button and a cropped product shot, feature grid, three ways to run it, closing call to action.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). Hover feature cards and buttons. Docs links move to the docs board in Play.\nStands for: the public site for this repository. The docker command comes from hosting/Dockerfile.\nMotion: glow and drift shapes behind the hero (dramatic); product shot rises, saved chip pops; feature cards morph on hover.\nUnbuilt, unverified: version and password are placeholders. No testimonials or numbers are shown because none exist. Download targets are not wired.",
+   "page": "site",
+   "fill": "orange"
+  },
+  "note-SiteDocs": {
+   "x": 3400,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: a docs article with sidebar, on-this-page list, a layer table, live example controls and the JSON they write.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). The example controls respond.\nStands for: a new article describing the Configuration studio page.\nMotion: gentle rise on load; link and sidebar hover transitions.\nUnbuilt, unverified: the article is draft copy for a feature that is still a design. Sidebar entries are a proposed outline.",
+   "page": "site",
+   "fill": "orange"
+  },
+  "note-SitePhone": {
+   "x": 4270,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the landing page hero at mobile width with stacked buttons and a cropped product shot.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything).\nStands for: the same page as the landing board at a narrow width.\nMotion: the same hero drift, smaller.\nUnbuilt, unverified: only the first screen is drawn; the menu does not open.",
+   "page": "site",
+   "fill": "orange"
+  },
+  "title-site": {
+   "x": 0,
+   "y": -320,
+   "text": "Docs site",
+   "kind": "title1",
+   "maxW": 4630,
+   "page": "site"
+  },
+  "note-ChatNewSession": {
+   "x": 1480,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the new-session screen. Tinted wordmark over a pulsing violet and teal glow, composer card, project and branch row, four prompt starters.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: empty, filled. Tap a starter: it fills the composer and the send button wakes up. Type in the composer.\nStands for: new-session/ and composer/ in packages/app.\nMotion: glow breathes behind the wordmark (dramatic); starters stagger in; focus ring and lift on the composer; send button shape-morph.\nUnbuilt, unverified: starter wording and the prompts they insert are proposals. Pickers do not open. Nothing is sent.",
+   "page": "chat",
+   "fill": "blue"
+  },
+  "note-ChatSession": {
+   "x": 3400,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: a running session. User bubbles (tighter corners where two meet), assistant markdown, a collapsible tool-call group with diff chips, the thinking row, docked composer.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: thinking, answered, error. Click the tool-call header to collapse or expand it.\nStands for: session/timeline and session/composer in packages/app.\nMotion: shimmering gradient glow on the thinking row (dramatic); stop button with progress ring; alarm pulse on the error retry card (dramatic); tool cards stagger in.\nUnbuilt, unverified: transcript, line counts and the provider error text are sample content. Retry and Stop do nothing on the board.",
+   "page": "chat",
+   "fill": "blue"
+  },
+  "note-ChatComposerStates": {
+   "x": 5320,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: six composer states side by side: idle, focused, attachments, slash commands, @ mention, sending.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: all, or one of idle, focused, attachments, slash, mention, sending to see that state alone.\nStands for: composer/ (attachments, suggestions, prompt-status machine) in packages/app.\nMotion: send morphs into stop with a spinning progress ring and flowing bar (dramatic); popovers spring in; caret blink; cards stagger in.\nUnbuilt, unverified: these are drawn states, not a live composer; text in them cannot be edited. The image chip uses a placeholder thumbnail.",
+   "page": "chat",
+   "fill": "blue"
+  },
+  "title-chat": {
+   "x": 0,
+   "y": -320,
+   "text": "Chat (session timeline and composer)",
+   "kind": "title1",
+   "maxW": 5680,
+   "page": "chat"
+  },
+  "note-Controls": {
+   "x": 1480,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the Material Design 3 controls used across the app: buttons, switch, filled text field (with error state), select, segmented buttons, checkbox, assist and filter chips, menu, tooltip, slider.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). Every control works: toggle, type, pick, drag. Tab through to see focus rings; hover the reset button for the tooltip.\nStands for: the shared controls in packages/ui that the redesign would restyle.\nMotion: springy thumb, check and shape changes on press; active indicator sweeps in on focus; header shape morphs; menu and tooltip pop in.\nUnbuilt, unverified: no packages/ui component has been changed to match. The menu is drawn open; the select uses the native list.",
+   "page": "components",
+   "fill": "green"
+  },
+  "title-components": {
+   "x": 0,
+   "y": -320,
+   "text": "Material Design 3 controls",
+   "kind": "title1",
+   "maxW": 1840,
+   "page": "components"
+  },
+  "note-DeployHome": {
+   "x": 1320,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the deploy desktop app window (1280 x 800, frameless with its own title bar). Six target cards with readiness and one Deploy button each; nav rail; release picker chip.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: ready, checking (readiness lines shimmer while the computer is probed). Hover cards.\nStands for: hosting/host.sh and host.bat (this computer, --ssh) and appliance/build.sh (.vdi for VirtualBox, raw image for USB and SD).\nMotion: morphing header shape and staggered cards (dramatic entrance); live ping on ready dots; card shape-morph on hover.\nUnbuilt, unverified: the desktop app is about to be built. Readiness text and version numbers are sample values. The release code name and version are placeholders. VMware output is not produced by appliance/build.sh today.",
+   "page": "deploy",
+   "fill": "pink"
+  },
+  "note-DeployRun": {
+   "x": 3080,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: one deployment with a six-step stepper (Download image, Verify checksum, Create instance, Start, Wait for health, Verify link) and a live log.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: running, success, failed. Hide log / View log toggles the log.\nStands for: hosting/host.sh: compose up, then polling the address for up to 2 minutes and printing Ready with the LAN address.\nMotion: flowing progress on the active step and the overall bar (dramatic); address pops in and the check pulses rings on success (dramatic); alarm pulse on the failed error card (dramatic).\nUnbuilt, unverified: checksum verification, retry-from-step and the QR block (a placeholder pattern) are design. The address is a sample.",
+   "page": "deploy",
+   "fill": "pink"
+  },
+  "note-DeployInstances": {
+   "x": 4840,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: instances with name, target, version, health, link and row actions (start or stop, restart, open, copy link, More: logs, update, duplicate, remove).\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). items 0 to 8 (0 is the empty state). stage: list, menu (More menu open), remove (confirm naming the instance and what is deleted).\nStands for: docker compose up, stop and down from hosting/host.sh; --down keeps the data volume, which is why deleting it is a separate switch.\nMotion: rows stagger in and slide on hover; live ping only on rows checked just now; menu pops; alarm pulse on the remove dialog (dramatic).\nUnbuilt, unverified: no instance registry exists yet. Rows are sample data. Health is only stated where the row says it was checked just now.",
+   "page": "deploy",
+   "fill": "pink"
+  },
+  "note-DeployFlash": {
+   "x": 6600,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: flashing the appliance image to a card or drive: removable-disk list, two-key super confirmation naming the disk, write progress, read-back verify, done with tips for finding the address.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: pick, confirm, writing, verifying, done. In pick nothing is preselected; choose a disk. In confirm press Turn key 1 and Turn key 2: both unlock Erase.\nStands for: the raw .img from appliance/build.sh (--pi for Raspberry Pi 4 and 400) and the console banner that shows Open the app.\nMotion: key-rotate and pop per key; alarm pulse on the erase card (dramatic); thick flowing progress with a large percentage (dramatic); ring pulse on done (dramatic).\nUnbuilt, unverified: disk detection, system-disk exclusion, writing and read-back are not built. Percentages are fixed sample values. Choosing a disk does not enable the button on the board.",
+   "page": "deploy",
+   "fill": "pink"
+  },
+  "note-DeployNewInstance": {
+   "x": 1320,
+   "y": 920,
+   "w": 360,
+   "text": "Shows: the per-target form: target, instance name, port with a free check chip, projects folder, SSH host (SSH target), memory and processor sliders and network mode (virtual machines), then a review step.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: form, invalid, review. Switch Target to see the SSH or virtual-machine fields; drag the sliders.\nStands for: the values hosting/setup.ts asks for (OPENCODE_INSTANCE, OPENCODE_PORT, OPENCODE_WORKSPACE) and --ssh user@host.\nMotion: validation chips and footer change with state; segmented, slider and field transitions; staggered entrance.\nUnbuilt, unverified: live port checking, SSH test and VM sizing are design. Validation on the board is shown by stage, not computed from what is typed.",
+   "page": "deploy",
+   "fill": "pink"
+  },
+  "note-DeploySetupTui": {
+   "x": 3080,
+   "y": 920,
+   "w": 360,
+   "text": "Shows: a terminal window with the setup for the web app in Docker: arrow-key menu with the default marked, live validation, review before writing, password shown once; the plain-text fallback is smaller beneath.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: menu, invalid, review, done. The terminal stays dark in both themes on purpose.\nStands for: bun hosting/setup.ts, which today asks the same six values as plain prompts and writes hosting/.env.\nMotion: selected menu line pops; caret blink; screen rises in per stage; key hints morph on hover.\nUnbuilt, unverified: arrow-key menus, Back, the review screen and showing the password once are design; today only the plain prompts exist. The password on the board is a placeholder, never a real secret.",
+   "page": "deploy",
+   "fill": "pink"
+  },
+  "title-deploy": {
+   "x": 0,
+   "y": -320,
+   "text": "Deploy desktop app",
+   "kind": "title1",
+   "maxW": 6960,
+   "page": "deploy"
+  }
+ }
+}

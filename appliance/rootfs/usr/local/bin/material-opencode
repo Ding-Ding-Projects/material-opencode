@@ -1,0 +1,12 @@
+#!/bin/sh
+# Appliance helper: material-opencode password | url | update | logs
+envfile=/etc/material-opencode/.env
+case "$1" in
+	password) grep '^OPENCODE_PASSWORD=' "$envfile" | cut -d= -f2- ;;
+	url) echo "http://$(ip -4 -o addr show scope global | awk '{print $4}' | cut -d/ -f1 | head -n1):4096" ;;
+	update)
+		sed -i 's#^OPENCODE_IMAGE=.*#OPENCODE_IMAGE=ghcr.io/ding-ding-projects/material-opencode:latest#' "$envfile"
+		docker compose --env-file "$envfile" -f /opt/material-opencode/compose.yaml pull && rc-service material-opencode restart ;;
+	logs) docker logs --tail 200 -f material-opencode ;;
+	*) echo "usage: material-opencode password|url|update|logs" >&2; exit 2 ;;
+esac

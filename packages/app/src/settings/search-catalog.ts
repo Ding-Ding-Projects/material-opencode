@@ -307,6 +307,12 @@ export const serverSettings: Entry<SettingsServerTab | "servers">[] = [
   },
   { tab: "extensions", subtab: "skills", label: "settings.extensions.tab.skills" },
   {
+    tab: "configuration",
+    label: "settings.tab.configuration",
+    description: "settings.configuration.description",
+    keywords: "config json file permissions agents commands mcp lsp formatter compaction snapshots bypass policies",
+  },
+  {
     tab: "servers",
     label: "settings.general.row.shell.title",
     target: "settings-shell",

@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Configuration studio overview</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,300..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+sc-for,sc-if{display:contents}
+.mo{--acc:#6750A4;--surf:#FEF7FF;--scl:#F7F2FA;--sc:#F3EDF7;--sch:#ECE6F0;--schh:#E6E0E9;--on:#1D1B20;--onv:#49454F;--out:#79747E;--outv:#CAC4D0;
+--pri:var(--acc);--onpri:#FFFFFF;--pric:color-mix(in oklab,var(--acc) 20%,#FFFBFF);--onpric:color-mix(in oklab,var(--acc) 55%,#000);--prit:color-mix(in oklab,var(--acc) 88%,#000);
+--terc:#FFDBCF;--onterc:#5C1A06;--tert:#A6391A;--ter:#FF8A65;--onter:#3B1408;
+--tealc:#C8EDE7;--ontealc:#00352E;--tealt:#00695C;--teal:#00796B;
+--err:#B3261E;--errc:#F9DEDC;--onerrc:#410E0B;--shadow:0 1px 2px rgba(29,27,32,.14),0 8px 24px rgba(29,27,32,.10);
+--pad:24px;--gap:16px;--rowpad:14px;
+position:relative;box-sizing:border-box;overflow-x:clip;font-family:'Roboto Flex','Google Sans',Roboto,system-ui,sans-serif;font-size:14px;line-height:1.45;color:var(--on);background:var(--surf);-webkit-font-smoothing:antialiased}
+.mo.th-dark{--surf:#141218;--scl:#1D1B20;--sc:#211F26;--sch:#2B2930;--schh:#36343B;--on:#E6E0E9;--onv:#CAC4D0;--out:#938F99;--outv:#49454F;
+--pri:color-mix(in oklab,var(--acc) 42%,#fff);--onpri:color-mix(in oklab,var(--acc) 55%,#000);--pric:color-mix(in oklab,var(--acc) 55%,#141218);--onpric:color-mix(in oklab,var(--acc) 14%,#fff);--prit:color-mix(in oklab,var(--acc) 42%,#fff);
+--terc:#6B2A14;--onterc:#FFDBCF;--tert:#FFB59D;--tealc:#00504A;--ontealc:#B4F0E6;--tealt:#6FD8C9;
+--err:#F2B8B5;--errc:#8C1D18;--onerrc:#F9DEDC;--shadow:0 1px 2px rgba(0,0,0,.5),0 8px 24px rgba(0,0,0,.4)}
+.mo.dn-compact{--pad:16px;--gap:10px;--rowpad:6px;font-size:13px}
+.mo *,.mo *::before,.mo *::after{box-sizing:border-box}
+.mo a{color:var(--prit)}.mo a:hover{color:var(--on)}
+.mo h1,.mo h2,.mo h3,.mo p{margin:0}
+.mo code,.mo .mono{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:.86em}
+.ic{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.row{display:flex;align-items:center;gap:12px}.wrap{flex-wrap:wrap}.col{display:flex;flex-direction:column;gap:var(--gap)}.grow{flex:1 1 0;min-width:0}
+.t-d{font-size:57px;line-height:1.05;font-weight:600;letter-spacing:-.02em;font-variation-settings:"opsz" 144}
+.t-h{font-size:32px;line-height:1.15;font-weight:600;letter-spacing:-.01em}
+.t-t{font-size:22px;line-height:1.25;font-weight:600}
+.t-s{font-size:16px;font-weight:600}
+.t-b{font-size:14px;color:var(--onv)}
+.t-l{font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--onv)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 24px;border-radius:22px;border:0;font:inherit;font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap;background:transparent;color:var(--prit);transition:border-radius .25s cubic-bezier(.2,1.4,.4,1),background .2s,box-shadow .2s,transform .15s}
+.btn:hover{background:color-mix(in oklab,var(--pri) 10%,transparent)}
+.btn:active{border-radius:12px;transform:scale(.97)}
+.btn:focus-visible,.ib:focus-visible,.pick:focus-visible,.navi:focus-visible,.cat:focus-visible,.tile:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+.btn.fill,.mo a.btn.fill{background:var(--pri);color:var(--onpri)}
+.btn.fill:hover{box-shadow:var(--shadow);background:color-mix(in oklab,var(--pri) 90%,var(--on))}
+.btn.tonal,.mo a.btn.tonal{background:var(--pric);color:var(--onpric)}
+.btn.tonal:hover{background:color-mix(in oklab,var(--pric) 88%,var(--on))}
+.btn.out{border:1px solid var(--out)}
+.btn.danger{background:var(--err);color:var(--surf)}
+.btn.danger:hover{background:color-mix(in oklab,var(--err) 88%,var(--on))}
+.btn.big{min-height:56px;padding:0 32px;border-radius:28px;font-size:16px}
+.btn.big:active{border-radius:16px}
+.ib{position:relative;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;flex:none;border-radius:22px;border:0;background:transparent;color:var(--onv);cursor:pointer;transition:background .2s,border-radius .25s cubic-bezier(.2,1.4,.4,1),color .2s}
+.ib:hover{background:color-mix(in oklab,var(--on) 9%,transparent);color:var(--on)}
+.ib:active{border-radius:12px}
+.ib.sm{width:28px;height:28px;border-radius:14px}.ib.sm .ic{width:16px;height:16px}
+.ib.sm::before{content:"";position:absolute;inset:-8px}
+.ib.tonal{background:var(--pric);color:var(--onpric)}
+.tipb::after{content:attr(data-tip);position:absolute;left:50%;top:calc(100% + 8px);z-index:20;width:max-content;max-width:300px;padding:10px 14px;border-radius:12px;background:var(--on);color:var(--surf);font:500 12px/1.4 'Roboto Flex',system-ui,sans-serif;text-align:left;white-space:normal;opacity:0;transform:translate(-50%,-4px) scale(.96);pointer-events:none;transition:opacity .18s,transform .22s cubic-bezier(.2,1.4,.4,1)}
+.tipb:hover::after,.tipb:focus-visible::after{opacity:1;transform:translate(-50%,0) scale(1)}
+.card{background:var(--scl);border-radius:28px;padding:var(--pad);transition:background .25s,box-shadow .25s,transform .25s}
+.card.hi{background:var(--sch)}
+.card.lift:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.chip{position:relative;display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 12px;border-radius:16px;border:1px solid var(--outv);background:transparent;color:var(--on);font:inherit;font-size:13px;font-weight:500;white-space:nowrap;transition:background .2s,border-color .2s}
+.chip .ic{width:16px;height:16px}
+button.chip{cursor:pointer}button.chip::before{content:"";position:absolute;inset:-6px 0}
+button.chip:hover{background:color-mix(in oklab,var(--on) 8%,transparent)}
+.chip.on{background:var(--pric);color:var(--onpric);border-color:transparent}
+.chip.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px}
+.chip .cx{position:relative;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;margin-right:-6px;border:0;border-radius:10px;background:transparent;color:inherit;cursor:pointer;transition:background .2s}
+.chip .cx::before{content:"";position:absolute;inset:-12px}
+.chip .cx:hover{background:color-mix(in oklab,var(--on) 16%,transparent)}
+.chip .cx .ic{width:14px;height:14px}
+.chips{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-height:48px;padding:7px 10px;border:1px solid var(--out);border-radius:14px;transition:border-color .2s,box-shadow .2s}
+.chips:focus-within,.tf:focus,.ta:focus{border-color:var(--pri);box-shadow:0 0 0 2px var(--pri);outline:0}
+.chips input{flex:1 1 90px;min-width:90px;min-height:32px;border:0;background:transparent;color:var(--on);font:inherit;outline:0}
+.tf,.ta{width:100%;min-height:48px;padding:0 14px;border:1px solid var(--out);border-radius:14px;background:transparent;color:var(--on);font:inherit;transition:border-color .2s,box-shadow .2s}
+.ta{padding:12px 14px;min-height:96px;resize:vertical;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12.5px;line-height:1.55}
+.tf.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:13px}
+.num{width:112px;flex:none;text-align:right;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:13px}
+.mo ::placeholder{color:var(--onv);opacity:1}
+.pick{display:inline-flex;align-items:center;gap:10px;min-height:48px;max-width:100%;padding:0 12px 0 14px;border:1px solid var(--out);border-radius:14px;background:transparent;color:var(--on);font:inherit;font-weight:500;cursor:pointer;transition:background .2s,border-color .2s}
+.pick:hover{background:color-mix(in oklab,var(--on) 6%,transparent)}
+.pick .ic:last-child{color:var(--onv)}
+.seg{position:relative;display:inline-flex;flex-wrap:wrap;border:1px solid var(--out);border-radius:22px;overflow:hidden}
+.seg input{position:absolute;opacity:0;width:1px;height:1px}
+.seg label{display:flex;align-items:center;gap:8px;min-height:42px;padding:0 18px;font-weight:500;cursor:pointer;border-right:1px solid var(--out);transition:background .2s,color .2s,padding .25s cubic-bezier(.2,1.4,.4,1)}
+.seg label:last-child{border-right:0}
+.seg label:hover{background:color-mix(in oklab,var(--on) 7%,transparent)}
+.seg label::before{content:"";width:0;height:6px;margin-right:-8px;border-left:2px solid transparent;border-bottom:2px solid transparent;transform:rotate(-45deg) translateY(-2px);transition:width .25s cubic-bezier(.2,1.4,.4,1),margin .25s}
+.seg input:checked+label{background:var(--pric);color:var(--onpric)}
+.seg input:checked+label::before{width:11px;margin-right:0;border-color:currentColor}
+.seg input:focus-visible+label{outline:3px solid var(--pri);outline-offset:-4px}
+.seg input:checked+label.e-allow{background:var(--tealc);color:var(--ontealc)}
+.seg input:checked+label.e-ask{background:var(--terc);color:var(--onterc)}
+.seg input:checked+label.e-deny{background:var(--errc);color:var(--onerrc)}
+.sw{-webkit-appearance:none;appearance:none;position:relative;width:52px;height:32px;margin:6px 0;flex:none;border-radius:16px;border:2px solid var(--out);background:var(--schh);cursor:pointer;transition:background .2s,border-color .2s}
+.sw::before{content:"";position:absolute;top:50%;left:6px;width:16px;height:16px;border-radius:12px;background:var(--out);transform:translateY(-50%);transition:left .25s cubic-bezier(.2,1.4,.4,1),width .25s cubic-bezier(.2,1.4,.4,1),height .25s cubic-bezier(.2,1.4,.4,1),background .2s}
+.sw::after{content:"";position:absolute;inset:-8px}
+.sw:checked{background:var(--pri);border-color:var(--pri)}
+.sw:checked::before{left:22px;width:24px;height:24px;background:var(--onpri)}
+.sw:active::before{width:28px}
+.sw:focus-visible{outline:3px solid var(--pri);outline-offset:3px}
+.sl{-webkit-appearance:none;appearance:none;flex:1 1 140px;min-width:120px;height:44px;margin:0;border:14px solid transparent;border-radius:22px;background-color:transparent;background-image:linear-gradient(var(--pri),var(--pri)),linear-gradient(var(--schh),var(--schh));background-repeat:no-repeat;background-clip:padding-box;background-origin:padding-box;cursor:pointer}
+.sl::-webkit-slider-runnable-track{height:16px;background:transparent}
+.sl::-webkit-slider-thumb{-webkit-appearance:none;width:6px;height:40px;margin-top:-12px;border-radius:3px;background:var(--pri);box-shadow:0 0 0 4px var(--scl);transition:width .2s cubic-bezier(.2,1.4,.4,1)}
+.sl:active::-webkit-slider-thumb{width:3px}
+.sl::-moz-range-track{height:16px;background:transparent}
+.sl::-moz-range-thumb{width:6px;height:40px;border:0;border-radius:3px;background:var(--pri)}
+.sl:focus-visible{outline:3px solid var(--pri);outline-offset:-10px}
+.badge{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:12px;font-size:11.5px;font-weight:700;letter-spacing:.02em;white-space:nowrap;background:var(--schh);color:var(--onv)}
+.badge::before{content:"";width:6px;height:6px;border-radius:3px;background:currentColor}
+.badge.b-global{background:var(--pric);color:var(--onpric)}
+.badge.b-project{background:var(--tealc);color:var(--ontealc)}
+.badge.plain::before{display:none}
+.key{display:inline-block;padding:2px 8px;border-radius:8px;background:var(--schh);color:var(--onv);font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11.5px}
+.ctl{display:grid;grid-template-columns:minmax(200px,1fr) minmax(260px,1.3fr) auto;gap:8px 24px;align-items:center;padding:var(--rowpad) 0;border-top:1px solid var(--outv)}
+.ctl:first-of-type{border-top:0}
+.ctl-h{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.ctl-l{font-size:15px;font-weight:600;color:var(--on)}
+.ctl-t{flex-basis:100%;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11.5px;color:var(--onv)}
+.ctl-c{display:flex;flex-wrap:wrap;align-items:center;gap:10px;min-width:0}
+.ctl-m{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.cq{container-type:inline-size}
+@container (max-width:640px){.ctl{grid-template-columns:1fr}.ctl-m{justify-content:flex-start}}
+.kv{display:flex;flex-direction:column;gap:8px;width:100%}
+.kv-r{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) 44px;gap:8px;align-items:center}
+.dot{width:10px;height:10px;flex:none;border-radius:5px;background:var(--out)}
+.dot.ok{background:var(--tealt)}.dot.warn{background:var(--tert)}.dot.bad{background:var(--err)}
+.dot.ok.live{animation:ping 2.2s ease-out infinite}
+.shell{display:flex;flex-wrap:wrap;min-height:100vh;background:var(--surf)}
+.rail{flex:0 0 96px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;background:var(--sc)}
+.navi{display:flex;flex-direction:column;align-items:center;gap:4px;width:80px;min-height:60px;padding:6px 0;border:0;border-radius:18px;background:transparent;color:var(--onv);font:inherit;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;transition:color .2s}
+.navi .pill{display:flex;align-items:center;justify-content:center;width:56px;height:32px;border-radius:16px;transition:background .25s,width .3s cubic-bezier(.2,1.4,.4,1)}
+.navi:hover .pill{background:color-mix(in oklab,var(--on) 9%,transparent)}
+.navi.on{color:var(--on)}.navi.on .pill{background:var(--pric);color:var(--onpric);width:64px}
+.fab{display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;margin-bottom:10px;border:0;border-radius:18px;background:var(--pric);color:var(--onpric);cursor:pointer;transition:border-radius .3s cubic-bezier(.2,1.4,.4,1),box-shadow .2s,transform .2s}
+.fab:hover{box-shadow:var(--shadow);border-radius:28px}.fab:active{transform:scale(.94)}
+.fab:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+.main{flex:999 1 560px;min-width:0;display:flex;flex-direction:column}
+.topbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;min-height:72px;padding:12px 24px}
+.sbar{display:flex;align-items:center;gap:10px;flex:1 1 320px;min-height:56px;padding:0 8px 0 20px;border-radius:28px;background:var(--sch);color:var(--onv);transition:background .2s,box-shadow .2s}
+.sbar:focus-within{background:var(--schh);box-shadow:0 0 0 2px var(--pri)}
+.sbar input{flex:1;min-width:0;min-height:44px;border:0;background:transparent;color:var(--on);font:inherit;font-size:16px;outline:0}
+.kbd{display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:8px;border:1px solid var(--outv);font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11.5px;color:var(--onv);white-space:nowrap}
+.cat{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:0 16px;border:0;border-radius:24px;background:transparent;color:var(--onv);font:inherit;font-weight:600;text-align:left;cursor:pointer;transition:background .2s,color .2s,padding .25s cubic-bezier(.2,1.4,.4,1)}
+.cat:hover{background:color-mix(in oklab,var(--on) 7%,transparent);padding-left:20px}
+.cat.on{background:var(--pric);color:var(--onpric)}
+.cat .cnt{margin-left:auto;font-size:12px;font-weight:700;opacity:.85}
+.catcol{flex:0 0 272px;display:flex;flex-direction:column;gap:2px;padding:8px 12px 24px}
+@media (max-width:760px){.rail{flex-basis:100%;flex-direction:row;justify-content:center}.catcol{flex-basis:100%}.fab{margin:0 10px 0 0}}
+.sk{border-radius:12px;background:linear-gradient(100deg,var(--sch) 30%,var(--schh) 50%,var(--sch) 70%);background-size:300% 100%;animation:shimmer 1.6s linear infinite}
+.in{animation:rise .55s cubic-bezier(.2,.8,.2,1) both}
+.d1{animation-delay:70ms}.d2{animation-delay:140ms}.d3{animation-delay:210ms}.d4{animation-delay:280ms}.d5{animation-delay:350ms}.d6{animation-delay:420ms}.d7{animation-delay:490ms}.d8{animation-delay:560ms}
+.pop{animation:pop .5s cubic-bezier(.2,1.5,.4,1) both}
+.alarm{animation:alarm 1.6s ease-in-out infinite}
+.flow{position:relative;height:8px;border-radius:4px;background:var(--schh);overflow:hidden}
+.flow::before{content:"";position:absolute;inset:0;width:var(--w,60%);border-radius:4px;background:repeating-linear-gradient(110deg,var(--pri) 0 14px,color-mix(in oklab,var(--pri) 62%,var(--surf)) 14px 28px);background-size:56px 100%;animation:flow 1s linear infinite}
+.flow.w30::before{width:30%}.flow.w45::before{width:45%}.flow.w60::before{width:60%}.flow.w80::before{width:80%}.flow.w100::before{width:100%}
+.spin{animation:spin 1.1s linear infinite}
+.morph{position:relative;display:flex;align-items:center;justify-content:center;width:72px;height:72px;flex:none;color:var(--onpric)}
+.morph::before{content:"";position:absolute;inset:0;background:var(--pric);border-radius:38% 62% 55% 45%/52% 40% 60% 48%;animation:morph 9s ease-in-out infinite}
+.morph::after{content:"";position:absolute;width:14px;height:14px;right:-4px;top:2px;border-radius:5px;background:var(--ter);animation:orbit 6s ease-in-out infinite}
+.morph .ic{position:relative;width:30px;height:30px}
+.stack{position:relative;height:150px}
+.stack i{position:absolute;left:8%;right:8%;height:58px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700;font-size:13px;box-shadow:var(--shadow);animation:plate .9s cubic-bezier(.2,1.4,.4,1) both,bob 5s ease-in-out infinite 1s}
+.stack i:nth-child(1){bottom:0;background:var(--schh);color:var(--on);left:0;right:0}
+.stack i:nth-child(2){bottom:40px;background:var(--pric);color:var(--onpric);animation-delay:.25s,1.4s}
+.stack i:nth-child(3){bottom:80px;left:16%;right:16%;background:var(--tealc);color:var(--ontealc);animation-delay:.5s,1.8s}
+.wire{position:relative;flex:1 1 60px;min-width:48px;height:4px;border-radius:2px;background:repeating-linear-gradient(90deg,var(--tealt) 0 10px,transparent 10px 18px);background-size:36px 100%;animation:wire .8s linear infinite}
+.wire.off{background:repeating-linear-gradient(90deg,var(--out) 0 10px,transparent 10px 18px);animation:none}
+@keyframes morph{0%,100%{border-radius:38% 62% 55% 45%/52% 40% 60% 48%;transform:rotate(0)}33%{border-radius:60% 40% 38% 62%/40% 58% 42% 60%;transform:rotate(40deg)}66%{border-radius:45% 55% 62% 38%/60% 44% 56% 40%;transform:rotate(-25deg)}}
+@keyframes orbit{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(-58px,52px) rotate(180deg)}}
+@keyframes plate{from{opacity:0;transform:translateY(-70px) scale(.8) rotate(-6deg)}to{opacity:1;transform:none}}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -5px}}
+@keyframes wire{from{background-position:0 0}to{background-position:36px 0}}
+@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+@keyframes shimmer{from{background-position:100% 0}to{background-position:-200% 0}}
+@keyframes flow{from{background-position:0 0}to{background-position:56px 0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes ping{0%{box-shadow:0 0 0 0 color-mix(in oklab,var(--tealt) 60%,transparent)}70%,100%{box-shadow:0 0 0 9px transparent}}
+@keyframes alarm{0%,100%{box-shadow:0 0 0 0 color-mix(in oklab,var(--err) 55%,transparent)}50%{box-shadow:0 0 0 14px transparent}}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(6%,-8%) scale(1.15)}100%{transform:translate(0,0) scale(1)}}
+@keyframes drift2{0%{transform:translate(0,0) rotate(0)}50%{transform:translate(-8%,6%) rotate(40deg)}100%{transform:translate(0,0) rotate(0)}}
+@keyframes blink{50%{opacity:0}}
+.mo-off,.mo-off *,.mo-off *::before,.mo-off *::after{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){.mo,.mo *,.mo *::before,.mo *::after{animation:none!important;transition:none!important}}
+
+.swt{position:relative;display:inline-flex}.swt input{position:absolute;opacity:0;width:1px;height:1px}
+.swt label{display:block;width:44px;height:44px;border-radius:22px;border:3px solid var(--scl);box-shadow:0 0 0 1px var(--outv);cursor:pointer;transition:border-radius .3s cubic-bezier(.2,1.4,.4,1),box-shadow .2s,transform .2s}
+.swt label:hover{transform:scale(1.08)}
+.swt input:checked+label{border-radius:14px;box-shadow:0 0 0 3px var(--on)}
+.swt input:focus-visible+label{box-shadow:0 0 0 3px var(--pri)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+.cwin{position:relative;display:flex;height:28px;border-radius:14px;background:var(--schh);overflow:hidden}
+.cwin .used{flex:0 0 62%;border-radius:14px;background:var(--pri);transform-origin:left;animation:fill 2.4s cubic-bezier(.3,.7,.2,1) infinite alternate}
+.cwin .mark{position:absolute;left:80%;top:0;bottom:0;width:4px;margin-left:-2px;background:var(--ter);animation:alarm 1.6s ease-in-out infinite}
+.cwin .buf{position:absolute;left:80%;right:0;top:0;bottom:0;background:repeating-linear-gradient(135deg,color-mix(in oklab,var(--ter) 55%,transparent) 0 8px,transparent 8px 16px)}
+@keyframes fill{from{transform:scaleX(.35)}to{transform:scaleX(1.27)}}
+.bychip{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 6px 0 16px;border-radius:22px;background:var(--errc);color:var(--onerrc);font-weight:700}
+.rings{position:relative;display:flex;align-items:center;justify-content:center;width:120px;height:120px;flex:none;border-radius:44px;background:var(--errc);color:var(--onerrc)}
+.rings .ic{width:52px;height:52px}
+.rings::before,.rings::after{content:"";position:absolute;inset:0;border-radius:44px;border:3px solid var(--err);animation:ring 2s ease-out infinite}
+.rings::after{animation-delay:1s}
+.rings.calm{background:var(--tealc);color:var(--ontealc)}.rings.calm::before,.rings.calm::after{display:none}
+@keyframes ring{from{opacity:.8;transform:scale(1)}to{opacity:0;transform:scale(1.55)}}
+
+.fld{display:flex;flex-direction:column;gap:8px;min-width:0;padding:14px 0 4px}
+.fld-h{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;min-height:28px}
+.fld-h .ctl-l{font-size:14px}
+.fld-k{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-top:-4px}
+.fld>.seg,.fld>.pick{align-self:flex-start}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:4px 32px}
+.span2{grid-column:1/-1}
+.sech{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:8px}
+.secic{display:flex;align-items:center;justify-content:center;width:44px;height:44px;flex:none;border-radius:16px;background:var(--pric);color:var(--onpric)}
+.rule{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 8px 8px 4px;border-radius:22px;background:var(--surf);transition:background .2s,box-shadow .25s,transform .25s cubic-bezier(.2,1.4,.4,1)}
+.rule:hover{box-shadow:var(--shadow);transform:translateX(4px)}
+.grab{cursor:grab}.grab:active{cursor:grabbing}
+.idx{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;flex:none;border-radius:14px;background:var(--schh);font-size:12px;font-weight:700;color:var(--onv)}
+.agdot{width:20px;height:20px;flex:none;border-radius:8px;animation:morphdot 5s ease-in-out infinite}
+@keyframes morphdot{0%,100%{border-radius:8px;transform:rotate(0) scale(1)}50%{border-radius:50%;transform:rotate(90deg) scale(1.25)}}
+
+.srow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;width:100%;min-height:64px;padding:10px 12px 10px 20px;border:0;border-radius:22px;background:var(--scl);color:var(--on);font:inherit;text-align:left;cursor:pointer;transition:background .2s,border-radius .3s cubic-bezier(.2,1.4,.4,1)}
+.srow:hover{background:var(--sch);border-radius:30px}
+.srow:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+.tile{display:flex;flex-direction:column;gap:6px;padding:18px 20px;border:0;border-radius:28px;background:var(--scl);color:var(--on);font:inherit;text-align:left;cursor:pointer;transition:background .2s,border-radius .3s cubic-bezier(.2,1.4,.4,1),transform .25s}
+.tile:hover{background:var(--sch);border-radius:20px;transform:translateY(-2px)}
+.cattile{min-height:168px;align-items:flex-start}</style>
+</helmet>
+<div class="mo th-{{theme}} mo-{{motion}} dn-{{density}}" ref="{{ setRoot }}" style="min-height: 100vh; --acc: {{accent}}">
+<div class="shell"><nav class="rail" aria-label="Primary"><button type="button" class="fab" aria-label="New session"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button><button type="button" class="navi"><span class="pill"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>Home</button><button type="button" class="navi"><span class="pill"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>Sessions</button><button type="button" class="navi"><span class="pill"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>Automations</button><button type="button" class="navi on" aria-current="page"><span class="pill"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4h-7"/><path d="M10 4H3"/><path d="M21 12h-9"/><path d="M8 12H3"/><path d="M21 20h-5"/><path d="M12 20H3"/><path d="M14 2v4"/><path d="M8 10v4"/><path d="M16 18v4"/></svg></span>Settings</button></nav><div class="main"><header class="topbar in"><div class="sbar"><label class="vh" for="cfg-q">Search settings</label><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><sc-if value="{{ isBrowse }}" hint-placeholder-val="{{ true }}"><input type="search" id="cfg-q" placeholder="Search every setting, key or value"><button type="button" class="chip" aria-pressed="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3v10"/><path d="m12.67 5.5 8.66 5"/><path d="m12.67 10.5 8.66-5"/><path d="M9 17a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2z"/></svg>Regex</button></sc-if><sc-if value="{{ isSearch }}" hint-placeholder-val="{{ false }}"><input type="search" id="cfg-q2" aria-label="Search settings" class="mono" value="{{ t.t0.v }}" onChange="{{ t.t0.set }}"><button type="button" class="chip on" aria-pressed="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3v10"/><path d="m12.67 5.5 8.66 5"/><path d="m12.67 10.5 8.66-5"/><path d="M9 17a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2z"/></svg>Regex</button></sc-if><span class="kbd">Ctrl+Shift+F</span></div><div class="seg" role="radiogroup" aria-label="Config scope"><input type="radio" name="scope" id="scope-Global" checked="{{ g.scope.o0 }}" onChange="{{ g.scope.p0 }}"><label for="scope-Global">Global</label><input type="radio" name="scope" id="scope-Project" checked="{{ g.scope.o1 }}" onChange="{{ g.scope.p1 }}"><label for="scope-Project">Project</label></div></header><div class="row wrap in d1" style="padding: 4px 24px 20px; gap: 8px 16px"><div class="grow" style="flex-basis: 320px"><h1 class="t-d">Configuration studio</h1><p style="font-size: 17px; color: var(--onv); margin-top: 10px; max-width: 720px">Every key in the config file has a control here. Nothing has to be typed as JSON, and nothing is hidden from it.</p></div></div><main style="padding: 0 24px 32px"><sc-if value="{{ isBrowse }}" hint-placeholder-val="{{ true }}"><div class="row wrap" style="align-items: flex-start; gap: 24px"><div style="flex: 999 1 640px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr)); gap: 16px"><button type="button" class="tile cattile in d1"><span class="row" style="width: 100%"><span class="secic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4h-7"/><path d="M10 4H3"/><path d="M21 12h-9"/><path d="M8 12H3"/><path d="M21 20h-5"/><path d="M12 20H3"/><path d="M14 2v4"/><path d="M8 10v4"/><path d="M16 18v4"/></svg></span><span class="grow"></span><span class="badge b-global">3 set globally</span></span><span class="t-s" style="font-size: 18px; margin-top: 6px">General</span><span class="mono" style="color: var(--onv); font-size: 12px">shell · model · default_agent · update · share · username · timezone</span></button><button type="button" class="tile cattile in d2"><span class="row" style="width: 100%"><span class="secic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg></span><span class="grow"></span><span class="badge b-global">2 providers</span></span><span class="t-s" style="font-size: 18px; margin-top: 6px">Models & providers</span><span class="mono" style="color: var(--onv); font-size: 12px">model · providers.*.models · providers.*.env</span></button><button type="button" class="tile cattile in d3"><span class="row" style="width: 100%"><span class="secic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></span><span class="grow"></span><span class="badge b-project">1 project agent</span></span><span class="t-s" style="font-size: 18px; margin-top: 6px">Agents & commands</span><span class="mono" style="color: var(--onv); font-size: 12px">agents.* · default_agent · commands.*</span></button><button type="button" class="tile cattile in d4"><span class="row" style="width: 100%"><span class="secic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span><span class="grow"></span><span class="badge b-global">8 rules</span></span><span class="t-s" style="font-size: 18px; margin-top: 6px">Permissions & policies</span><span class="mono" style="color: var(--onv); font-size: 12px">bypass_permissions · permissions[] · policies[]</span></button><button type="button" class="tile cattile in d2"><span class="row" style="width: 100%"><span class="secic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></svg></span><span class="grow"></span><span class="badge b-project">3 servers</span></span><span class="t-s" style="font-size: 18px; margin-top: 6px">Tools & MCP</span><span class="mono" style="color: var(--onv); font-size: 12px">mcp.servers.* · mcp.timeout · tool_output</span></button><button type="button" class="tile cattile in d3"><span class="row" style="width: 100%"><span class="secic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></span><span class="grow"></span><span class="badge ">All defaults</span></span><span class="t-s" style="font-size: 18px; margin-top: 6px">Code intelligence</span><span class="mono" style="color: var(--onv); font-size: 12px">lsp · formatter</span></button><button type="button" class="tile cattile in d4"><span class="row" style="width: 100%"><span class="secic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg></span><span class="grow"></span><span class="badge b-project">1 set in project</span></span><span class="t-s" style="font-size: 18px; margin-top: 6px">Files & watcher</span><span class="mono" style="color: var(--onv); font-size: 12px">watcher.ignore · worktree.directory · media.image</span></button><button type="button" class="tile cattile in d5"><span class="row" style="width: 100%"><span class="secic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="grow"></span><span class="badge ">All defaults</span></span><span class="t-s" style="font-size: 18px; margin-top: 6px">Sessions</span><span class="mono" style="color: var(--onv); font-size: 12px">compaction · snapshots · warming · share</span></button><button type="button" class="tile cattile in d3"><span class="row" style="width: 100%"><span class="secic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></span><span class="grow"></span><span class="badge b-global">2 set globally</span></span><span class="t-s" style="font-size: 18px; margin-top: 6px">Integrations</span><span class="mono" style="color: var(--onv); font-size: 12px">websearch · references · plugins · skills · instructions</span></button><button type="button" class="tile cattile in d4"><span class="row" style="width: 100%"><span class="secic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span><span class="grow"></span><span class="badge ">All defaults</span></span><span class="t-s" style="font-size: 18px; margin-top: 6px">Automations</span><span class="mono" style="color: var(--onv); font-size: 12px">automations · timezone</span></button><button type="button" class="tile cattile in d5"><span class="row" style="width: 100%"><span class="secic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg></span><span class="grow"></span><span class="badge ">All defaults</span></span><span class="t-s" style="font-size: 18px; margin-top: 6px">Experimental</span><span class="mono" style="color: var(--onv); font-size: 12px">experimental.* flags · subagent_depth · location_idle_timeout</span></button><button type="button" class="tile cattile in d6"><span class="row" style="width: 100%"><span class="secic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></svg></span><span class="grow"></span><span class="badge ">Edit as JSONC</span></span><span class="t-s" style="font-size: 18px; margin-top: 6px">Raw JSON</span><span class="mono" style="color: var(--onv); font-size: 12px">The whole document, with comments kept</span></button></div><aside class="card hi col in d3" style="flex: 1 1 300px; gap: 14px" aria-labelledby="lay-h">
+<div class="row"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg><h2 class="t-s" id="lay-h">Where a value comes from</h2></div>
+<div class="stack" aria-hidden="true"><i>Default</i><i>Global</i><i>Project</i></div>
+<p class="t-b">Each control shows one badge. A later layer overrides an earlier one, key by key.</p>
+<div class="col" style="gap: 8px">
+<div class="row" style="padding: 12px 14px; border-radius: 18px; background: var(--surf)"><span class="badge">Default</span><span class="grow t-b">Built into the app</span></div>
+<div class="row" style="padding: 12px 14px; border-radius: 18px; background: var(--surf); margin-left: 12px"><span class="badge b-global">Global</span><span class="grow mono" style="font-size: 12px">~/.config/opencode/opencode.jsonc</span></div>
+<div class="row" style="padding: 12px 14px; border-radius: 18px; background: var(--surf); margin-left: 24px"><span class="badge b-project">Project</span><span class="grow mono" style="font-size: 12px">opencode.jsonc in the project root</span></div>
+</div>
+<p class="t-b">Reset removes the key from the layer you are editing, so the layer below shows through.</p>
+<button type="button" class="btn tonal"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></svg>Open raw JSON</button>
+</aside></div></sc-if><sc-if value="{{ isSearch }}" hint-placeholder-val="{{ false }}"><div class="row wrap" style="align-items: flex-start; gap: 24px"><section class="card col" style="flex: 999 1 640px; gap: 6px" aria-label="Search results"><div class="row wrap"><h2 class="t-t grow">Matching settings</h2><span class="t-b">Pattern is anchored to the key path</span></div><sc-for list="{{ results }}" as="r" hint-placeholder-count="4"><button type="button" class="srow" style="background: var(--surf)"><span class="col grow" style="gap: 2px; flex-basis: 260px"><span class="mono" style="font-size: 14px; font-weight: 600">{{r.key}}</span><span class="t-b">{{r.cat}}</span></span><span class="mono t-b">{{r.val}}</span><span class="badge {{r.bc}}">{{r.src}}</span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></sc-for><sc-if value="{{ noItems }}" hint-placeholder-val="{{ false }}"><p class="t-b" style="padding: 24px 0">No key matches this pattern.</p></sc-if></section><aside class="card hi col in d3" style="flex: 1 1 300px; gap: 14px" aria-labelledby="lay-h">
+<div class="row"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg><h2 class="t-s" id="lay-h">Where a value comes from</h2></div>
+<div class="stack" aria-hidden="true"><i>Default</i><i>Global</i><i>Project</i></div>
+<p class="t-b">Each control shows one badge. A later layer overrides an earlier one, key by key.</p>
+<div class="col" style="gap: 8px">
+<div class="row" style="padding: 12px 14px; border-radius: 18px; background: var(--surf)"><span class="badge">Default</span><span class="grow t-b">Built into the app</span></div>
+<div class="row" style="padding: 12px 14px; border-radius: 18px; background: var(--surf); margin-left: 12px"><span class="badge b-global">Global</span><span class="grow mono" style="font-size: 12px">~/.config/opencode/opencode.jsonc</span></div>
+<div class="row" style="padding: 12px 14px; border-radius: 18px; background: var(--surf); margin-left: 24px"><span class="badge b-project">Project</span><span class="grow mono" style="font-size: 12px">opencode.jsonc in the project root</span></div>
+</div>
+<p class="t-b">Reset removes the key from the layer you are editing, so the layer below shows through.</p>
+<button type="button" class="btn tonal"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></svg>Open raw JSON</button>
+</aside></div></sc-if></main></div></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent": {"editor": "color", "default": "#6750A4", "options": ["#6750A4", "#00897B", "#FF8A65", "#3F51B5"], "section": "Theme"}, "dark": {"editor": "boolean", "default": false, "section": "Theme"}, "density": {"editor": "enum", "options": ["comfortable", "compact"], "default": "comfortable", "section": "Theme"}, "motion": {"editor": "boolean", "default": true, "section": "Theme"}, "stage": {"editor": "enum", "options": ["browse", "search"], "default": "browse", "section": "Board"}, "items": {"editor": "int", "default": 6, "min": 0, "max": 6, "step": 1, "section": "Board"}, "$preview": {"width": 1440, "height": 1020}}'>
+class Component extends DCLogic {
+renderVals() {
+const p = this.props || {};
+const st = this.state || {};
+const accent = p.accent ?? '#6750A4';
+const dark = p.dark ?? false;
+const motion = p.motion ?? true;
+const density = p.density ?? 'comfortable';
+const sd = {};
+const s = {};
+Object.keys(sd).forEach((k) => {
+const d = sd[k];
+const v = st['s_' + k] ?? d[0];
+s[k] = { v: v, pct: Math.max(0, Math.min(100, ((v - d[1]) / (d[2] - d[1])) * 100)) + '%', set: (e) => this.setState({ ['s_' + k]: Number(e.target.value) }) };
+});
+const gd = {"scope": 0};
+const g = {};
+Object.keys(gd).forEach((k) => {
+const cur = st['g_' + k] ?? gd[k];
+const o = {};
+for (let i = 0; i < 12; i++) { o['o' + i] = cur === i; o['p' + i] = () => this.setState({ ['g_' + k]: i }); }
+g[k] = o;
+});
+const cd = {};
+const c = {};
+Object.keys(cd).forEach((k) => {
+const on = st['c_' + k] ?? cd[k];
+c[k] = { on: on, set: () => this.setState({ ['c_' + k]: !on }) };
+});
+const td = {"t0": "^(tool_output|mcp\\.timeout|compaction\\.keep)\\."};
+const t = {};
+Object.keys(td).forEach((k) => {
+t[k] = { v: st['t_' + k] ?? td[k], set: (e) => this.setState({ ['t_' + k]: e.target.value }) };
+});
+const rows = (name, list, extra) => list.map((row0, i) => {
+const k = 'L_' + name + '_' + i;
+const row = Object.assign({}, row0, st[k] || {});
+const merge = (o) => this.setState({ [k]: Object.assign({}, st[k] || {}, o) });
+return Object.assign(row, extra ? extra(row, merge) : {});
+});
+const stage = p.stage ?? "browse";
+const n = Math.max(0, Math.min(6, p.items ?? 6));
+const resultsAll = [{"key": "tool_output.max_lines", "cat": "Tools & MCP", "val": "2000", "src": "Default", "bc": ""}, {"key": "tool_output.max_bytes", "cat": "Tools & MCP", "val": "51200", "src": "Default", "bc": ""}, {"key": "mcp.timeout.startup", "cat": "Tools & MCP", "val": "30000", "src": "Project", "bc": "b-project"}, {"key": "mcp.timeout.catalog", "cat": "Tools & MCP", "val": "not set", "src": "Default", "bc": ""}, {"key": "mcp.timeout.execution", "cat": "Tools & MCP", "val": "not set", "src": "Default", "bc": ""}, {"key": "compaction.keep.tokens", "cat": "Sessions", "val": "not set", "src": "Default", "bc": ""}];
+return { accent: accent, theme: dark ? 'dark' : 'light', motion: motion ? 'on' : 'off', density: density === 'compact' ? 'compact' : 'comfortable', s: s, g: g, c: c, t: t, setRoot: (el) => { if (el) el.style.setProperty('--acc', accent); }, isBrowse: stage === "browse", isSearch: stage === "search", noItems: n === 0, hasItems: n > 0, results: rows("results", resultsAll.slice(0, n), null) };
+}
+}
+</script>
+</body>
+</html>

@@ -232,6 +232,7 @@ function HomeProjectsPanel(props: HomeProjectsViewProps) {
 
   return (
     <aside
+      data-slot={props.dropdown ? undefined : "home-projects-panel"}
       class={
         props.dropdown
           ? "flex max-h-[min(60dvh,calc(var(--kb-popper-content-available-height)-12px))] min-h-0 min-w-0 flex-col overflow-hidden"

@@ -1,0 +1,19 @@
+# Run the OpenCode web app on this computer or a Docker host. `hosting/setup.ts` writes hosting/.env for you.
+name: material-opencode
+
+services:
+  opencode:
+    image: ${OPENCODE_IMAGE:-ghcr.io/ding-ding-projects/material-opencode:latest}
+    container_name: ${OPENCODE_INSTANCE:-material-opencode}
+    restart: unless-stopped
+    environment:
+      OPENCODE_PASSWORD: ${OPENCODE_PASSWORD:?run "bun hosting/setup.ts" to create hosting/.env}
+    ports:
+      - "${OPENCODE_BIND:-0.0.0.0}:${OPENCODE_PORT:-4096}:4096"
+    volumes:
+      - opencode-data:/data
+      - ${OPENCODE_WORKSPACE:-./workspace}:/workspace
+
+volumes:
+  opencode-data:
+    name: ${OPENCODE_INSTANCE:-material-opencode}-data
