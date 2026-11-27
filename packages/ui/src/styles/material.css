@@ -146,6 +146,95 @@
   transition: transform var(--md-duration-medium) var(--md-ease-spatial);
 }
 
+/* Home: Material search bar, a navigation-drawer card for projects, and an animated empty-state graphic. */
+:root[data-design="material"] [data-slot="home-session-search-field"] {
+  height: 56px;
+  padding-inline: 20px 12px;
+  border-radius: var(--md-shape-full);
+  background: var(--v2-background-bg-layer-02);
+  box-shadow: var(--v2-elevation-raised);
+  font-size: 16px;
+  transition:
+    box-shadow var(--md-duration-medium) var(--md-ease-emphasized),
+    background-color var(--md-duration-short) var(--md-ease-emphasized);
+}
+
+:root[data-design="material"] [data-slot="home-session-search-field"]:focus-within {
+  box-shadow:
+    0 0 0 2px var(--v2-background-bg-accent),
+    var(--v2-elevation-floating);
+}
+
+:root[data-design="material"] [data-slot="home-projects-panel"] {
+  padding: 20px 12px;
+  border-radius: var(--md-shape-extra-large);
+  background: color-mix(in oklab, var(--v2-background-bg-layer-02) 80%, transparent);
+  box-shadow: inset 0 0 0 1px var(--v2-border-border-muted);
+}
+
+:root[data-design="material"] [data-slot="home-project-nav-button"] {
+  border-radius: var(--md-shape-full);
+}
+
+[data-slot="home-sessions-empty-art"] {
+  display: none;
+}
+
+:root[data-design="material"] [data-slot="home-sessions-empty-art"] {
+  display: block;
+  width: 160px;
+  height: 120px;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: md-rise var(--md-duration-long) var(--md-ease-emphasized-decelerate) both;
+}
+
+:root[data-design="material"] [data-slot="home-sessions-empty-art"] [data-slot="orbit"] {
+  stroke: var(--v2-border-border-base);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 6;
+  transform-origin: 80px 60px;
+  animation: md-spin 24s linear infinite;
+}
+
+:root[data-design="material"] [data-slot="home-sessions-empty-art"] [data-slot="core"] {
+  fill: var(--md-tint-strong);
+  stroke: var(--v2-background-bg-accent);
+  stroke-width: 1.5;
+  transform-origin: 80px 60px;
+  animation: md-breathe 4s var(--md-ease-emphasized) infinite;
+}
+
+:root[data-design="material"] [data-slot="home-sessions-empty-art"] [data-slot="glyph"] {
+  stroke: var(--v2-background-bg-accent);
+  stroke-width: 2.5;
+}
+
+:root[data-design="material"] [data-slot="home-sessions-empty-art"] :is([data-slot="satellite"], [data-slot="satellite-2"]) {
+  fill: var(--v2-cyan-700, #00897b);
+  transform-origin: 80px 60px;
+  animation: md-spin 9s linear infinite;
+}
+
+:root[data-design="material"] [data-slot="home-sessions-empty-art"] [data-slot="satellite-2"] {
+  fill: var(--v2-orange-500, #ff8a65);
+  animation-duration: 6s;
+  animation-direction: reverse;
+}
+
+@keyframes md-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes md-breathe {
+  50% {
+    transform: scale(1.08);
+  }
+}
+
 /*
  * Dramatic backdrop graphics: slow drifting tonal shapes behind Home and Settings. They sit under the content,
  * never take input, and stop (staying as a still tint) when motion is reduced.

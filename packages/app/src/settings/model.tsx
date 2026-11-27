@@ -392,7 +392,9 @@ export const { use: useSettings, provider: SettingsProvider } = createSimpleCont
       const root = document.documentElement
       const mono = monoFontFamily(store.appearance?.mono)
       root.style.setProperty("--font-family-mono", mono)
-      root.style.setProperty("--font-family-sans", sansFontFamily(store.appearance?.sans))
+      // Material Expressive uses Roboto Flex until the person picks a UI font of their own.
+      const material = (store.appearance?.design ?? "material") === "material"
+      root.style.setProperty("--font-family-sans", sansFontFamily(store.appearance?.sans || (material ? "Roboto Flex" : undefined)))
       // Inline code can first appear during history backfill. Load its selected
       // face with the shell so that font discovery does not resize that mount.
       void document.fonts?.load(`440 13px ${mono}`).catch(() => undefined)
