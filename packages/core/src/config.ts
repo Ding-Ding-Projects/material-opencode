@@ -4,8 +4,8 @@ import { makeLocationNode } from "@opencode/util/effect/app-node"
 import path from "path"
 import { isDeepStrictEqual } from "node:util"
 import { applyEdits, modify, type ParseError, parse } from "jsonc-parser"
-import { Context, Effect, FiberMap, Layer, Option, PubSub, Ref, Schema, Semaphore, Stream } from "effect"
-import { Directory, Document, Info, type Patch, type Entry, Event } from "@opencode/schema/config"
+import { Context, Effect, FiberMap, Layer, Option, PubSub, Ref, Result, Schema, Semaphore, Stream } from "effect"
+import { Directory, Document, Info, type Patch, type Entry, type EditRequest, type EditResult, Event } from "@opencode/schema/config"
 import { App } from "./app.js"
 import { Credential } from "./credential.js"
 import { FlagResolve } from "./flag/resolve.js"
@@ -48,6 +48,11 @@ export interface Interface {
   readonly changes: () => Stream.Stream<Watcher.Update>
   /** Updates supported global config fields while preserving unrelated JSONC content. */
   readonly update?: (patch: Patch) => Effect.Effect<void, FSUtil.Error>
+  /**
+   * Applies JSON-path edits to the highest-precedence global config document while preserving unrelated JSONC
+   * content. The result is validated against `Info` and only written when it is valid and `dryRun` is not set.
+   */
+  readonly edit?: (request: EditRequest) => Effect.Effect<EditResult, FSUtil.Error>
   /**
    * Replaces, or clears with `undefined`, the document an integration connection contributes. It loads right after
    * managed policies: its settings layer below remote, user, and project config, while its policies outrank theirs.
@@ -506,12 +511,44 @@ export const layer = (options?: Options) =>
       )
       yield* reloadLock.withPermit(reconcile(sources))
 
+      const globalDocument = Effect.fn("Config.globalDocument")(function* () {
+        const directory = initial.global ?? AbsolutePath.make(globalService.config)
+        const candidates = ConfigDiscovery.names.map((name) => path.join(directory, name))
+        return (yield* Effect.filter(candidates, fs.isFile)).at(-1) ?? path.join(directory, "opencode.jsonc")
+      })
+
+      const edit = Effect.fn("Config.edit")(
+        function* (request: EditRequest) {
+          const filepath = yield* globalDocument()
+          const before = (yield* fs.readFileStringSafe(filepath)) ?? "{}\n"
+          const after = yield* Effect.try({
+            try: () =>
+              request.edits.reduce(
+                (text, change) =>
+                  applyEdits(
+                    text,
+                    modify(text, [...change.path], change.value, {
+                      formattingOptions: { tabSize: 2, insertSpaces: true },
+                    }),
+                  ),
+                before,
+              ),
+            catch: (cause) => new FSUtil.FileSystemError({ method: "config.edit", cause }),
+          })
+          const issues = editIssues(after)
+          const written = !request.dryRun && issues.length === 0 && after !== before
+          if (written) {
+            yield* fs.writeWithDirs(filepath, after.endsWith("\n") ? after : `${after}\n`)
+            yield* requestReload
+          }
+          return { path: filepath, before, after, issues, written }
+        },
+        (effect) => updateLock.withPermit(effect),
+      )
+
       const update = Effect.fn("Config.update")(
         function* (patch: Patch) {
-          const directory = initial.global ?? AbsolutePath.make(globalService.config)
-          const candidates = ConfigDiscovery.names.map((name) => path.join(directory, name))
-          const filepath =
-            (yield* Effect.filter(candidates, fs.isFile)).at(-1) ?? path.join(directory, "opencode.jsonc")
+          const filepath = yield* globalDocument()
           const text = (yield* fs.readFileStringSafe(filepath)) ?? "{}\n"
           const updated = yield* Effect.try({
             try: () =>
@@ -540,6 +577,7 @@ export const layer = (options?: Options) =>
           }),
         changes: () => Stream.fromPubSub(updates),
         update,
+        edit,
         integration: Effect.fn("Config.integration")(function* (integrationID, document) {
           if (isDeepStrictEqual(integrations.get(integrationID), document)) return
           integrations.delete(integrationID)
@@ -572,3 +610,13 @@ export function configured(options?: Options) {
 }
 
 export const node = configured()
+
+// Reports JSONC syntax errors and schema violations for a candidate config document, as readable messages.
+function editIssues(text: string) {
+  const errors: ParseError[] = []
+  const input: unknown = parse(text, errors, { allowTrailingComma: true })
+  if (errors.length) return errors.map((error) => `Syntax error at offset ${error.offset} (code ${error.error})`)
+  const result = Schema.decodeUnknownResult(Info, { errors: "all", onExcessProperty: "ignore" })(input)
+  if (Result.isSuccess(result)) return []
+  return result.failure.message.split("\n").filter((line) => line.trim().length > 0)
+}

@@ -1,10 +1,12 @@
 import { Component, Show } from "solid-js"
 import { Select } from "@opencode/ui/select"
+import { SegmentedControl, SegmentedControlItem } from "@opencode/ui/segmented-control"
 import { TextInput } from "@opencode/ui/text-input"
 import { useLanguage } from "@/runtime/i18n/language"
 import { ExternalLink } from "@/runtime/platform/external-link"
 import { SettingsList } from "@/settings/list"
 import { SettingsRow } from "@/settings/row"
+import { useSettings } from "@/settings/model"
 import { createAppearanceSettingsController, type AppearanceSettingsController } from "@/settings/general/controllers"
 import "@/settings/settings.css"
 
@@ -72,6 +74,7 @@ const FontSetting: Component<{
 export const SettingsAppearance: Component = () => {
   const language = useLanguage()
   const appearance = createAppearanceSettingsController()
+  const settings = useSettings()
 
   return (
     <>
@@ -152,6 +155,20 @@ export const SettingsAppearance: Component = () => {
                 />
               </SettingsRow>
             </Show>
+
+            <SettingsRow
+              title={language.t("settings.appearance.design.title")}
+              description={language.t("settings.appearance.design.description")}
+            >
+              <SegmentedControl
+                data-action="settings-design"
+                value={settings.appearance.design()}
+                onChange={(value) => (value === "material" || value === "classic") && settings.appearance.setDesign(value)}
+              >
+                <SegmentedControlItem value="material">{language.t("settings.appearance.design.material")}</SegmentedControlItem>
+                <SegmentedControlItem value="classic">{language.t("settings.appearance.design.classic")}</SegmentedControlItem>
+              </SegmentedControl>
+            </SettingsRow>
 
             <SettingsRow
               title={language.t("settings.appearance.row.reduceMotion.title")}

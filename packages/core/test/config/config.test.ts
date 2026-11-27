@@ -95,6 +95,51 @@ const provider = {
 }
 
 describe("Config", () => {
+  it.live("edits the global document by JSON path, keeps comments, and refuses invalid or dry-run writes", () =>
+    Effect.acquireDisposable(Effect.promise(() => tmpdir())).pipe(
+      Effect.flatMap((tmp) => {
+        const global = path.join(tmp.path, "global")
+        const project = path.join(tmp.path, "project")
+        const file = path.join(global, "opencode.jsonc")
+        const original = '{\n  // keep me\n  "share": "manual"\n}\n'
+        return Effect.promise(async () => {
+          await fs.mkdir(project, { recursive: true })
+          await fs.mkdir(global, { recursive: true })
+          await fs.writeFile(file, original)
+        }).pipe(
+          Effect.andThen(
+            Effect.gen(function* () {
+              const config = yield* Config.Service
+              const preview = yield* config.edit!({ edits: [{ path: ["share"], value: "auto" }], dryRun: true })
+              expect(preview).toMatchObject({ path: file, before: original, issues: [], written: false })
+              expect(yield* Effect.promise(() => fs.readFile(file, "utf8"))).toBe(original)
+
+              const invalid = yield* config.edit!({ edits: [{ path: ["share"], value: "sometimes" }] })
+              expect(invalid.written).toBe(false)
+              expect(invalid.issues.length).toBeGreaterThan(0)
+              expect(yield* Effect.promise(() => fs.readFile(file, "utf8"))).toBe(original)
+
+              const saved = yield* config.edit!({
+                edits: [
+                  { path: ["share"], value: "auto" },
+                  { path: ["watcher", "ignore"], value: ["dist"] },
+                ],
+              })
+              expect(saved.written).toBe(true)
+              const text = yield* Effect.promise(() => fs.readFile(file, "utf8"))
+              expect(text).toContain("// keep me")
+              expect(text).toContain('"share": "auto"')
+              expect(text).toContain('"dist"')
+
+              const removed = yield* config.edit!({ edits: [{ path: ["watcher"] }] })
+              expect(removed.after).not.toContain("watcher")
+            }).pipe(Effect.provide(testLayer(project, global))),
+          ),
+        )
+      }),
+    ),
+  )
+
   it.live("excludes home-level claude and agents directories when global is disabled", () =>
     Effect.acquireDisposable(Effect.promise(() => tmpdir())).pipe(
       Effect.flatMap((tmp) => {

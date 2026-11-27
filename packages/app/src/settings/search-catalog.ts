@@ -307,6 +307,13 @@ export const serverSettings: Entry<SettingsServerTab | "servers">[] = [
   },
   { tab: "extensions", subtab: "skills", label: "settings.extensions.tab.skills" },
   {
+    tab: "configuration",
+    label: "settings.tab.configuration",
+    description: "settings.configuration.description",
+    keywords:
+      "opencode.json config permissions agents commands mcp lsp formatter watcher compaction snapshots share update username timezone websearch references plugins skills instructions worktree warming experimental policies tool output media providers automations",
+  },
+  {
     tab: "servers",
     label: "settings.general.row.shell.title",
     target: "settings-shell",

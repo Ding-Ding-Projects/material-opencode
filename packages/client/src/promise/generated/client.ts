@@ -364,6 +364,8 @@ import type {
   ConfigShellsOutput,
   ExperimentalConfigUpdateInput,
   ExperimentalConfigUpdateOutput,
+  ExperimentalConfigEditInput,
+  ExperimentalConfigEditOutput,
 } from "./types.js"
 import { ClientError } from "./client-error.js"
 
@@ -2104,6 +2106,18 @@ export function make(options: ClientOptions) {
               successStatus: 204,
               declaredStatuses: [400, 401, 404],
               empty: true,
+            },
+            requestOptions,
+          ),
+        edit: (input: ExperimentalConfigEditInput, requestOptions?: RequestOptions) =>
+          request<ExperimentalConfigEditOutput>(
+            {
+              method: "POST",
+              path: `/api/experimental/config/edit`,
+              body: { edits: input["edits"], dryRun: input["dryRun"] },
+              successStatus: 200,
+              declaredStatuses: [400, 401, 404],
+              empty: false,
             },
             requestOptions,
           ),

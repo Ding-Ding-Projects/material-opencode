@@ -1,0 +1,67 @@
+{
+  "$schema": "https://opencode.ai/desktop-theme.json",
+  "name": "Material Expressive",
+  "id": "material-expressive",
+  "light": {
+    "palette": {
+      "neutral": "#fef7ff",
+      "ink": "#1d1b20",
+      "primary": "#6750a4",
+      "accent": "#7d5260",
+      "success": "#386a20",
+      "warning": "#7d5700",
+      "error": "#b3261e",
+      "info": "#00639b",
+      "interactive": "#6750a4"
+    },
+    "overrides": {
+      "text-weak": "#49454f",
+      "syntax-comment": "#6b6670",
+      "syntax-keyword": "#6750a4",
+      "syntax-string": "#386a20",
+      "syntax-primitive": "#00639b",
+      "syntax-variable": "#1d1b20",
+      "syntax-property": "#7d5260",
+      "syntax-type": "#7d5700",
+      "syntax-constant": "#b3261e",
+      "syntax-operator": "#006a6a",
+      "syntax-punctuation": "#49454f",
+      "markdown-heading": "#6750a4",
+      "markdown-text": "#1d1b20",
+      "markdown-link": "#00639b",
+      "markdown-code": "#7d5260",
+      "markdown-block-quote": "#49454f"
+    }
+  },
+  "dark": {
+    "palette": {
+      "neutral": "#141218",
+      "ink": "#e6e0e9",
+      "primary": "#d0bcff",
+      "accent": "#efb8c8",
+      "success": "#9cd67d",
+      "warning": "#f6be48",
+      "error": "#f2b8b5",
+      "info": "#98cbff",
+      "interactive": "#d0bcff"
+    },
+    "overrides": {
+      "text-weak": "#cac4d0",
+      "syntax-comment": "#948f99",
+      "syntax-keyword": "#d0bcff",
+      "syntax-string": "#9cd67d",
+      "syntax-primitive": "#98cbff",
+      "syntax-variable": "#e6e0e9",
+      "syntax-property": "#efb8c8",
+      "syntax-type": "#f6be48",
+      "syntax-constant": "#f2b8b5",
+      "syntax-operator": "#4cdada",
+      "syntax-punctuation": "#cac4d0",
+      "markdown-heading": "#d0bcff",
+      "markdown-text": "#e6e0e9",
+      "markdown-link": "#98cbff",
+      "markdown-code": "#efb8c8",
+      "markdown-block-quote": "#cac4d0"
+    }
+  }
+}

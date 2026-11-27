@@ -1,0 +1,11 @@
+#!/bin/sh
+# Shows where to open the app on the console login screen, refreshed each boot.
+ip=$(ip -4 -o addr show scope global | awk '{print $4}' | cut -d/ -f1 | head -n1)
+{
+	echo
+	echo "  Material OpenCode appliance"
+	echo
+	echo "  Open the app:  http://${ip:-<waiting for network>}:4096"
+	echo "  Password:      log in as root and run: material-opencode password"
+	echo
+} > /etc/issue

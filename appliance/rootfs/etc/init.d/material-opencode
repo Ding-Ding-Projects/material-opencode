@@ -1,0 +1,39 @@
+#!/sbin/openrc-run
+# Starts the OpenCode web app container on boot. On first boot it creates the server password and loads the
+# image that was baked into the appliance, so the app works without Internet access.
+
+description="Material OpenCode web app in Docker"
+depend() {
+	need docker net
+	after firewall
+}
+
+dir=/opt/material-opencode
+envfile=/etc/material-opencode/.env
+
+start_pre() {
+	mkdir -p /etc/material-opencode /srv/workspace
+	if [ ! -f "$envfile" ]; then
+		umask 077
+		password=$(head -c 24 /dev/urandom | base64 | tr '+/' '-_' | tr -d '=')
+		printf 'OPENCODE_INSTANCE=material-opencode\nOPENCODE_PORT=4096\nOPENCODE_BIND=0.0.0.0\nOPENCODE_WORKSPACE=/srv/workspace\nOPENCODE_IMAGE=ghcr.io/ding-ding-projects/material-opencode:appliance\nOPENCODE_PASSWORD=%s\n' "$password" > "$envfile"
+	fi
+	# Wait for the Docker daemon, then load the baked image once.
+	i=0
+	until docker info >/dev/null 2>&1; do i=$((i + 1)); [ "$i" -ge 60 ] && return 1; sleep 1; done
+	if [ -f "$dir/image.tar.zst" ] && ! docker image inspect ghcr.io/ding-ding-projects/material-opencode:appliance >/dev/null 2>&1; then
+		zstd -dc "$dir/image.tar.zst" | docker load
+	fi
+}
+
+start() {
+	ebegin "Starting Material OpenCode"
+	docker compose --env-file "$envfile" -f "$dir/compose.yaml" up -d
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping Material OpenCode"
+	docker compose --env-file "$envfile" -f "$dir/compose.yaml" stop
+	eend $?
+}

@@ -358,6 +358,8 @@ import type {
   ConfigShellsOutput,
   ExperimentalConfigUpdateInput,
   ExperimentalConfigUpdateOutput,
+  ExperimentalConfigEditInput,
+  ExperimentalConfigEditOutput,
 } from "../api/api.js"
 import { ClientError } from "./client-error.js"
 
@@ -2216,8 +2218,16 @@ const EndpointExperimentalConfigUpdate = (raw: RawClient["server.config"]) => (i
     raw["config.update"]({ payload: { shell: input["shell"] } }).pipe(Effect.mapError(mapClientError)),
   )
 
+const EndpointExperimentalConfigEdit = (raw: RawClient["server.config"]) => (input: ExperimentalConfigEditInput) =>
+  preserveEffect<ExperimentalConfigEditOutput>()(
+    raw["config.edit"]({ payload: { edits: input["edits"], dryRun: input["dryRun"] } }).pipe(
+      Effect.mapError(mapClientError),
+    ),
+  )
+
 const adaptGroupExperimentalConfig = (raw: RawClient["server.config"]) => ({
   update: EndpointExperimentalConfigUpdate(raw),
+  edit: EndpointExperimentalConfigEdit(raw),
 })
 
 const adaptClient = (raw: RawClient) => {

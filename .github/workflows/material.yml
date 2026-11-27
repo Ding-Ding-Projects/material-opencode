@@ -1,0 +1,150 @@
+# Material OpenCode: checks the redesign and Configuration studio, publishes the web app in Docker, and builds and
+# boot-tests the appliance images. Runs only in this fork, on GitHub-hosted runners.
+name: material
+
+on:
+  push:
+    branches: [dev, material-redesign]
+  pull_request:
+    branches: [dev]
+  workflow_dispatch:
+
+concurrency:
+  group: material-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  IMAGE: ghcr.io/ding-ding-projects/material-opencode
+
+jobs:
+  check:
+    if: github.repository == 'Ding-Ding-Projects/material-opencode'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+      - run: bun install --frozen-lockfile
+      - name: Typecheck changed packages
+        run: |
+          for pkg in schema core protocol server app; do
+            echo "::group::$pkg"
+            (cd packages/$pkg && bun typecheck)
+            echo "::endgroup::"
+          done
+      - name: Client is generated from the protocol
+        run: cd packages/client && bun run check:generated
+      - name: Configuration studio tests
+        run: cd packages/app && bun test src/settings/configuration
+      - name: Config edit route tests
+        run: cd packages/core && bun test test/config/config.test.ts -t "edits the global document"
+
+  image:
+    if: github.repository == 'Ding-Ding-Projects/material-opencode'
+    needs: check
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build the web app image
+        run: |
+          docker buildx build -f hosting/Dockerfile \
+            --build-arg VERSION=${GITHUB_SHA::7} \
+            --platform linux/${{ matrix.arch }} \
+            --output type=docker,dest=image-${{ matrix.arch }}.tar \
+            -t $IMAGE:sha-${GITHUB_SHA::7}-${{ matrix.arch }} .
+      - name: Smoke test the container
+        run: |
+          docker load -i image-${{ matrix.arch }}.tar
+          docker run -d --name smoke -p 4096:4096 -e OPENCODE_PASSWORD=smoke $IMAGE:sha-${GITHUB_SHA::7}-${{ matrix.arch }}
+          for i in $(seq 1 60); do curl -fsS -o /dev/null http://127.0.0.1:4096/ && break; sleep 2; done
+          curl -fsS http://127.0.0.1:4096/ | grep -qi "<html"
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:4096/api/config)" = 401
+          test "$(curl -s -o /dev/null -w '%{http_code}' -u opencode:smoke http://127.0.0.1:4096/api/config)" = 200 || docker logs smoke
+      - name: Push the image
+        if: github.event_name == 'push'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker push $IMAGE:sha-${GITHUB_SHA::7}-${{ matrix.arch }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: image-${{ matrix.arch }}
+          path: image-${{ matrix.arch }}.tar
+          retention-days: 3
+
+  manifest:
+    if: github.repository == 'Ding-Ding-Projects/material-opencode' && github.event_name == 'push'
+    needs: image
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Publish multi-arch tags
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          short=${GITHUB_SHA::7}
+          tags="-t $IMAGE:sha-$short -t $IMAGE:${GITHUB_REF_NAME}"
+          if [ "$GITHUB_REF_NAME" = dev ]; then tags="$tags -t $IMAGE:latest"; fi
+          docker buildx imagetools create $tags $IMAGE:sha-$short-amd64 $IMAGE:sha-$short-arm64
+
+  appliance:
+    if: github.repository == 'Ding-Ding-Projects/material-opencode'
+    needs: image
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            docker: amd64
+            runner: ubuntu-24.04
+            variant: ""
+          - arch: aarch64
+            docker: arm64
+            runner: ubuntu-24.04-arm
+            variant: ""
+          - arch: aarch64
+            docker: arm64
+            runner: ubuntu-24.04-arm
+            variant: --pi
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: image-${{ matrix.docker }}
+      - name: Install image tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-utils qemu-system-x86 qemu-system-arm qemu-efi-aarch64 rsync dosfstools zstd unzip e2fsprogs
+          sudo modprobe nbd max_part=16
+      - name: Retag the image for the appliance
+        run: |
+          docker load -i image-${{ matrix.docker }}.tar
+          docker tag $IMAGE:sha-${GITHUB_SHA::7}-${{ matrix.docker }} $IMAGE:appliance
+          docker save $IMAGE:appliance -o appliance-image.tar
+      - name: Build the appliance image
+        run: sudo appliance/build.sh ${{ matrix.arch }} appliance-image.tar dist/appliance ${{ matrix.variant }}
+      - name: Boot test under QEMU
+        if: matrix.variant == ''
+        run: sudo appliance/boot-test.sh ${{ matrix.arch }} dist/appliance/material-opencode-${{ matrix.arch }}.img 1200
+      - name: Compress
+        run: sudo sh -c 'for f in dist/appliance/*.img; do xz -T0 -6 "$f"; done'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: appliance-${{ matrix.arch }}${{ matrix.variant }}
+          path: dist/appliance/
+          retention-days: 14

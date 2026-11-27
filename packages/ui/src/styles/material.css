@@ -1,0 +1,117 @@
+/*
+ * Material Expressive design layer. The app sets `data-design="material"` on the root element unless the person
+ * chose Classic in Settings > Appearance; every rule here is scoped to that attribute so Classic is unchanged.
+ * Shapes follow the Material 3 shape scale, motion uses its expressive spring easings, and every transition stops
+ * when `data-motion="reduce"` is set (the app's reduced-motion setting, which follows the system by default).
+ */
+
+:root[data-design="material"] {
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
+
+  --md-shape-small: 8px;
+  --md-shape-medium: 12px;
+  --md-shape-large: 16px;
+  --md-shape-extra-large: 28px;
+  --md-shape-full: 999px;
+
+  --md-ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --md-ease-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-ease-spatial: cubic-bezier(0.34, 1.36, 0.64, 1);
+  --md-duration-short: 150ms;
+  --md-duration-medium: 300ms;
+  --md-duration-long: 500ms;
+
+  /* A tonal tint of the theme's accent, used for selected and hovered surfaces. */
+  --md-tint: color-mix(in oklab, var(--v2-background-bg-accent, #6750a4) 12%, transparent);
+  --md-tint-strong: color-mix(in oklab, var(--v2-background-bg-accent, #6750a4) 22%, transparent);
+}
+
+:root[data-design="material"] [data-component="button-v2"] {
+  border-radius: var(--md-shape-full);
+  transition:
+    background-color var(--md-duration-short) var(--md-ease-emphasized),
+    box-shadow var(--md-duration-short) var(--md-ease-emphasized),
+    transform var(--md-duration-short) var(--md-ease-spatial);
+}
+
+:root[data-design="material"] [data-component="button-v2"]:active:not([data-disabled], :disabled) {
+  transform: scale(0.97);
+}
+
+:root[data-design="material"] [data-component="icon-button-v2"] {
+  border-radius: var(--md-shape-full);
+  transition:
+    background-color var(--md-duration-short) var(--md-ease-emphasized),
+    transform var(--md-duration-short) var(--md-ease-spatial);
+}
+
+:root[data-design="material"] [data-component="icon-button-v2"]:active:not([data-disabled], :disabled) {
+  transform: scale(0.92);
+}
+
+:root[data-design="material"] :is([data-component="text-input-v2"], [data-component="select-v2"], [data-component="textarea-v2"]) {
+  border-radius: var(--md-shape-medium);
+  transition:
+    box-shadow var(--md-duration-short) var(--md-ease-emphasized),
+    background-color var(--md-duration-short) var(--md-ease-emphasized);
+}
+
+:root[data-design="material"] :is([data-component="menu-v2-content"], [data-component="tooltip-v2"]) {
+  border-radius: var(--md-shape-large);
+}
+
+:root[data-design="material"] [data-component="menu-v2-item"] {
+  border-radius: var(--md-shape-small);
+}
+
+:root[data-design="material"] [data-component="dialog-v2"] {
+  border-radius: var(--md-shape-extra-large);
+}
+
+:root[data-design="material"] [data-component="tag"] {
+  border-radius: var(--md-shape-small);
+}
+
+:root[data-design="material"] [data-component="settings-list"] {
+  border-radius: var(--md-shape-extra-large);
+  animation: md-rise var(--md-duration-long) var(--md-ease-emphasized-decelerate) both;
+}
+
+:root[data-design="material"] .settings-section:nth-child(2) [data-component="settings-list"] {
+  animation-delay: 60ms;
+}
+
+:root[data-design="material"] .settings-section:nth-child(3) [data-component="settings-list"] {
+  animation-delay: 120ms;
+}
+
+:root[data-design="material"] [data-component="tabs-v2"] [role="tab"] {
+  border-radius: var(--md-shape-full);
+}
+
+:root[data-design="material"] :focus-visible {
+  outline-offset: 2px;
+}
+
+@keyframes md-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+:root[data-design="material"][data-motion="reduce"] *,
+:root[data-design="material"][data-motion="reduce"] *::before,
+:root[data-design="material"][data-motion="reduce"] *::after {
+  animation: none !important;
+  transition: none !important;
+}

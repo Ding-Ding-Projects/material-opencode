@@ -3066,8 +3066,18 @@ export type ExperimentalConfigUpdateOperation<E = never> = (
   input: ExperimentalConfigUpdateInput,
 ) => Effect.Effect<ExperimentalConfigUpdateOutput, E>
 
+export type ExperimentalConfigEditInput = {
+  readonly edits: ReadonlyArray<Config.Edit>
+  readonly dryRun?: boolean | undefined
+}
+export type ExperimentalConfigEditOutput = Config.EditResult
+export type ExperimentalConfigEditOperation<E = never> = (
+  input: ExperimentalConfigEditInput,
+) => Effect.Effect<ExperimentalConfigEditOutput, E>
+
 export interface ExperimentalConfigApi<E = never> {
   readonly update: ExperimentalConfigUpdateOperation<E>
+  readonly edit: ExperimentalConfigEditOperation<E>
 }
 
 /** @deprecated Use `ExperimentalSessionStatsInput`. Removed in the next minor. */

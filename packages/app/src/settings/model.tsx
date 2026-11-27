@@ -164,6 +164,8 @@ const appearanceSchema = Persistence.struct({
   tabGrouping: Persistence.optional(Schema.Literals(["none", "project", "server"])),
   sidebarOpen: Persistence.optional(Schema.Boolean),
   reduceMotion: Schema.Literals(["system", "on", "off"]),
+  // Material Expressive is the default look; Classic keeps the original shapes and motion.
+  design: Persistence.optional(Schema.Literals(["material", "classic"])),
 })
 
 const permissionsSchema = Persistence.struct({
@@ -406,6 +408,14 @@ export const { use: useSettings, provider: SettingsProvider } = createSimpleCont
       document.documentElement.dataset.motion = reduce ? "reduce" : "full"
     })
 
+    const design = () => store.appearance?.design ?? "material"
+
+    // The Material Expressive layer in @opencode/ui keys off this attribute.
+    createEffect(() => {
+      if (typeof document === "undefined") return
+      document.documentElement.dataset.design = design()
+    })
+
     const timelineWidth = withFallback(() => store.general?.timelineWidth, defaultSettings.general.timelineWidth)
 
     // The session column's width token keys off this attribute, so every surface sharing it follows the setting.
@@ -565,6 +575,10 @@ export const { use: useSettings, provider: SettingsProvider } = createSimpleCont
         reduceMotion,
         setReduceMotion(value: ReduceMotion) {
           setStore("appearance", "reduceMotion", value)
+        },
+        design,
+        setDesign(value: "material" | "classic") {
+          setStore("appearance", "design", value)
         },
       },
       keybinds: {

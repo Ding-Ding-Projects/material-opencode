@@ -16,6 +16,14 @@ export const ConfigHandler = HttpApiBuilder.group(Api, "server.config", (handler
       }),
     )
     .handle(
+      "config.edit",
+      Effect.fn(function* (ctx) {
+        const config = yield* Config.Service
+        if (!config.edit) return yield* Effect.die(new Error("Config edits are unavailable"))
+        return yield* config.edit(ctx.payload).pipe(Effect.orDie)
+      }),
+    )
+    .handle(
       "config.shells",
       Effect.fn(function* () {
         const shell = yield* ShellSelect.Service
