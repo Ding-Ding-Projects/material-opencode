@@ -16,7 +16,7 @@ RUN bun install --frozen-lockfile
 RUN cd packages/cli \
   && mkdir -p /out \
   && if [ "$(uname -m)" = x86_64 ]; then \
-       bun run build --single --baseline --skip-install && cp dist/cli-linux-x64-baseline/bin/opencode /out/opencode; \
+       bun run build --single --baseline && cp dist/cli-linux-x64-baseline/bin/opencode /out/opencode; \
      else \
        bun run build --single --skip-install && cp dist/cli-linux-arm64/bin/opencode /out/opencode; \
      fi \

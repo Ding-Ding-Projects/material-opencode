@@ -74,7 +74,8 @@ jobs:
           # --baseline also builds the regular x64 binary, so pick the baseline one explicitly.
           mkdir -p ../../dist/runtime
           if [ "${{ matrix.arch }}" = amd64 ]; then
-            bun run build --single --baseline --skip-install
+            # The baseline build resolves the native packages for every libc, which --skip-install would leave out.
+            bun run build --single --baseline
             cp dist/cli-linux-x64-baseline/bin/opencode ../../dist/runtime/opencode
           else
             bun run build --single --skip-install
