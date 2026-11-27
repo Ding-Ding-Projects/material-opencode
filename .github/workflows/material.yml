@@ -71,9 +71,15 @@ jobs:
         run: |
           cd packages/cli
           # x64 uses the baseline build (no AVX2) so the image also runs on older CPUs and in plain virtual machines.
-          if [ "${{ matrix.arch }}" = amd64 ]; then bun run build --single --baseline --skip-install; else bun run build --single --skip-install; fi
+          # --baseline also builds the regular x64 binary, so pick the baseline one explicitly.
           mkdir -p ../../dist/runtime
-          cp dist/cli-linux-*/bin/opencode ../../dist/runtime/opencode
+          if [ "${{ matrix.arch }}" = amd64 ]; then
+            bun run build --single --baseline --skip-install
+            cp dist/cli-linux-x64-baseline/bin/opencode ../../dist/runtime/opencode
+          else
+            bun run build --single --skip-install
+            cp dist/cli-linux-arm64/bin/opencode ../../dist/runtime/opencode
+          fi
           ../../dist/runtime/opencode --version
       - uses: docker/setup-buildx-action@v3
       - name: Build the web app image

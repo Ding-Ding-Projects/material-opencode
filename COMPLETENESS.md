@@ -3,8 +3,8 @@
 Status of the required product features for this fork, checked on 2026-11-27. Nothing below is called complete unless it is finished; partial and unbuilt items are listed so they are not forgotten.
 
 - Finished: 1
-- Partial: 18
-- Not built: 99
+- Partial: 19
+- Not built: 98
 - Not applicable: 8
 
 | Feature | Status | Notes |
@@ -22,7 +22,7 @@ Status of the required product features for this fork, checked on 2026-11-27. No
 | `adhd-modes` | Not built |  |
 | `dim-sum` | Not built |  |
 | `dim-sum-photo-source` | Not built |  |
-| `material-design` | Partial | Material Expressive layer, tonal palette, Roboto Flex, shapes and spring motion across the app; the session timeline keeps its original layout. |
+| `material-design` | Partial | Material Expressive layer, tonal palette, Roboto Flex, Material buttons, switch, fields, segmented buttons, checkbox, menus and tooltip, Material chat composer and bubbles; some surfaces (session side panels, dialogs content) keep their original layout. |
 | `workflow-navigation` | Not built |  |
 | `motion` | Partial | Entrance, press, hover and backdrop motion with a complete reduced-motion path on Home, Settings and the Configuration studio; not every surface yet. |
 | `live-charts` | Not built |  |
@@ -47,7 +47,7 @@ Status of the required product features for this fork, checked on 2026-11-27. No
 | `settings-explanations` | Partial | Every configuration key shows its schema description. |
 | `settings-quick-add` | Not built |  |
 | `data-folder-choice` | Not built |  |
-| `blank-editors` | Not built |  |
+| `blank-editors` | Partial | A new session offers prompt starters that fill the empty composer. |
 | `super-confirmation` | Partial | Two keys, slider, emergency exit and Escape cancel guard turning on bypass mode; other destructive actions use the existing dialogs. |
 | `element-locks` | Not built |  |
 | `support-tickets` | Not built |  |

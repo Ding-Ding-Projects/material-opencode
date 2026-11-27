@@ -14,9 +14,12 @@ COPY . .
 ENV OPENCODE_CHANNEL=material OPENCODE_VERSION=0.0.0-material-docker
 RUN bun install --frozen-lockfile
 RUN cd packages/cli \
-  && if [ "$(uname -m)" = x86_64 ]; then bun run build --single --baseline --skip-install; else bun run build --single --skip-install; fi \
   && mkdir -p /out \
-  && cp dist/cli-linux-*/bin/opencode /out/opencode \
+  && if [ "$(uname -m)" = x86_64 ]; then \
+       bun run build --single --baseline --skip-install && cp dist/cli-linux-x64-baseline/bin/opencode /out/opencode; \
+     else \
+       bun run build --single --skip-install && cp dist/cli-linux-arm64/bin/opencode /out/opencode; \
+     fi \
   && /out/opencode --version
 
 FROM debian:bookworm-slim
