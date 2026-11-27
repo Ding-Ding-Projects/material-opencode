@@ -2,9 +2,9 @@
 
 Files for a Design canvas (type slug bcd2878f-a88d-4094-a616-8e39d8a5fd8a). Nothing here has been published; the caller publishes.
 
-- `project/canvas.json`: v3 index, 4 pages, 19 boards, one sticky note per board, one `title1` note per page. Titles, page names and notes use the private vocabulary.
+- `project/canvas.json`: v3 index, 6 pages, 23 boards, one sticky note per board, one `title1` note per page. Titles, page names and notes use the private vocabulary.
 - `public-canvas.json`: the same index with every title, page name and note in ordinary English (scanned: no private vocabulary).
-- `project/*.dc.html`: 19 self-contained boards. All text inside boards is ordinary English product copy.
+- `project/*.dc.html`: 23 self-contained boards. All text inside boards is ordinary English product copy.
 
 Status of everything on these boards: design proposal. Nothing is claimed as implemented or verified in the app.
 
@@ -195,6 +195,49 @@ Every setting row has: label, config key, an info icon button whose tooltip and 
 - Motion: the same hero drift, smaller. Normal motion on every board: staggered entrance of panels, hover, press and focus transitions on every control.
 - Note says (summary): stands for the same page as the landing board at a narrow width. Still open: only the first screen is drawn; the menu does not open.
 
+
+### Page `chat`: Chat (session timeline and composer)
+
+#### `ChatNewSession.dc.html` (New session screen)
+
+- Frame: 1440 x 900 at (0, 0), `expand: fill`
+- Shows: the new-session screen. Tinted wordmark over a pulsing violet and teal glow, composer card, project and branch row, four prompt starters.
+- Tweaks: accent, dark, density, motion; `stage`: empty, filled (default empty)
+- Try: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: empty, filled. Tap a starter: it fills the composer and the send button wakes up. Type in the composer.
+- Motion: glow breathes behind the wordmark (dramatic); starters stagger in; focus ring and lift on the composer; send button shape-morph. Normal motion on every board: staggered entrance of panels, hover, press and focus transitions on every control.
+- Note says (summary): stands for new-session/ and composer/ in packages/app. Still open: starter wording and the prompts they insert are proposals. Pickers do not open. Nothing is sent.
+
+#### `ChatSession.dc.html` (Running session)
+
+- Frame: 1440 x 1040 at (1920, 0), `expand: fill`
+- Shows: a running session. User bubbles (tighter corners where two meet), assistant markdown, a collapsible tool-call group with diff chips, the thinking row, docked composer.
+- Tweaks: accent, dark, density, motion; `stage`: thinking, answered, error (default thinking)
+- Try: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: thinking, answered, error. Click the tool-call header to collapse or expand it.
+- Motion: shimmering gradient glow on the thinking row (dramatic); stop button with progress ring; alarm pulse on the error retry card (dramatic); tool cards stagger in. Normal motion on every board: staggered entrance of panels, hover, press and focus transitions on every control.
+- Note says (summary): stands for session/timeline and session/composer in packages/app. Still open: transcript, line counts and the provider error text are sample content. Retry and Stop do nothing on the board.
+
+#### `ChatComposerStates.dc.html` (Composer states)
+
+- Frame: 1440 x 1080 at (3840, 0), `expand: fill`
+- Shows: six composer states side by side: idle, focused, attachments, slash commands, @ mention, sending.
+- Tweaks: accent, dark, density, motion; `stage`: all, idle, focused, attachments, slash, mention, sending (default all)
+- Try: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: all, or one of idle, focused, attachments, slash, mention, sending to see that state alone.
+- Motion: send morphs into stop with a spinning progress ring and flowing bar (dramatic); popovers spring in; caret blink; cards stagger in. Normal motion on every board: staggered entrance of panels, hover, press and focus transitions on every control.
+- Note says (summary): stands for composer/ (attachments, suggestions, prompt-status machine) in packages/app. Still open: these are drawn states, not a live composer; text in them cannot be edited. The image chip uses a placeholder thumbnail.
+
+
+### Page `components`: Material Design 3 controls
+
+#### `Controls.dc.html` (Material Design 3 control set)
+
+- Frame: 1440 x 1180 at (0, 0), `expand: fill`
+- Shows: the Material Design 3 controls used across the app: buttons, switch, filled text field (with error state), select, segmented buttons, checkbox, assist and filter chips, menu, tooltip, slider.
+- Tweaks: accent, dark, density, motion
+- Try: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). Every control works: toggle, type, pick, drag. Tab through to see focus rings; hover the reset button for the tooltip.
+- Motion: springy thumb, check and shape changes on press; active indicator sweeps in on focus; header shape morphs; menu and tooltip pop in. Normal motion on every board: staggered entrance of panels, hover, press and focus transitions on every control.
+- Note says (summary): stands for the shared controls in packages/ui that the redesign would restyle. Still open: no packages/ui component has been changed to match. The menu is drawn open; the select uses the native list.
+
+
 ## Config keys shown, and where the brief and the schema differ
 
 All keys and types were read from `packages/schema/src/config.ts` and `packages/schema/src/config/*.ts` in the worktree.
@@ -262,4 +305,6 @@ In this folder, `canvas.json` is the ordinary-English index (the hosted canvas k
 | Full bypass permissions mode | `bypass_permissions` config key enforced by the server, two-key super confirmation with slider and emergency exit, warning banner with Turn off | Header chip outside Settings |
 | Web app in Docker | `hosting/` Dockerfile, compose, interactive setup, `host.sh` / `host.bat` (local and SSH), CI image build, smoke test and GHCR publish | Dashboard screen, owner registration screen |
 | Appliance image | `appliance/` Alpine image build (x86_64, arm64, Raspberry Pi 4 UEFI), console banner, CI QEMU boot test | Graphical boot panel, one-click deploy desktop app |
+| Chat | Material composer card, tonal user bubbles, glowing new-session backdrop, prompt-starter chips | Thinking glow, composer state morphs, attachment chips restyle |
+| Controls | Material buttons, switch, filled fields, segmented buttons, checkbox, menu and tooltip styles | Slider restyle |
 | Website | See `site/` | |

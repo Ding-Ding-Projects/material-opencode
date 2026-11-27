@@ -2,7 +2,7 @@ import { Tooltip } from "@opencode/ui/tooltip"
 import { Icon } from "@opencode/ui/icon"
 import { Keybind } from "@opencode/ui/keybind"
 import { useCommand } from "@/shell/commands/command"
-import { Match, Show, Switch, createComputed, createMemo, createSignal, onCleanup, untrack } from "solid-js"
+import { For, Match, Show, Switch, createComputed, createMemo, createSignal, onCleanup, untrack } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createResizeObserver } from "@solid-primitives/resize-observer"
 import {
@@ -130,6 +130,7 @@ export function NewSessionView(props: {
               <Show when={props.project.empty()}>
                 <PromptProjectAddButton controller={props.project} />
               </Show>
+              <NewSessionStarters onPick={(text) => insertStarter(props.composer, text)} />
             </div>
           </div>
         </div>
@@ -159,6 +160,37 @@ export function NewSessionView(props: {
       </div>
     </div>
   )
+}
+
+const starters = [
+  "settings.newSession.starter.explain",
+  "settings.newSession.starter.tests",
+  "settings.newSession.starter.review",
+  "settings.newSession.starter.fix",
+] as const
+
+/** Prompt starters: one tap puts a ready-made request in the composer, to send as is or edit first. */
+function NewSessionStarters(props: { onPick: (text: string) => void }) {
+  const language = useLanguage()
+
+  return (
+    <div data-slot="new-session-starters" role="group" aria-label={language.t("settings.newSession.starters")}>
+      <For each={starters}>
+        {(key) => (
+          <button type="button" data-slot="new-session-starter" onClick={() => props.onPick(language.t(`${key}.prompt`))}>
+            {language.t(key)}
+          </button>
+        )}
+      </For>
+    </div>
+  )
+}
+
+// The composer is a rich contenteditable editor; inserting through the browser's editing command keeps its own input
+// handling, undo history and mention parsing in charge of the text.
+function insertStarter(composer: ComposerModel, text: string) {
+  composer.restoreFocus()
+  queueMicrotask(() => document.execCommand("insertText", false, text))
 }
 
 function NewSessionTips(props: { selection: ComposerModel["model"]["selection"]; onDone: () => void }) {

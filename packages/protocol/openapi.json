@@ -17721,6 +17721,68 @@
           "required": true
         }
       }
+    },
+    "/api/experimental/config/edit": {
+      "post": {
+        "tags": ["config"],
+        "operationId": "experimental.config.edit",
+        "parameters": [],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Config.EditResult",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Config.EditResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "InvalidRequestError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidRequestErrorEncoded"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UnauthorizedError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedErrorEncoded"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "LocationNotFoundError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocationNotFoundErrorEncoded"
+                }
+              }
+            }
+          }
+        },
+        "description": "Apply JSON-path edits to the highest-precedence global configuration document, preserving comments and unrelated content. The result is validated and written only when valid and not a dry run. Experimental: may change without compatibility guarantees.",
+        "summary": "Edit global configuration",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Config.EditRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
     }
   },
   "components": {
@@ -18606,6 +18668,76 @@
         "required": ["type", "info"],
         "additionalProperties": false
       },
+      "Config.Edit": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "$ref": "#/components/schemas/Config.EditPath"
+          },
+          "value": {}
+        },
+        "required": ["path"],
+        "additionalProperties": false
+      },
+      "Config.EditPath": {
+        "type": "array",
+        "items": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string",
+              "enum": ["Infinity", "-Infinity", "NaN"]
+            }
+          ]
+        },
+        "description": "JSON path to a configuration value, for example [\"mcp\", \"github\", \"enabled\"]"
+      },
+      "Config.EditRequest": {
+        "type": "object",
+        "properties": {
+          "edits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Config.Edit"
+            }
+          },
+          "dryRun": {
+            "type": "boolean"
+          }
+        },
+        "required": ["edits"],
+        "additionalProperties": false
+      },
+      "Config.EditResult": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "before": {
+            "type": "string"
+          },
+          "after": {
+            "type": "string"
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "written": {
+            "type": "boolean"
+          }
+        },
+        "required": ["path", "before", "after", "issues", "written"],
+        "additionalProperties": false
+      },
       "Config.Entry": {
         "anyOf": [
           {
@@ -18710,6 +18842,9 @@
           },
           "permissions": {
             "$ref": "#/components/schemas/Permission.Ruleset"
+          },
+          "bypass_permissions": {
+            "type": "boolean"
           },
           "policies": {
             "type": "array",

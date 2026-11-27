@@ -25,6 +25,14 @@
   {
    "id": "site",
    "name": "Docs site"
+  },
+  {
+   "id": "chat",
+   "name": "Chat (session timeline and composer)"
+  },
+  {
+   "id": "components",
+   "name": "Material Design 3 controls"
   }
  ],
  "boards": {
@@ -216,6 +224,46 @@
    "title": "Landing page on mobile (390 x 844)",
    "page": "site",
    "is_interactive": true
+  },
+  "ChatNewSession.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "New session screen",
+   "page": "chat",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "ChatSession.dc.html": {
+   "x": 1920,
+   "y": 0,
+   "w": 1440,
+   "h": 1040,
+   "title": "Running session",
+   "page": "chat",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "ChatComposerStates.dc.html": {
+   "x": 3840,
+   "y": 0,
+   "w": 1440,
+   "h": 1080,
+   "title": "Composer states",
+   "page": "chat",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "Controls.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 1180,
+   "title": "Material Design 3 control set",
+   "page": "components",
+   "is_interactive": true,
+   "expand": "fill"
   }
  },
  "order": [
@@ -237,7 +285,11 @@
   "DeployApp.dc.html",
   "SiteHome.dc.html",
   "SiteDocs.dc.html",
-  "SitePhone.dc.html"
+  "SitePhone.dc.html",
+  "ChatNewSession.dc.html",
+  "ChatSession.dc.html",
+  "ChatComposerStates.dc.html",
+  "Controls.dc.html"
  ],
  "notes": {
   "note-Main": {
@@ -423,6 +475,54 @@
    "kind": "title1",
    "maxW": 4630,
    "page": "site"
+  },
+  "note-ChatNewSession": {
+   "x": 1480,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the new-session screen. Tinted wordmark over a pulsing violet and teal glow, composer card, project and branch row, four prompt starters.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: empty, filled. Tap a starter: it fills the composer and the send button wakes up. Type in the composer.\nStands for: new-session/ and composer/ in packages/app.\nMotion: glow breathes behind the wordmark (dramatic); starters stagger in; focus ring and lift on the composer; send button shape-morph.\nUnbuilt, unverified: starter wording and the prompts they insert are proposals. Pickers do not open. Nothing is sent.",
+   "page": "chat",
+   "fill": "blue"
+  },
+  "note-ChatSession": {
+   "x": 3400,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: a running session. User bubbles (tighter corners where two meet), assistant markdown, a collapsible tool-call group with diff chips, the thinking row, docked composer.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: thinking, answered, error. Click the tool-call header to collapse or expand it.\nStands for: session/timeline and session/composer in packages/app.\nMotion: shimmering gradient glow on the thinking row (dramatic); stop button with progress ring; alarm pulse on the error retry card (dramatic); tool cards stagger in.\nUnbuilt, unverified: transcript, line counts and the provider error text are sample content. Retry and Stop do nothing on the board.",
+   "page": "chat",
+   "fill": "blue"
+  },
+  "note-ChatComposerStates": {
+   "x": 5320,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: six composer states side by side: idle, focused, attachments, slash commands, @ mention, sending.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: all, or one of idle, focused, attachments, slash, mention, sending to see that state alone.\nStands for: composer/ (attachments, suggestions, prompt-status machine) in packages/app.\nMotion: send morphs into stop with a spinning progress ring and flowing bar (dramatic); popovers spring in; caret blink; cards stagger in.\nUnbuilt, unverified: these are drawn states, not a live composer; text in them cannot be edited. The image chip uses a placeholder thumbnail.",
+   "page": "chat",
+   "fill": "blue"
+  },
+  "title-chat": {
+   "x": 0,
+   "y": -320,
+   "text": "Chat (session timeline and composer)",
+   "kind": "title1",
+   "maxW": 5680,
+   "page": "chat"
+  },
+  "note-Controls": {
+   "x": 1480,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the Material Design 3 controls used across the app: buttons, switch, filled text field (with error state), select, segmented buttons, checkbox, assist and filter chips, menu, tooltip, slider.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). Every control works: toggle, type, pick, drag. Tab through to see focus rings; hover the reset button for the tooltip.\nStands for: the shared controls in packages/ui that the redesign would restyle.\nMotion: springy thumb, check and shape changes on press; active indicator sweeps in on focus; header shape morphs; menu and tooltip pop in.\nUnbuilt, unverified: no packages/ui component has been changed to match. The menu is drawn open; the select uses the native list.",
+   "page": "components",
+   "fill": "green"
+  },
+  "title-components": {
+   "x": 0,
+   "y": -320,
+   "text": "Material Design 3 controls",
+   "kind": "title1",
+   "maxW": 1840,
+   "page": "components"
   }
  }
 }

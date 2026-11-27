@@ -9,3 +9,10 @@ ip=$(ip -4 -o addr show scope global | awk '{print $4}' | cut -d/ -f1 | head -n1
 	echo "  Password:      log in as root and run: material-opencode password"
 	echo
 } > /etc/issue
+
+# Report the app container's state on the console once it has had time to start, for anyone watching the boot.
+(
+	sleep 90
+	echo "material-opencode: $(docker ps -a --filter name=material-opencode --format '{{.Status}}' 2>&1)"
+	docker logs --tail 15 material-opencode 2>&1 | sed 's/^/material-opencode: /'
+) > /dev/console 2>&1 &
