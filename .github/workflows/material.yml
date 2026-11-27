@@ -151,10 +151,15 @@ jobs:
           docker tag $IMAGE:sha-${GITHUB_SHA::7}-${{ matrix.docker }} $IMAGE:appliance
           docker save $IMAGE:appliance -o appliance-image.tar
       - name: Build the appliance image
-        run: sudo appliance/build.sh ${{ matrix.arch }} appliance-image.tar dist/appliance ${{ matrix.variant }}
+        run: |
+          set -o pipefail
+          sudo appliance/build.sh ${{ matrix.arch }} appliance-image.tar dist/appliance ${{ matrix.variant }} 2>&1 | tee build.log || {
+            echo "::error title=Appliance build::$(tail -c 6000 build.log | sed 's/%/%25/g' | awk 'BEGIN{ORS="%0A"}{print}')"
+            exit 1
+          }
       - name: Boot test under QEMU
         if: matrix.variant == ''
-        run: sudo appliance/boot-test.sh ${{ matrix.arch }} dist/appliance/material-opencode-${{ matrix.arch }}.img 1200
+        run: sudo --preserve-env=GITHUB_ACTIONS appliance/boot-test.sh ${{ matrix.arch }} dist/appliance/material-opencode-${{ matrix.arch }}.img 1200
       - name: Compress
         run: sudo sh -c 'for f in dist/appliance/*.img; do xz -T0 -6 "$f"; done'
       - uses: actions/upload-artifact@v4

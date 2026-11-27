@@ -26,6 +26,10 @@ until curl -fsS -o /dev/null http://127.0.0.1:14096/; do
   if [ $(( $(date +%s) - start )) -ge "$timeout_s" ]; then
     echo "Appliance did not serve the app within ${timeout_s}s. Serial console tail:" >&2
     tail -n 80 "$log" >&2
+    # Annotations are readable without the run log, so surface the end of the console there too.
+    if [ -n "${GITHUB_ACTIONS:-}" ]; then
+      echo "::error title=Appliance serial console::$(tail -c 6000 "$log" | tr -d '\r' | sed 's/%/%25/g' | awk 'BEGIN{ORS="%0A"}{print}')"
+    fi
     exit 1
   fi
   sleep 5
