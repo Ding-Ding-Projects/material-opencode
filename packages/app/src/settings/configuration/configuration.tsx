@@ -10,6 +10,7 @@ import { TextInput } from "@opencode/ui/text-input"
 import { useLanguage } from "@/runtime/i18n/language"
 import { useServerSDK } from "@/runtime/server/client"
 import { ConfigField, type FieldContext } from "./fields"
+import { SuperConfirm } from "./super-confirm"
 import {
   createConfigStudioState,
   draft,
@@ -164,7 +165,7 @@ export function SettingsConfiguration(props: { headerAction?: JSX.Element }) {
           </div>
         </Match>
         <Match when={true}>
-          <Show when={value().bypass_permissions === true}>
+          <Show when={(studio() as { document?: Record<string, unknown> }).document?.bypass_permissions === true}>
             <div data-slot="config-bypass" role="alert">
               <Icon name="outline-hexagonal-warning" />
               <div>
@@ -307,8 +308,8 @@ function ReviewDrawer(props: { state: ReviewState; onCancel: () => void; onSave:
   const language = useLanguage()
   // Turning on full bypass mode is the one change that needs a second, typed confirmation.
   const enablesBypass = () => props.state.edits.some((edit) => edit.path[0] === "bypass_permissions" && (edit.path.length === 1 ? edit.value === true : false))
-  const [typed, setTyped] = createSignal("")
-  const confirmed = () => !enablesBypass() || typed().trim().toUpperCase() === "BYPASS"
+  const [authorized, setAuthorized] = createSignal(false)
+  const confirmed = () => !enablesBypass() || authorized()
   const changes = createMemo(() => (props.state.review ? diffLines(props.state.review.before, props.state.review.after) : []))
   const issues = () => props.state.review?.issues ?? []
   return (
@@ -329,20 +330,12 @@ function ReviewDrawer(props: { state: ReviewState; onCancel: () => void; onSave:
             </div>
           </Show>
           <Show when={enablesBypass()}>
-            <div data-slot="config-bypass-confirm">
-              <Icon name="outline-hexagonal-warning" />
-              <div>
-                <strong>{language.t("settings.configuration.bypass.confirmTitle")}</strong>
-                <p>{language.t("settings.configuration.bypass.confirmDescription")}</p>
-                <TextInput
-                  appearance="small"
-                  aria-label={language.t("settings.configuration.bypass.confirmLabel")}
-                  placeholder="BYPASS"
-                  value={typed()}
-                  onInput={(event) => setTyped(event.currentTarget.value)}
-                />
-              </div>
-            </div>
+            <SuperConfirm
+              action={language.t("settings.configuration.bypass.confirmTitle")}
+              detail={language.t("settings.configuration.bypass.confirmDescription")}
+              onAuthorized={setAuthorized}
+              onCancel={props.onCancel}
+            />
           </Show>
           <pre data-slot="config-diff">
             <For each={changes()}>

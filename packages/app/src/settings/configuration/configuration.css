@@ -65,6 +65,107 @@
   color: var(--v2-text-text-muted);
 }
 
+[data-component="super-confirm"] {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 24px;
+  border: 1px solid color-mix(in oklab, var(--v2-red-500, #c62828) 55%, transparent);
+  background: color-mix(in oklab, var(--v2-red-500, #c62828) 10%, transparent);
+  animation: config-alert 1.4s var(--config-ease) 2;
+}
+
+[data-slot="super-confirm-copy"] {
+  display: flex;
+  gap: 12px;
+}
+
+[data-slot="super-confirm-copy"] p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: var(--line-height-compact);
+  color: var(--v2-text-text-muted);
+}
+
+[data-slot="super-confirm-keys"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+[data-slot="super-confirm-key"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid var(--v2-border-border-strong);
+  background: transparent;
+  color: var(--v2-text-text-base);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background-color 200ms var(--config-ease),
+    transform 300ms var(--config-spring);
+}
+
+[data-slot="super-confirm-key"][aria-pressed="true"] {
+  background: color-mix(in oklab, var(--v2-red-500, #c62828) 30%, transparent);
+  border-color: transparent;
+}
+
+[data-slot="super-confirm-key"][aria-pressed="true"] [data-component="icon"] {
+  transform: rotate(-90deg);
+  transition: transform 400ms var(--config-spring);
+}
+
+[data-slot="super-confirm-slider"] {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--v2-text-text-muted);
+}
+
+[data-slot="super-confirm-slider"] input {
+  width: 100%;
+  height: 44px;
+  accent-color: var(--v2-red-500, #c62828);
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--v2-red-500, #c62828) 45%, transparent) var(--progress),
+    transparent var(--progress)
+  );
+  border-radius: 999px;
+}
+
+[data-component="super-confirm"][data-unlocked="true"] [data-slot="super-confirm-slider"] input {
+  animation: config-pulse 1.2s var(--config-ease) infinite;
+}
+
+[data-slot="super-confirm-done"] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  animation: config-celebrate 700ms var(--config-spring) both;
+}
+
+[data-slot="super-confirm-exit"] {
+  align-self: flex-start;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 0;
+  background: transparent;
+  color: var(--v2-text-text-base);
+  text-decoration: underline;
+  font: inherit;
+  cursor: pointer;
+}
+
 [data-slot="config-layout"] {
   display: flex;
   flex-direction: column;
