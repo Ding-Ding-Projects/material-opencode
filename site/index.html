@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Material OpenCode — the open source coding agent, redesigned</title>
+    <meta name="description" content="OpenCode with a Material Expressive app, a Configuration studio for every setting, a web app in Docker and a ready-to-boot appliance image." />
+    <meta property="og:title" content="Material OpenCode" />
+    <meta property="og:description" content="OpenCode with a Material Expressive app, every setting in a visual editor, and one-command self-hosting." />
+    <meta property="og:image" content="https://ding-ding-projects.github.io/material-opencode/assets/home-light.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap">
+        <a class="brand" href="./">
+          <span class="brand-mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4" /></svg>
+          </span>
+          Material OpenCode
+        </a>
+        <nav class="links" aria-label="Site">
+          <a href="./" aria-current="page">Home</a>
+          <a href="docs.html">Docs</a>
+          <a href="https://github.com/Ding-Ding-Projects/material-opencode">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="hero" aria-labelledby="hero-title">
+        <span class="blob a" aria-hidden="true"></span>
+        <span class="blob b" aria-hidden="true"></span>
+        <h1 id="hero-title">Your coding agent, beautifully in control.</h1>
+        <p>Material OpenCode is the open source OpenCode agent with a Material Expressive app, every setting in a visual editor, and self-hosting that takes one command.</p>
+        <div class="actions">
+          <a class="btn fill" href="docs.html#docker">Run it in Docker</a>
+          <a class="btn out" href="https://github.com/Ding-Ding-Projects/material-opencode/actions/workflows/material.yml">Download the appliance image</a>
+        </div>
+      </section>
+
+      <section aria-labelledby="features-title">
+        <h2 id="features-title">What's new</h2>
+        <p class="lede">Everything below is in the app today. Each card links to its guide.</p>
+        <div class="grid">
+          <a class="card" href="docs.html#design" style="text-decoration: none; color: inherit">
+            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 3a9 9 0 0 0 0 18M3 12h18" /></svg></span>
+            <h3>Material Expressive design</h3>
+            <p>Tonal surfaces, Roboto Flex, large rounded shapes and spring motion, with a Classic option and a full reduced-motion path.</p>
+          </a>
+          <a class="card" href="docs.html#configuration" style="text-decoration: none; color: inherit">
+            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0" /><circle cx="16" cy="6" r="2" /><circle cx="10" cy="12" r="2" /><circle cx="18" cy="18" r="2" /></svg></span>
+            <h3>Configuration studio</h3>
+            <p>Every key of opencode.json with the control that fits it, a diff to review before saving, and validation by the server.</p>
+          </a>
+          <a class="card" href="docs.html#bypass" style="text-decoration: none; color: inherit">
+            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z" /><path d="M9 12l2 2 4-4" /></svg></span>
+            <h3>Full bypass permissions mode</h3>
+            <p>Let tools run without asking, behind a two-key confirmation. Deny rules and managed policies still apply.</p>
+          </a>
+          <a class="card" href="docs.html#docker" style="text-decoration: none; color: inherit">
+            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="11" rx="3" /><path d="M7 9V5h4v4M13 9V6h4v3" /></svg></span>
+            <h3>Web app in Docker</h3>
+            <p>An interactive setup writes everything for you, then one script starts the app on your network, locally or over SSH.</p>
+          </a>
+          <a class="card" href="docs.html#appliance" style="text-decoration: none; color: inherit">
+            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="12" rx="2" /><path d="M8 20h8M12 16v4" /></svg></span>
+            <h3>Appliance image</h3>
+            <p>A minimal Linux image that boots straight into the app, for virtual machines, spare PCs and Raspberry Pi 4.</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="split" aria-labelledby="studio-title">
+        <div>
+          <h2 id="studio-title">See every change before it lands</h2>
+          <p class="lede">The Configuration studio asks the server for a dry run, shows the exact change to your configuration file with its comments kept, and only writes it when it passes validation.</p>
+          <a class="btn fill" href="docs.html#configuration">Read the guide</a>
+        </div>
+        <img class="shot" src="assets/config-review-light.png" alt="The Configuration studio's review panel showing a change to opencode.jsonc before saving" loading="lazy" />
+      </section>
+
+      <section class="split" aria-labelledby="home-title">
+        <img class="shot" src="assets/home-light.png" alt="The redesigned Home screen with a Material search bar and a projects drawer" loading="lazy" />
+        <div>
+          <h2 id="home-title">A Home that feels like home</h2>
+          <p class="lede">A Material search bar, a projects drawer and calm drifting backdrop graphics. Every animation stops when your system asks for reduced motion.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="wrap">
+      Material OpenCode is a fork of <a href="https://github.com/anomalyco/opencode">OpenCode</a> under the MIT license. Roboto Flex is used under the SIL Open Font License 1.1.
+    </footer>
+  </body>
+</html>

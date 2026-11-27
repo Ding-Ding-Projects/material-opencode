@@ -1,0 +1,35 @@
+# Publishes the Material OpenCode website in site/ to GitHub Pages.
+name: material-site
+
+on:
+  push:
+    branches: [dev, material-redesign]
+    paths: [site/**, .github/workflows/material-site.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: material-site
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.repository == 'Ding-Ding-Projects/material-opencode'
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
