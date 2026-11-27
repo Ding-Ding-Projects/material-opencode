@@ -14,6 +14,7 @@ import { SessionStore } from "./session/store.js"
 import { PermissionPolicy } from "./permission/policy.js"
 import { PermissionSaved } from "./permission/saved.js"
 import { PluginHooks } from "./plugin/hooks.js"
+import { Config } from "./config.js"
 
 export * as Policy from "./permission/policy.js"
 const PermissionEffect = Permission.Effect
@@ -157,6 +158,7 @@ const layer = Layer.effect(
     const sessions = yield* SessionStore.Service
     const saved = yield* PermissionSaved.Service
     const hooks = yield* PluginHooks.Service
+    const config = yield* Config.Service
     const pending = new Map<ID, Pending>()
     const parents = new Map<string, Tool.CallID>()
     let closed = false
@@ -221,6 +223,9 @@ const layer = Layer.effect(
         source: row(input.source),
         effect,
       })
+      // Full bypass mode settles every remaining ask as allowed; the configured denies above still won.
+      if (event.effect === "ask" && Config.latest(yield* config.entries(), "bypass_permissions") === true)
+        return { effect: "allow" as const, policy: effective }
       const unattended = yield* Unattended
       if (event.effect !== "ask" || unattended === undefined)
         return { effect: event.effect, message: event.message, policy: effective }
@@ -422,5 +427,5 @@ function withoutUndefined(record: Record<string, unknown>): Record<string, unkno
 export const node = makeLocationNode({
   service: Service,
   layer,
-  deps: [Bus.node, Location.node, Agent.node, SessionStore.node, PermissionSaved.node, PluginHooks.node],
+  deps: [Bus.node, Location.node, Agent.node, SessionStore.node, PermissionSaved.node, PluginHooks.node, Config.node],
 })

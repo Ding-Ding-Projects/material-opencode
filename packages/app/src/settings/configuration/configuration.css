@@ -31,6 +31,40 @@
   color: var(--v2-text-text-muted);
 }
 
+[data-slot="config-bypass"],
+[data-slot="config-bypass-confirm"] {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 14px 18px;
+  border-radius: 20px;
+  border: 1px solid color-mix(in oklab, var(--v2-red-500, #c62828) 55%, transparent);
+  background: color-mix(in oklab, var(--v2-red-500, #c62828) 12%, transparent);
+  line-height: var(--line-height-base);
+}
+
+[data-slot="config-bypass"] {
+  align-items: center;
+  animation: config-alert 1.4s var(--config-ease) infinite;
+}
+
+[data-slot="config-bypass"] > div,
+[data-slot="config-bypass-confirm"] > div {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+[data-slot="config-bypass"] p,
+[data-slot="config-bypass-confirm"] p {
+  margin: 0;
+  font-size: 12px;
+  line-height: var(--line-height-compact);
+  color: var(--v2-text-text-muted);
+}
+
 [data-slot="config-layout"] {
   display: flex;
   flex-direction: column;

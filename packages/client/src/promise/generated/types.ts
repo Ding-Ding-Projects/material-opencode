@@ -2597,6 +2597,7 @@ export type ConfigEntry =
         timezone?: string
         automations?: boolean
         permissions?: PermissionRuleset
+        bypass_permissions?: boolean
         policies?: Array<{
           action:
             | "provider.use"

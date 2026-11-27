@@ -62,6 +62,10 @@ export class Info extends Schema.Class<Info>("Config.Info")({
   permissions: Permission.Ruleset.pipe(optional).annotate({
     description: "Ordered tool permission rules applied to agent tool use",
   }),
+  bypass_permissions: Schema.Boolean.pipe(optional).annotate({
+    description:
+      "Full bypass mode: every tool request that would ask for approval is allowed without asking. Configured deny rules and managed policies still apply. Use only in a sandbox or on code you trust.",
+  }),
   policies: ConfigPolicy.Info.pipe(Schema.Array, optional).annotate({
     description: "Ordered policies controlling access to providers, tools, and integrations",
   }),

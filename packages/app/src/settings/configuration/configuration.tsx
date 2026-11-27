@@ -164,6 +164,18 @@ export function SettingsConfiguration(props: { headerAction?: JSX.Element }) {
           </div>
         </Match>
         <Match when={true}>
+          <Show when={value().bypass_permissions === true}>
+            <div data-slot="config-bypass" role="alert">
+              <Icon name="outline-hexagonal-warning" />
+              <div>
+                <strong>{language.t("settings.configuration.bypass.on")}</strong>
+                <p>{language.t("settings.configuration.bypass.onDescription")}</p>
+              </div>
+              <Button size="small" variant="outline" onClick={() => dispatch({ type: "set", path: ["bypass_permissions"], value: undefined })}>
+                {language.t("settings.configuration.bypass.turnOff")}
+              </Button>
+            </div>
+          </Show>
           <div data-slot="config-layout">
             <nav data-slot="config-rail" aria-label={language.t("settings.configuration.categories")}>
               <For each={categories()}>
@@ -293,6 +305,10 @@ type ReviewState = {
 
 function ReviewDrawer(props: { state: ReviewState; onCancel: () => void; onSave: () => void }) {
   const language = useLanguage()
+  // Turning on full bypass mode is the one change that needs a second, typed confirmation.
+  const enablesBypass = () => props.state.edits.some((edit) => edit.path[0] === "bypass_permissions" && (edit.path.length === 1 ? edit.value === true : false))
+  const [typed, setTyped] = createSignal("")
+  const confirmed = () => !enablesBypass() || typed().trim().toUpperCase() === "BYPASS"
   const changes = createMemo(() => (props.state.review ? diffLines(props.state.review.before, props.state.review.after) : []))
   const issues = () => props.state.review?.issues ?? []
   return (
@@ -312,6 +328,22 @@ function ReviewDrawer(props: { state: ReviewState; onCancel: () => void; onSave:
               </div>
             </div>
           </Show>
+          <Show when={enablesBypass()}>
+            <div data-slot="config-bypass-confirm">
+              <Icon name="outline-hexagonal-warning" />
+              <div>
+                <strong>{language.t("settings.configuration.bypass.confirmTitle")}</strong>
+                <p>{language.t("settings.configuration.bypass.confirmDescription")}</p>
+                <TextInput
+                  appearance="small"
+                  aria-label={language.t("settings.configuration.bypass.confirmLabel")}
+                  placeholder="BYPASS"
+                  value={typed()}
+                  onInput={(event) => setTyped(event.currentTarget.value)}
+                />
+              </div>
+            </div>
+          </Show>
           <pre data-slot="config-diff">
             <For each={changes()}>
               {(part) => (
@@ -327,7 +359,7 @@ function ReviewDrawer(props: { state: ReviewState; onCancel: () => void; onSave:
           <Button
             size="small"
             variant={props.state.type === "saving" ? "loading" : "submit"}
-            disabled={!props.state.review || issues().length > 0 || props.state.type === "saving"}
+            disabled={!props.state.review || issues().length > 0 || props.state.type === "saving" || !confirmed()}
             onClick={props.onSave}
           >
             {language.t("settings.configuration.save")}

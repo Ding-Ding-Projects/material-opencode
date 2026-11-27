@@ -167,7 +167,7 @@ export const configCategories = [
   { id: "general", keys: ["shell", "model", "default_agent", "username", "timezone", "update", "enterprise"] },
   { id: "models", keys: ["providers"] },
   { id: "agents", keys: ["agents", "commands"] },
-  { id: "permissions", keys: ["permissions", "policies"] },
+  { id: "permissions", keys: ["bypass_permissions", "permissions", "policies"] },
   { id: "tools", keys: ["mcp", "tool_output", "media"] },
   { id: "code", keys: ["lsp", "formatter"] },
   { id: "files", keys: ["watcher", "worktree", "snapshots"] },

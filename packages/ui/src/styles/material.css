@@ -98,6 +98,125 @@
   outline-offset: 2px;
 }
 
+/* Surfaces: large-radius panels with tonal elevation instead of hairline boxes. */
+:root[data-design="material"] [data-slot="home-panel"] {
+  border-radius: var(--md-shape-extra-large);
+}
+
+:root[data-design="material"] .settings-tab-title {
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: -0.2px;
+}
+
+:root[data-design="material"] .settings-nav-groups [data-slot="tabs-v2-trigger-wrapper"] {
+  border-radius: var(--md-shape-full);
+  transition:
+    background-color var(--md-duration-short) var(--md-ease-emphasized),
+    color var(--md-duration-short) var(--md-ease-emphasized),
+    transform var(--md-duration-short) var(--md-ease-spatial);
+}
+
+:root[data-design="material"] .settings-nav-groups [data-slot="tabs-v2-trigger-wrapper"]:has([data-selected]) {
+  background: var(--md-tint-strong);
+}
+
+:root[data-design="material"] .settings-nav-groups [data-slot="tabs-v2-trigger-wrapper"]:active {
+  transform: scale(0.98);
+}
+
+:root[data-design="material"] [data-component="settings-list"] {
+  background-color: color-mix(in oklab, var(--v2-background-bg-layer-01) 85%, var(--md-tint));
+  box-shadow: inset 0 0 0 1px var(--v2-border-border-muted);
+  padding-inline: 24px;
+}
+
+:root[data-design="material"] [data-component="settings-row"] {
+  transition: background-color var(--md-duration-short) var(--md-ease-emphasized);
+}
+
+:root[data-design="material"] [data-component="switch"] [data-slot="switch-control"] {
+  transition:
+    background-color var(--md-duration-medium) var(--md-ease-emphasized),
+    box-shadow var(--md-duration-medium) var(--md-ease-emphasized);
+}
+
+:root[data-design="material"] [data-component="switch"] [data-slot="switch-thumb"] {
+  transition: transform var(--md-duration-medium) var(--md-ease-spatial);
+}
+
+/*
+ * Dramatic backdrop graphics: slow drifting tonal shapes behind Home and Settings. They sit under the content,
+ * never take input, and stop (staying as a still tint) when motion is reduced.
+ */
+:root[data-design="material"] :is([data-slot="home-panel"], .settings-screen) {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+:root[data-design="material"] :is([data-slot="home-panel"], .settings-screen)::before,
+:root[data-design="material"] :is([data-slot="home-panel"], .settings-screen)::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 42% 58% 63% 37% / 45% 40% 60% 55%;
+  filter: blur(48px);
+  opacity: 0.55;
+}
+
+:root[data-design="material"] :is([data-slot="home-panel"], .settings-screen)::before {
+  width: 520px;
+  height: 520px;
+  right: -200px;
+  top: 30%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    color-mix(in oklab, var(--v2-background-bg-accent, #6750a4) 45%, transparent),
+    transparent 70%
+  );
+  animation: md-drift 22s ease-in-out infinite;
+}
+
+:root[data-design="material"] :is([data-slot="home-panel"], .settings-screen)::after {
+  width: 420px;
+  height: 420px;
+  left: -140px;
+  bottom: -180px;
+  background: radial-gradient(
+    circle at 60% 40%,
+    color-mix(in oklab, var(--v2-cyan-500, #00897b) 35%, transparent),
+    transparent 70%
+  );
+  animation: md-drift-2 28s ease-in-out infinite;
+}
+
+:root[data-design="material"] [data-slot="home-panel"] > * {
+  animation: md-rise var(--md-duration-long) var(--md-ease-emphasized-decelerate) both;
+}
+
+@keyframes md-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate(-6%, 8%) scale(1.15) rotate(25deg);
+  }
+}
+
+@keyframes md-drift-2 {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(8%, -6%) rotate(-35deg);
+  }
+}
+
 @keyframes md-rise {
   from {
     opacity: 0;
