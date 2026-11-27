@@ -70,7 +70,8 @@ jobs:
           OPENCODE_VERSION: 0.0.0-material-${{ github.run_number }}
         run: |
           cd packages/cli
-          bun run build --single --skip-install
+          # x64 uses the baseline build (no AVX2) so the image also runs on older CPUs and in plain virtual machines.
+          if [ "${{ matrix.arch }}" = amd64 ]; then bun run build --single --baseline --skip-install; else bun run build --single --skip-install; fi
           mkdir -p ../../dist/runtime
           cp dist/cli-linux-*/bin/opencode ../../dist/runtime/opencode
           ../../dist/runtime/opencode --version

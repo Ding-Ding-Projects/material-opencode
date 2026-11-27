@@ -14,7 +14,7 @@ COPY . .
 ENV OPENCODE_CHANNEL=material OPENCODE_VERSION=0.0.0-material-docker
 RUN bun install --frozen-lockfile
 RUN cd packages/cli \
-  && bun run build --single --skip-install \
+  && if [ "$(uname -m)" = x86_64 ]; then bun run build --single --baseline --skip-install; else bun run build --single --skip-install; fi \
   && mkdir -p /out \
   && cp dist/cli-linux-*/bin/opencode /out/opencode \
   && /out/opencode --version
