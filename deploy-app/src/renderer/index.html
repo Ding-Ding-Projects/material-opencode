@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'" />
+    <title>Material OpenCode Deploy</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="titlebar">
+      <span class="brand"><span class="mark" aria-hidden="true">&lt;/&gt;</span>Material OpenCode Deploy</span>
+      <span class="release" id="release-chip">Checking for the latest release…</span>
+      <span class="spacer"></span>
+      <button class="win" data-window="minimize" aria-label="Minimize">&#x2013;</button>
+      <button class="win" data-window="maximize" aria-label="Maximize">&#x25A1;</button>
+      <button class="win close" data-window="close" aria-label="Close">&#x2715;</button>
+    </header>
+    <div class="shell">
+      <nav class="rail" aria-label="Sections">
+        <button data-view="deploy" aria-current="page"><span class="ico" aria-hidden="true">&#x25B6;</span>Deploy</button>
+        <button data-view="instances"><span class="ico" aria-hidden="true">&#x25A4;</span>Instances</button>
+        <button data-view="images"><span class="ico" aria-hidden="true">&#x25C9;</span>Images</button>
+        <button data-view="help"><span class="ico" aria-hidden="true">?</span>Help</button>
+      </nav>
+      <main id="view" tabindex="-1"></main>
+    </div>
+    <div id="dialog-root"></div>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -33,6 +33,10 @@
   {
    "id": "components",
    "name": "Material Design 3 controls"
+  },
+  {
+   "id": "deploy",
+   "name": "Deploy desktop app"
   }
  ],
  "boards": {
@@ -264,6 +268,60 @@
    "page": "components",
    "is_interactive": true,
    "expand": "fill"
+  },
+  "DeployHome.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1280,
+   "h": 800,
+   "title": "Deploy desktop app: target picker",
+   "page": "deploy",
+   "is_interactive": true
+  },
+  "DeployRun.dc.html": {
+   "x": 1760,
+   "y": 0,
+   "w": 1280,
+   "h": 800,
+   "title": "Deploy desktop app: deployment in progress",
+   "page": "deploy",
+   "is_interactive": true
+  },
+  "DeployInstances.dc.html": {
+   "x": 3520,
+   "y": 0,
+   "w": 1280,
+   "h": 800,
+   "title": "Deploy desktop app: instance manager",
+   "page": "deploy",
+   "is_interactive": true
+  },
+  "DeployFlash.dc.html": {
+   "x": 5280,
+   "y": 0,
+   "w": 1280,
+   "h": 800,
+   "title": "Deploy desktop app: USB and SD flashing",
+   "page": "deploy",
+   "is_interactive": true
+  },
+  "DeployNewInstance.dc.html": {
+   "x": 0,
+   "y": 920,
+   "w": 1280,
+   "h": 800,
+   "title": "Deploy desktop app: new instance form",
+   "page": "deploy",
+   "is_interactive": true
+  },
+  "DeploySetupTui.dc.html": {
+   "x": 1760,
+   "y": 920,
+   "w": 1280,
+   "h": 800,
+   "title": "One-command setup in the terminal (web app in Docker)",
+   "page": "deploy",
+   "is_interactive": true
   }
  },
  "order": [
@@ -289,7 +347,13 @@
   "ChatNewSession.dc.html",
   "ChatSession.dc.html",
   "ChatComposerStates.dc.html",
-  "Controls.dc.html"
+  "Controls.dc.html",
+  "DeployHome.dc.html",
+  "DeployRun.dc.html",
+  "DeployInstances.dc.html",
+  "DeployFlash.dc.html",
+  "DeployNewInstance.dc.html",
+  "DeploySetupTui.dc.html"
  ],
  "notes": {
   "note-Main": {
@@ -523,6 +587,62 @@
    "kind": "title1",
    "maxW": 1840,
    "page": "components"
+  },
+  "note-DeployHome": {
+   "x": 1320,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: the deploy desktop app window (1280 x 800, frameless with its own title bar). Six target cards with readiness and one Deploy button each; nav rail; release picker chip.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: ready, checking (readiness lines shimmer while the computer is probed). Hover cards.\nStands for: hosting/host.sh and host.bat (this computer, --ssh) and appliance/build.sh (.vdi for VirtualBox, raw image for USB and SD).\nMotion: morphing header shape and staggered cards (dramatic entrance); live ping on ready dots; card shape-morph on hover.\nUnbuilt, unverified: the desktop app is about to be built. Readiness text and version numbers are sample values. The release code name and version are placeholders. VMware output is not produced by appliance/build.sh today.",
+   "page": "deploy",
+   "fill": "pink"
+  },
+  "note-DeployRun": {
+   "x": 3080,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: one deployment with a six-step stepper (Download image, Verify checksum, Create instance, Start, Wait for health, Verify link) and a live log.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: running, success, failed. Hide log / View log toggles the log.\nStands for: hosting/host.sh: compose up, then polling the address for up to 2 minutes and printing Ready with the LAN address.\nMotion: flowing progress on the active step and the overall bar (dramatic); address pops in and the check pulses rings on success (dramatic); alarm pulse on the failed error card (dramatic).\nUnbuilt, unverified: checksum verification, retry-from-step and the QR block (a placeholder pattern) are design. The address is a sample.",
+   "page": "deploy",
+   "fill": "pink"
+  },
+  "note-DeployInstances": {
+   "x": 4840,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: instances with name, target, version, health, link and row actions (start or stop, restart, open, copy link, More: logs, update, duplicate, remove).\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). items 0 to 8 (0 is the empty state). stage: list, menu (More menu open), remove (confirm naming the instance and what is deleted).\nStands for: docker compose up, stop and down from hosting/host.sh; --down keeps the data volume, which is why deleting it is a separate switch.\nMotion: rows stagger in and slide on hover; live ping only on rows checked just now; menu pops; alarm pulse on the remove dialog (dramatic).\nUnbuilt, unverified: no instance registry exists yet. Rows are sample data. Health is only stated where the row says it was checked just now.",
+   "page": "deploy",
+   "fill": "pink"
+  },
+  "note-DeployFlash": {
+   "x": 6600,
+   "y": 0,
+   "w": 360,
+   "text": "Shows: flashing the appliance image to a card or drive: removable-disk list, two-key super confirmation naming the disk, write progress, read-back verify, done with tips for finding the address.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: pick, confirm, writing, verifying, done. In pick nothing is preselected; choose a disk. In confirm press Turn key 1 and Turn key 2: both unlock Erase.\nStands for: the raw .img from appliance/build.sh (--pi for Raspberry Pi 4 and 400) and the console banner that shows Open the app.\nMotion: key-rotate and pop per key; alarm pulse on the erase card (dramatic); thick flowing progress with a large percentage (dramatic); ring pulse on done (dramatic).\nUnbuilt, unverified: disk detection, system-disk exclusion, writing and read-back are not built. Percentages are fixed sample values. Choosing a disk does not enable the button on the board.",
+   "page": "deploy",
+   "fill": "pink"
+  },
+  "note-DeployNewInstance": {
+   "x": 1320,
+   "y": 920,
+   "w": 360,
+   "text": "Shows: the per-target form: target, instance name, port with a free check chip, projects folder, SSH host (SSH target), memory and processor sliders and network mode (virtual machines), then a review step.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: form, invalid, review. Switch Target to see the SSH or virtual-machine fields; drag the sliders.\nStands for: the values hosting/setup.ts asks for (OPENCODE_INSTANCE, OPENCODE_PORT, OPENCODE_WORKSPACE) and --ssh user@host.\nMotion: validation chips and footer change with state; segmented, slider and field transitions; staggered entrance.\nUnbuilt, unverified: live port checking, SSH test and VM sizing are design. Validation on the board is shown by stage, not computed from what is typed.",
+   "page": "deploy",
+   "fill": "pink"
+  },
+  "note-DeploySetupTui": {
+   "x": 3080,
+   "y": 920,
+   "w": 360,
+   "text": "Shows: a terminal window with the setup for the web app in Docker: arrow-key menu with the default marked, live validation, review before writing, password shown once; the plain-text fallback is smaller beneath.\nTry: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: menu, invalid, review, done. The terminal stays dark in both themes on purpose.\nStands for: bun hosting/setup.ts, which today asks the same six values as plain prompts and writes hosting/.env.\nMotion: selected menu line pops; caret blink; screen rises in per stage; key hints morph on hover.\nUnbuilt, unverified: arrow-key menus, Back, the review screen and showing the password once are design; today only the plain prompts exist. The password on the board is a placeholder, never a real secret.",
+   "page": "deploy",
+   "fill": "pink"
+  },
+  "title-deploy": {
+   "x": 0,
+   "y": -320,
+   "text": "Deploy desktop app",
+   "kind": "title1",
+   "maxW": 6960,
+   "page": "deploy"
   }
  }
 }

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Web app in Docker — Material OpenCode</title>
+    <meta name="description" content="Run the Material OpenCode web app in Docker with one command, an interactive setup, SSH, build and down options." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Web app in Docker — Material OpenCode" />
+    <meta property="og:description" content="Run the Material OpenCode web app in Docker with one command, an interactive setup, SSH, build and down options." />
+    <meta property="og:image" content="https://ding-ding-projects.github.io/material-opencode/assets/home-light.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="../assets/site.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap">
+        <a class="brand" href="../">
+          <span class="brand-mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4" /></svg>
+          </span>
+          Material OpenCode
+        </a>
+        <nav class="links" aria-label="Site">
+          <a href="../">Home</a>
+          <a href="../docs.html" aria-current="page">Docs</a>
+          <a href="https://github.com/Ding-Ding-Projects/material-opencode">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap docs">
+      <aside aria-label="On this page">
+        <strong class="aside-title">On this page</strong>
+        <a href="#run">Run it</a>
+        <a href="#setup">The interactive setup</a>
+        <a href="#options">Options</a>
+        <a href="#signin">Signing in</a>
+        <strong class="aside-title">All guides</strong>
+        <a href="design.html">Material Expressive design</a>
+        <a href="configuration.html">Configuration studio</a>
+        <a href="bypass.html">Full bypass permissions mode</a>
+        <a href="chat.html">Material chat</a>
+        <a href="docker.html" aria-current="page">Web app in Docker</a>
+        <a href="appliance.html">Appliance image</a>
+        <a href="deploy.html">Deploy desktop app</a>
+      </aside>
+      <article>
+        <h1>Web app in Docker</h1>
+<h2 id="run">Run it</h2>
+<p>From a checkout of the <a href="https://github.com/Ding-Ding-Projects/material-opencode">repository</a>:</p>
+<pre><code>hosting/host.sh            # macOS and Linux
+hosting\host.bat           # Windows with Docker Desktop</code></pre>
+<p>The script starts the container, waits until the app answers, then prints the address to open on your network. Docker with Compose must be installed. If the app does not answer within two minutes the script says so and points to <code>docker logs</code>.</p>
+<h2 id="setup">The interactive setup</h2>
+<p>The first run starts a setup that asks for:</p>
+<ol>
+<li>Instance name, used for the container and its data volume.</li>
+<li>Port on this computer (default 4096).</li>
+<li>Listen address (<code>0.0.0.0</code> is the whole local network).</li>
+<li>The folder with your projects, mounted at <code>/workspace</code>.</li>
+<li>The image: the published one or a local build tag.</li>
+</ol>
+<p>Press Enter to keep each default. It also creates a server password and writes everything to <code>hosting/.env</code>, which holds the password, so keep that file private. You can run the setup alone with <code>bun hosting/setup.ts</code>, or <code>--yes</code> to accept every default.</p>
+<h2 id="options">Options</h2>
+<ul>
+<li><code>--ssh user@host</code> runs it on another machine with Docker. The script copies <code>compose.yaml</code> and <code>.env</code> there over SSH.</li>
+<li><code>--build</code> builds the image from your checkout instead of pulling <code>ghcr.io/ding-ding-projects/material-opencode</code>.</li>
+<li><code>--down</code> stops and removes the container. Your data volume is kept. It combines with <code>--ssh</code>.</li>
+</ul>
+<h2 id="signin">Signing in</h2>
+<p>Sign in with the password from <code>hosting/.env</code>. The user name is <code>opencode</code> for API clients. The <a href="deploy.html">Deploy desktop app</a> can do all of this with buttons.</p>
+      </article>
+    </main>
+
+    <footer class="wrap">
+      Material OpenCode is a fork of <a href="https://github.com/anomalyco/opencode">OpenCode</a> under the MIT license.
+    </footer>
+  </body>
+</html>

@@ -16,3 +16,15 @@ ip=$(ip -4 -o addr show scope global | awk '{print $4}' | cut -d/ -f1 | head -n1
 	echo "material-opencode: $(docker ps -a --filter name=material-opencode --format '{{.Status}}' 2>&1)"
 	docker logs --tail 15 material-opencode 2>&1 | sed 's/^/material-opencode: /'
 ) > /dev/console 2>&1 &
+
+# Announce the address on the serial console too, so the deploy app can read it from a virtual machine's serial log.
+(
+	for _ in $(seq 1 120); do
+		ip=$(ip -4 -o addr show scope global | awk '{print $4}' | cut -d/ -f1 | head -n1)
+		[ -n "$ip" ] && break
+		sleep 2
+	done
+	[ -n "$ip" ] && for tty in /dev/ttyS0 /dev/ttyAMA0; do
+		[ -c "$tty" ] && echo "material-opencode-url: http://$ip:4096" > "$tty" 2>/dev/null
+	done
+) &

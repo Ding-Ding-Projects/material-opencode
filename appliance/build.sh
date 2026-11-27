@@ -6,7 +6,7 @@
 #   sudo appliance/build.sh aarch64 dist/image-arm64.tar  dist/appliance          (generic arm64 UEFI)
 #   sudo appliance/build.sh aarch64 dist/image-arm64.tar  dist/appliance --pi     (adds Raspberry Pi 4/400 UEFI firmware)
 #
-# Outputs <out>/material-opencode-<arch>[-pi].img (raw, for USB/SD flashing) and, for x86_64, a .vdi for VirtualBox.
+# Outputs <out>/material-opencode-<arch>[-pi].img (raw, for USB/SD flashing) and, for x86_64, a .vdi for VirtualBox and a .vmdk for VMware.
 set -eu
 arch="$1"; image_tar="$2"; out="$3"; pi="${4:-}"
 here=$(cd "$(dirname "$0")" && pwd)
@@ -59,6 +59,7 @@ fi
 
 if [ "$arch" = "x86_64" ]; then
   qemu-img convert -O vdi "$img" "${img%.img}.vdi"
+  qemu-img convert -O vmdk "$img" "${img%.img}.vmdk"
 fi
 sha256sum "$img" > "$img.sha256"
 echo "Built $img"

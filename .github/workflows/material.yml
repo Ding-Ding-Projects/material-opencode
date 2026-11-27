@@ -172,9 +172,70 @@ jobs:
         if: matrix.variant == ''
         run: sudo --preserve-env=GITHUB_ACTIONS appliance/boot-test.sh ${{ matrix.arch }} dist/appliance/material-opencode-${{ matrix.arch }}.img 1500
       - name: Compress
-        run: sudo sh -c 'for f in dist/appliance/*.img; do xz -T0 -6 "$f"; done'
+        run: sudo sh -c 'for f in dist/appliance/*.img dist/appliance/*.vdi dist/appliance/*.vmdk; do [ -f "$f" ] && gzip -6 "$f"; done; rm -f dist/appliance/*.sha256'
       - uses: actions/upload-artifact@v4
         with:
           name: appliance-${{ matrix.arch }}${{ matrix.variant }}
           path: dist/appliance/
           retention-days: 14
+
+  deploy-app:
+    if: github.repository == 'Ding-Ding-Projects/material-opencode'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-2025
+            target: win
+          - os: ubuntu-24.04
+            target: linux
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+      - name: Install
+        working-directory: deploy-app
+        run: bun install --frozen-lockfile
+      - name: Typecheck and test
+        working-directory: deploy-app
+        run: |
+          bun run typecheck
+          bun run test
+      - name: Package with the source inside
+        working-directory: deploy-app
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: bun run dist:${{ matrix.target }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deploy-app-${{ matrix.target }}
+          path: |
+            deploy-app/release/*.exe
+            deploy-app/release/*.AppImage
+          retention-days: 14
+
+  release:
+    if: github.repository == 'Ding-Ding-Projects/material-opencode' && github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    needs: [manifest, appliance, deploy-app]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: assets
+          merge-multiple: true
+          pattern: "{appliance-*,deploy-app-*}"
+      - name: Source bundle and checksums
+        run: |
+          git archive --format=tar.gz --prefix=material-opencode/ -o assets/material-opencode-source.tar.gz HEAD
+          cd assets && sha256sum * > SHA256SUMS && cat SHA256SUMS
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="material-$(date -u +%Y.%m.%d)-${GITHUB_SHA::7}"
+          gh release create "$tag" assets/* --target "$GITHUB_SHA" --title "Material OpenCode $tag" \
+            --notes "Web app image: \`$IMAGE:latest\`. Appliance images, the deploy app with the source inside, and SHA256SUMS are attached." --latest

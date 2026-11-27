@@ -2,9 +2,9 @@
 
 Files for a Design canvas (type slug bcd2878f-a88d-4094-a616-8e39d8a5fd8a). Nothing here has been published; the caller publishes.
 
-- `project/canvas.json`: v3 index, 6 pages, 23 boards, one sticky note per board, one `title1` note per page. Titles, page names and notes use the private vocabulary.
+- `project/canvas.json`: v3 index, 7 pages, 29 boards, one sticky note per board, one `title1` note per page. Titles, page names and notes use the private vocabulary.
 - `public-canvas.json`: the same index with every title, page name and note in ordinary English (scanned: no private vocabulary).
-- `project/*.dc.html`: 23 self-contained boards. All text inside boards is ordinary English product copy.
+- `project/*.dc.html`: 29 self-contained boards. All text inside boards is ordinary English product copy.
 
 Status of everything on these boards: design proposal. Nothing is claimed as implemented or verified in the app.
 
@@ -238,6 +238,66 @@ Every setting row has: label, config key, an info icon button whose tooltip and 
 - Note says (summary): stands for the shared controls in packages/ui that the redesign would restyle. Still open: no packages/ui component has been changed to match. The menu is drawn open; the select uses the native list.
 
 
+
+### Page `deploy`: Deploy desktop app
+
+All six boards are fixed 1280 x 800 windows (frameless, own title bar) for the desktop deploy app that is about to be built. They follow `hosting/` and `appliance/` in the worktree: port 4096, the six values `hosting/setup.ts` asks for, `hosting/host.sh` (local, `--ssh`, the 2-minute health wait), and the raw and `.vdi` images from `appliance/build.sh`. The earlier `DeployApp.dc.html` board on the hosting page is unchanged.
+
+#### `DeployHome.dc.html` (Deploy desktop app: target picker)
+
+- Frame: 1280 x 800 at (0, 0), fixed
+- Shows: the deploy desktop app window (1280 x 800, frameless with its own title bar). Six target cards with readiness and one Deploy button each; nav rail; release picker chip.
+- Tweaks: accent, dark, density, motion; `stage`: ready, checking (default ready)
+- Try: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: ready, checking (readiness lines shimmer while the computer is probed). Hover cards.
+- Motion: morphing header shape and staggered cards (dramatic entrance); live ping on ready dots; card shape-morph on hover. Normal motion on every board: entrance of panels, hover, press and focus transitions on every control.
+- Note says (summary): stands for hosting/host.sh and host.bat (this computer, --ssh) and appliance/build.sh (.vdi for VirtualBox, raw image for USB and SD). Still open: the desktop app is about to be built. Readiness text and version numbers are sample values. The release code name and version are placeholders. VMware output is not produced by appliance/build.sh today.
+
+#### `DeployRun.dc.html` (Deploy desktop app: deployment in progress)
+
+- Frame: 1280 x 800 at (1760, 0), fixed
+- Shows: one deployment with a six-step stepper (Download image, Verify checksum, Create instance, Start, Wait for health, Verify link) and a live log.
+- Tweaks: accent, dark, density, motion; `stage`: running, success, failed (default running)
+- Try: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: running, success, failed. Hide log / View log toggles the log.
+- Motion: flowing progress on the active step and the overall bar (dramatic); address pops in and the check pulses rings on success (dramatic); alarm pulse on the failed error card (dramatic). Normal motion on every board: entrance of panels, hover, press and focus transitions on every control.
+- Note says (summary): stands for hosting/host.sh: compose up, then polling the address for up to 2 minutes and printing Ready with the LAN address. Still open: checksum verification, retry-from-step and the QR block (a placeholder pattern) are design. The address is a sample.
+
+#### `DeployInstances.dc.html` (Deploy desktop app: instance manager)
+
+- Frame: 1280 x 800 at (3520, 0), fixed
+- Shows: instances with name, target, version, health, link and row actions (start or stop, restart, open, copy link, More: logs, update, duplicate, remove).
+- Tweaks: accent, dark, density, motion; `stage`: list, menu, remove (default list); `items`: 0 to 8 (default 4)
+- Try: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). items 0 to 8 (0 is the empty state). stage: list, menu (More menu open), remove (confirm naming the instance and what is deleted).
+- Motion: rows stagger in and slide on hover; live ping only on rows checked just now; menu pops; alarm pulse on the remove dialog (dramatic). Normal motion on every board: entrance of panels, hover, press and focus transitions on every control.
+- Note says (summary): stands for docker compose up, stop and down from hosting/host.sh; --down keeps the data volume, which is why deleting it is a separate switch. Still open: no instance registry exists yet. Rows are sample data. Health is only stated where the row says it was checked just now.
+
+#### `DeployFlash.dc.html` (Deploy desktop app: USB and SD flashing)
+
+- Frame: 1280 x 800 at (5280, 0), fixed
+- Shows: flashing the appliance image to a card or drive: removable-disk list, two-key super confirmation naming the disk, write progress, read-back verify, done with tips for finding the address.
+- Tweaks: accent, dark, density, motion; `stage`: pick, confirm, writing, verifying, done (default pick)
+- Try: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: pick, confirm, writing, verifying, done. In pick nothing is preselected; choose a disk. In confirm press Turn key 1 and Turn key 2: both unlock Erase.
+- Motion: key-rotate and pop per key; alarm pulse on the erase card (dramatic); thick flowing progress with a large percentage (dramatic); ring pulse on done (dramatic). Normal motion on every board: entrance of panels, hover, press and focus transitions on every control.
+- Note says (summary): stands for the raw .img from appliance/build.sh (--pi for Raspberry Pi 4 and 400) and the console banner that shows Open the app. Still open: disk detection, system-disk exclusion, writing and read-back are not built. Percentages are fixed sample values. Choosing a disk does not enable the button on the board.
+
+#### `DeployNewInstance.dc.html` (Deploy desktop app: new instance form)
+
+- Frame: 1280 x 800 at (0, 920), fixed
+- Shows: the per-target form: target, instance name, port with a free check chip, projects folder, SSH host (SSH target), memory and processor sliders and network mode (virtual machines), then a review step.
+- Tweaks: accent, dark, density, motion; `stage`: form, invalid, review (default form)
+- Try: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: form, invalid, review. Switch Target to see the SSH or virtual-machine fields; drag the sliders.
+- Motion: validation chips and footer change with state; segmented, slider and field transitions; staggered entrance. Normal motion on every board: entrance of panels, hover, press and focus transitions on every control.
+- Note says (summary): stands for the values hosting/setup.ts asks for (OPENCODE_INSTANCE, OPENCODE_PORT, OPENCODE_WORKSPACE) and --ssh user@host. Still open: live port checking, SSH test and VM sizing are design. Validation on the board is shown by stage, not computed from what is typed.
+
+#### `DeploySetupTui.dc.html` (One-command setup in the terminal (web app in Docker))
+
+- Frame: 1280 x 800 at (1760, 920), fixed
+- Shows: a terminal window with the setup for the web app in Docker: arrow-key menu with the default marked, live validation, review before writing, password shown once; the plain-text fallback is smaller beneath.
+- Tweaks: accent, dark, density, motion; `stage`: menu, invalid, review, done (default menu)
+- Try: Shared Tweaks: accent (seed colour), dark, density (comfortable or compact), motion (off stills everything). stage: menu, invalid, review, done. The terminal stays dark in both themes on purpose.
+- Motion: selected menu line pops; caret blink; screen rises in per stage; key hints morph on hover. Normal motion on every board: entrance of panels, hover, press and focus transitions on every control.
+- Note says (summary): stands for bun hosting/setup.ts, which today asks the same six values as plain prompts and writes hosting/.env. Still open: arrow-key menus, Back, the review screen and showing the password once are design; today only the plain prompts exist. The password on the board is a placeholder, never a real secret.
+
+
 ## Config keys shown, and where the brief and the schema differ
 
 All keys and types were read from `packages/schema/src/config.ts` and `packages/schema/src/config/*.ts` in the worktree.
@@ -293,18 +353,3 @@ Known limits:
 - Duplicate element ids exist across mutually exclusive stage branches of one board.
 - Contrast was chosen by calculation for the default accent in light and dark; other accent values are not checked.
 - QR blocks are placeholder patterns, not scannable codes.
-
-## Repository copy and implementation status (added when the design was committed)
-
-In this folder, `canvas.json` is the ordinary-English index (the hosted canvas keeps its own titles), the `.dc.html` files are the boards, `frames/` holds local renders of each board and stage, and `app-screens/` holds screenshots of the real app taken after the matching work landed.
-
-| Area | In the app today | Still design only |
-|---|---|---|
-| Material Expressive look | Default design layer with Classic option, tonal palette on the default theme, Roboto Flex, large-radius surfaces, pill controls, spring motion, drifting backdrop graphics, reduced-motion path | Session timeline restyle, command palette with inline setting controls |
-| Configuration studio | Every `opencode.json` key with switches, segmented buttons, sliders, chip lists, record and list editors, variant pickers, JSON fallback, source badges, reset, regex search, dry-run JSONC diff review, validation errors, save | Per-field guided wizards, drag-to-reorder |
-| Full bypass permissions mode | `bypass_permissions` config key enforced by the server, two-key super confirmation with slider and emergency exit, warning banner with Turn off | Header chip outside Settings |
-| Web app in Docker | `hosting/` Dockerfile, compose, interactive setup, `host.sh` / `host.bat` (local and SSH), CI image build, smoke test and GHCR publish | Dashboard screen, owner registration screen |
-| Appliance image | `appliance/` Alpine image build (x86_64, arm64, Raspberry Pi 4 UEFI), console banner, CI QEMU boot test | Graphical boot panel, one-click deploy desktop app |
-| Chat | Material composer card, tonal user bubbles, glowing new-session backdrop, prompt-starter chips | Thinking glow, composer state morphs, attachment chips restyle |
-| Controls | Material buttons, switch, filled fields, segmented buttons, checkbox, menu and tooltip styles | Slider restyle |
-| Website | See `site/` | |
