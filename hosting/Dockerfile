@@ -10,6 +10,8 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends git ca-certificates python3 make g++ \
   && rm -rf /var/lib/apt/lists/*
 COPY . .
+# The build reads its channel from Git, which the build context leaves out.
+ENV OPENCODE_CHANNEL=material OPENCODE_VERSION=0.0.0-material-docker
 RUN bun install --frozen-lockfile
 RUN cd packages/cli \
   && bun run build --single --skip-install \

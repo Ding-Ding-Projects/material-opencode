@@ -60,14 +60,28 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+      - run: bun install --frozen-lockfile
+      - name: Build the CLI with the web app embedded
+        env:
+          OPENCODE_CHANNEL: material
+          OPENCODE_VERSION: 0.0.0-material-${{ github.run_number }}
+        run: |
+          cd packages/cli
+          bun run build --single --skip-install
+          mkdir -p ../../dist/runtime
+          cp dist/cli-linux-*/bin/opencode ../../dist/runtime/opencode
+          ../../dist/runtime/opencode --version
       - uses: docker/setup-buildx-action@v3
       - name: Build the web app image
         run: |
-          docker buildx build -f hosting/Dockerfile \
+          docker buildx build -f hosting/Dockerfile.runtime \
             --build-arg VERSION=${GITHUB_SHA::7} \
             --platform linux/${{ matrix.arch }} \
             --output type=docker,dest=image-${{ matrix.arch }}.tar \
-            -t $IMAGE:sha-${GITHUB_SHA::7}-${{ matrix.arch }} .
+            -t $IMAGE:sha-${GITHUB_SHA::7}-${{ matrix.arch }} dist/runtime
       - name: Smoke test the container
         run: |
           docker load -i image-${{ matrix.arch }}.tar
