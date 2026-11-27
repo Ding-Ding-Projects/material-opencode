@@ -68,7 +68,7 @@ hosting\host.bat           # Windows with Docker Desktop</code></pre>
         <p>The appliance is a minimal Alpine Linux image that boots straight into Docker and starts the app, with the app image already inside so it works offline. Images are built for x86_64 (raw for USB, VDI for VirtualBox), generic arm64, and Raspberry Pi 4/400.</p>
         <ol>
           <li>Download the image from the latest <a href="https://github.com/Ding-Ding-Projects/material-opencode/actions/workflows/material.yml">build</a>.</li>
-          <li>Import the VDI into VirtualBox with a bridged network, or write the raw image to a USB drive or SD card.</li>
+          <li>Import the VDI into VirtualBox with EFI turned on (Settings › System) and a bridged network, or write the raw image to a USB drive or SD card.</li>
           <li>Boot it. The console shows the address to open. Log in on the console as <code>root</code> and run <code>material-opencode password</code> to see the password.</li>
         </ol>
         <p>On the appliance, <code>material-opencode update</code> pulls the newest app image and <code>material-opencode logs</code> follows the app's log.</p>

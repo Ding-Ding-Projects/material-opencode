@@ -310,8 +310,7 @@ export const serverSettings: Entry<SettingsServerTab | "servers">[] = [
     tab: "configuration",
     label: "settings.tab.configuration",
     description: "settings.configuration.description",
-    keywords:
-      "opencode.json config permissions agents commands mcp lsp formatter watcher compaction snapshots share update username timezone websearch references plugins skills instructions worktree warming experimental policies tool output media providers automations",
+    keywords: "config json file permissions agents commands mcp lsp formatter compaction snapshots bypass policies",
   },
   {
     tab: "servers",

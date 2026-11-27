@@ -17,13 +17,18 @@ export const initialSuperConfirm: SuperConfirmState = { first: false, second: fa
 
 export function superConfirmTransition(state: SuperConfirmState, event: SuperConfirmEvent): SuperConfirmState {
   if (event.type === "reset") return initialSuperConfirm
+
   if (state.authorized) return state
+
   if (event.type === "key") {
     // Turning a key back off also drops the slider, so the order of operations can never be skipped.
     const next = { ...state, [event.key]: !state[event.key] }
+
     return next.first && next.second ? next : { ...next, slider: 0 }
   }
+
   if (!state.first || !state.second) return state
   const slider = Math.max(0, Math.min(100, event.value))
+
   return { ...state, slider, authorized: slider >= 100 }
 }

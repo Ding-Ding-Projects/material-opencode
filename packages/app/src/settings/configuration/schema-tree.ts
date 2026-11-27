@@ -1,5 +1,6 @@
-import { Schema } from "effect"
+import { Predicate, Schema } from "effect"
 import { Config } from "@opencode/schema/config"
+import { isDocument, type ConfigValue } from "./machine"
 
 // The Configuration studio renders every key of opencode.json from the same contract the server validates against.
 // It reads the encoded JSON Schema (the shape written to disk) and takes descriptions from the type side, where the
@@ -7,7 +8,7 @@ import { Config } from "@opencode/schema/config"
 
 export type JsonSchema = {
   readonly type?: string | readonly string[]
-  readonly enum?: readonly unknown[]
+  readonly enum?: readonly Schema.Json[]
   readonly anyOf?: readonly JsonSchema[]
   readonly oneOf?: readonly JsonSchema[]
   readonly $ref?: string
@@ -40,22 +41,34 @@ export type ConfigSchema = ReturnType<typeof createConfigSchema>
 export function createConfigSchema() {
   const encoded = Schema.toJsonSchemaDocument(Config.Info)
   const typed = Schema.toJsonSchemaDocument(Schema.toType(Config.Info))
-  const definitions = encoded.definitions as Record<string, JsonSchema>
+  // SAFETY: `toJsonSchemaDocument` emits JSON Schema definitions, which `JsonSchema` describes structurally.
+  const definitions = encoded.definitions as Readonly<Record<string, JsonSchema>>
+
   const resolve = (schema: JsonSchema): JsonSchema => {
     const seen = new Set<string>()
     let current = schema
+
     while (current.$ref && !seen.has(current.$ref)) {
       seen.add(current.$ref)
       const next = definitions[current.$ref.replace("#/$defs/", "")]
+
       if (!next) return current
       current = { ...next, description: current.description ?? next.description }
     }
+
     return current
   }
+
+  // SAFETY: the document root is a JSON Schema object, as above.
   const root = resolve(encoded.schema as JsonSchema)
   // Both documents name their root `Config.InfoEncoded`, so the type side resolves against its own definitions.
-  const typeRef = (typed.schema as JsonSchema).$ref?.replace("#/$defs/", "")
-  const typeRoot = (typeRef ? (typed.definitions as Record<string, JsonSchema>)[typeRef] : undefined) ?? (typed.schema as JsonSchema)
+  // SAFETY: the type-side document has the same JSON Schema shape as the encoded one.
+  const typedSchema = typed.schema as JsonSchema
+  // SAFETY: as above, for its definitions.
+  const typedDefinitions = typed.definitions as Readonly<Record<string, JsonSchema>>
+  const typeRef = typedSchema.$ref?.replace("#/$defs/", "")
+  const typeRoot = (typeRef ? typedDefinitions[typeRef] : undefined) ?? typedSchema
+
   const properties = Object.fromEntries(
     Object.entries(root.properties ?? {})
       .filter(([key]) => key !== "$schema")
@@ -64,6 +77,7 @@ export function createConfigSchema() {
         { ...value, description: typeRoot.properties?.[key]?.description ?? value.description } satisfies JsonSchema,
       ]),
   )
+
   return { root: { ...root, properties } satisfies JsonSchema, resolve }
 }
 
@@ -73,25 +87,38 @@ export function variants(schema: JsonSchema) {
 
 export function kindOf(schema: JsonSchema, resolve: (schema: JsonSchema) => JsonSchema): FieldKind {
   const options = variants(schema)
+
   if (options.length > 0) {
     const resolved = options.map(resolve)
-    if (resolved.every((option) => option.enum && option.enum.every((item) => typeof item === "string"))) return "enum"
+
+    if (resolved.every((option) => option.enum && option.enum.every(Predicate.isString))) return "enum"
+
     return "union"
   }
+
   if (schema.enum && schema.enum.length > 1) return "enum"
   const type = Array.isArray(schema.type) ? schema.type[0] : schema.type
+
   if (type === "boolean") return "boolean"
+
   if (type === "string") return "string"
+
   if (type === "number" || type === "integer") return "number"
+
   if (type === "array") {
     const items = schema.items ? resolve(schema.items) : undefined
+
     if (items && kindOf(items, resolve) === "string") return "strings"
+
     return "list"
   }
+
   if (type === "object") {
     if (schema.properties && Object.keys(schema.properties).length > 0) return "object"
-    if (schema.additionalProperties && typeof schema.additionalProperties === "object") return "record"
+
+    if (Predicate.isObject(schema.additionalProperties)) return "record"
   }
+
   return "json"
 }
 
@@ -99,59 +126,84 @@ export function kindOf(schema: JsonSchema, resolve: (schema: JsonSchema) => Json
 export function enumOptions(schema: JsonSchema, resolve: (schema: JsonSchema) => JsonSchema) {
   const options = variants(schema)
   const values = options.length > 0 ? options.map(resolve).flatMap((option) => option.enum ?? []) : (schema.enum ?? [])
-  return values.filter((item): item is string => typeof item === "string")
+
+  return values.filter(Predicate.isString)
 }
 
 /** The branch of a union that the current value fits, so the editor opens on it. */
-export function matchVariant(schema: JsonSchema, value: unknown, resolve: (schema: JsonSchema) => JsonSchema) {
+export function matchVariant(schema: JsonSchema, value: ConfigValue, resolve: (schema: JsonSchema) => JsonSchema) {
   const options = variants(schema).map(resolve)
   const index = options.findIndex((option) => fits(option, value, resolve))
+
   return index === -1 ? 0 : index
 }
 
-function fits(schema: JsonSchema, value: unknown, resolve: (schema: JsonSchema) => JsonSchema): boolean {
+function fits(schema: JsonSchema, value: ConfigValue, resolve: (schema: JsonSchema) => JsonSchema): boolean {
   if (value === undefined) return false
+
   if (variants(schema).length > 0) return variants(schema).some((option) => fits(resolve(option), value, resolve))
-  if (schema.enum) return schema.enum.includes(value)
+
+  if (schema.enum) return value !== undefined && schema.enum.includes(value)
   const type = Array.isArray(schema.type) ? schema.type[0] : schema.type
-  if (type === "boolean") return typeof value === "boolean"
-  if (type === "string") return typeof value === "string"
-  if (type === "number" || type === "integer") return typeof value === "number"
+
+  if (type === "boolean") return Predicate.isBoolean(value)
+
+  if (type === "string") return Predicate.isString(value)
+
+  if (type === "number" || type === "integer") return Predicate.isNumber(value)
+
   if (type === "array") return Array.isArray(value)
+
   if (type === "object") {
-    if (!value || typeof value !== "object" || Array.isArray(value)) return false
+    if (!isDocument(value)) return false
     const required = schema.required ?? []
+
     return required.every((key) => key in value)
   }
+
   return false
 }
 
 export function variantLabel(schema: JsonSchema, index: number, resolve: (schema: JsonSchema) => JsonSchema) {
   const option = resolve(variants(schema)[index] ?? {})
+
   if (option.title) return option.title
+
   if (variants(schema)[index]?.$ref) return variants(schema)[index]!.$ref!.replace("#/$defs/", "").replace(/Encoded$/, "")
+
   if (option.enum && option.enum.length === 1) return JSON.stringify(option.enum[0])
-  const type = typeof option.type === "string" ? option.type : option.type?.join(" | ")
+  const type = Predicate.isString(option.type) ? option.type : option.type?.join(" | ")
+
   if (type === "object" && option.required?.length) return `{ ${option.required.join(", ")} }`
+
   return type ?? "value"
 }
 
 /** A starting value for a new entry of this schema. */
-export function defaultFor(schema: JsonSchema, resolve: (schema: JsonSchema) => JsonSchema): unknown {
+export function defaultFor(schema: JsonSchema, resolve: (schema: JsonSchema) => JsonSchema): Schema.Json {
   const options = variants(schema)
+
   if (options.length > 0) return defaultFor(resolve(options[0]!), resolve)
+
   if (schema.enum && schema.enum.length > 0) return schema.enum[0]
   const type = Array.isArray(schema.type) ? schema.type[0] : schema.type
+
   if (type === "boolean") return false
+
   if (type === "string") return ""
+
   if (type === "number" || type === "integer") return Math.max(schema.minimum ?? 0, (schema.exclusiveMinimum ?? -1) + 1)
+
   if (type === "array") return []
+
   if (type === "object") {
     const required = schema.required ?? []
+
     return Object.fromEntries(
       required.map((key) => [key, defaultFor(resolve(schema.properties?.[key] ?? {}), resolve)]),
     )
   }
+
   return null
 }
 
@@ -159,7 +211,9 @@ export function defaultFor(schema: JsonSchema, resolve: (schema: JsonSchema) => 
 export function sliderRange(schema: JsonSchema) {
   const min = schema.minimum ?? (schema.exclusiveMinimum !== undefined ? schema.exclusiveMinimum + 1 : undefined)
   const max = schema.maximum
+
   if (min === undefined || max === undefined || max - min > 100_000) return undefined
+
   return { min, max, step: schema.type === "integer" ? 1 : (max - min) / 100 }
 }
 
@@ -182,11 +236,16 @@ export type ConfigCategory = (typeof configCategories)[number]["id"] | "other" |
 /** Every top-level key belongs to a category, including keys a newer schema adds that the list above predates. */
 export function categoryKeys(root: JsonSchema, category: ConfigCategory) {
   const all = Object.keys(root.properties ?? {})
+
   if (category === "raw") return []
+
   if (category === "other") {
     const known = new Set<string>(configCategories.flatMap((item) => [...item.keys]))
+
     return all.filter((key) => !known.has(key))
   }
+
   const entry = configCategories.find((item) => item.id === category)
+
   return (entry?.keys ?? []).filter((key) => all.includes(key))
 }

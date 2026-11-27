@@ -9,7 +9,8 @@ cp "$img" "$work/disk.img"
 log="$work/serial.log"
 if [ "$arch" = "x86_64" ]; then
   accel=tcg; [ -w /dev/kvm ] && accel=kvm
-  qemu-system-x86_64 -machine accel=$accel -m 2048 -smp 2 -nographic \
+  firmware=$(ls /usr/share/ovmf/OVMF.fd /usr/share/OVMF/OVMF_CODE.fd 2>/dev/null | head -n1)
+  qemu-system-x86_64 -machine q35,accel=$accel -m 2048 -smp 2 -nographic -bios "$firmware" \
     -drive file="$work/disk.img",format=raw,if=virtio \
     -netdev user,id=n0,hostfwd=tcp::14096-:4096 -device virtio-net-pci,netdev=n0 >"$log" 2>&1 &
 else

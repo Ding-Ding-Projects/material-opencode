@@ -8,8 +8,9 @@ import { Button } from "@opencode/ui/button"
 import { IconButton } from "@opencode/ui/icon-button"
 import { Icon } from "@opencode/ui/icon"
 import { Tooltip } from "@opencode/ui/tooltip"
+import { Option, Predicate, Schema } from "effect"
 import { useLanguage } from "@/runtime/i18n/language"
-import type { ConfigPath } from "./machine"
+import { isDocument, type ConfigDocument, type ConfigPath, type ConfigValue } from "./machine"
 import {
   defaultFor,
   enumOptions,
@@ -23,7 +24,7 @@ import {
 
 export type FieldContext = {
   resolve: (schema: JsonSchema) => JsonSchema
-  set: (path: ConfigPath, value: unknown) => void
+  set: (path: ConfigPath, value: ConfigValue) => void
   /** Which layers besides this document set a top-level key, for the source badge. */
   sources: (key: string) => readonly ("global" | "project")[]
   pending: (path: ConfigPath) => boolean
@@ -33,7 +34,7 @@ type FieldProps = {
   name: string
   path: ConfigPath
   schema: JsonSchema
-  value: unknown
+  value: ConfigValue
   ctx: FieldContext
   depth: number
   /** Removes this entry from its parent list or record instead of resetting the key. */
@@ -147,6 +148,7 @@ export function ConfigField(props: FieldProps) {
 
 function Scalar(props: FieldProps & { kind: string }) {
   const language = useLanguage()
+
   return (
     <SolidSwitch fallback={<JsonEditor {...props} />}>
       <Match when={props.kind === "boolean"}>
@@ -161,9 +163,9 @@ function Scalar(props: FieldProps & { kind: string }) {
         <TextInput
           appearance="small"
           aria-label={props.name}
-          value={typeof props.value === "string" ? props.value : ""}
+          value={Predicate.isString(props.value) ? props.value : ""}
           placeholder={language.t("settings.configuration.unset")}
-          invalid={typeof props.value === "string" && !!props.schema.pattern && !new RegExp(props.schema.pattern).test(props.value)}
+          invalid={Predicate.isString(props.value) && !!props.schema.pattern && !new RegExp(props.schema.pattern).test(props.value)}
           onChange={(event) => props.ctx.set(props.path, event.currentTarget.value === "" ? undefined : event.currentTarget.value)}
         />
       </Match>
@@ -179,7 +181,8 @@ function Scalar(props: FieldProps & { kind: string }) {
 
 function EnumControl(props: FieldProps) {
   const options = createMemo(() => enumOptions(props.schema, props.ctx.resolve))
-  const current = () => (typeof props.value === "string" ? props.value : undefined)
+  const current = () => (Predicate.isString(props.value) ? props.value : undefined)
+
   return (
     <Show
       when={options().length <= 4}
@@ -201,12 +204,15 @@ function EnumControl(props: FieldProps) {
 
 function NumberControl(props: FieldProps) {
   const range = () => sliderRange(props.schema)
-  const value = () => (typeof props.value === "number" ? props.value : undefined)
+  const value = () => (Predicate.isNumber(props.value) ? props.value : undefined)
+
   const commit = (text: string) => {
     if (text === "") return props.ctx.set(props.path, undefined)
     const next = Number(text)
+
     if (Number.isFinite(next)) props.ctx.set(props.path, props.schema.type === "integer" ? Math.round(next) : next)
   }
+
   return (
     <div data-slot="config-number">
       <Show when={range()}>
@@ -238,13 +244,16 @@ function NumberControl(props: FieldProps) {
 
 function ChipsControl(props: FieldProps) {
   const language = useLanguage()
-  const items = () => (Array.isArray(props.value) ? props.value.filter((item): item is string => typeof item === "string") : [])
+  const items = () => (Array.isArray(props.value) ? props.value.filter(Predicate.isString) : [])
+
   const add = (input: HTMLInputElement) => {
     const text = input.value.trim()
+
     if (!text) return
     props.ctx.set(props.path, [...items(), text])
     input.value = ""
   }
+
   return (
     <div data-slot="config-chips">
       <Index each={items()}>
@@ -277,7 +286,8 @@ function ChipsControl(props: FieldProps) {
 }
 
 function ObjectFields(props: FieldProps) {
-  const record = () => (props.value && typeof props.value === "object" && !Array.isArray(props.value) ? (props.value as Record<string, unknown>) : {})
+  const record = (): ConfigDocument => (isDocument(props.value) ? props.value : {})
+
   return (
     <div data-slot="config-group">
       <For each={Object.entries(props.schema.properties ?? {})}>
@@ -291,14 +301,17 @@ function ObjectFields(props: FieldProps) {
 
 function RecordFields(props: FieldProps) {
   const language = useLanguage()
-  const record = () => (props.value && typeof props.value === "object" && !Array.isArray(props.value) ? (props.value as Record<string, unknown>) : {})
-  const item = () => (typeof props.schema.additionalProperties === "object" ? props.schema.additionalProperties : {})
+  const record = (): ConfigDocument => (isDocument(props.value) ? props.value : {})
+  const item = () => (Predicate.isObject(props.schema.additionalProperties) ? props.schema.additionalProperties : {})
+
   const add = (input: HTMLInputElement) => {
     const key = input.value.trim()
+
     if (!key || key in record()) return
     props.ctx.set([...props.path, key], defaultFor(props.ctx.resolve(item()), props.ctx.resolve))
     input.value = ""
   }
+
   return (
     <div data-slot="config-group">
       <For each={Object.keys(record())}>
@@ -324,6 +337,7 @@ function RecordFields(props: FieldProps) {
         onSubmit={(event) => {
           event.preventDefault()
           const input = event.currentTarget.elements.namedItem("key")
+
           if (input instanceof HTMLInputElement) add(input)
         }}
       >
@@ -340,12 +354,14 @@ function ListFields(props: FieldProps) {
   const language = useLanguage()
   const items = () => (Array.isArray(props.value) ? props.value : [])
   const item = () => props.schema.items ?? {}
+
   const move = (index: number, offset: number) => {
     const next = [...items()]
     const [entry] = next.splice(index, 1)
     next.splice(index + offset, 0, entry)
     props.ctx.set(props.path, next)
   }
+
   return (
     <div data-slot="config-group">
       <Index each={items()}>
@@ -399,6 +415,7 @@ function UnionField(props: FieldProps) {
   const options = createMemo(() => variants(props.schema).map((_, index) => index))
   const active = createMemo(() => matchVariant(props.schema, props.value, props.ctx.resolve))
   const branch = () => variants(props.schema)[active()] ?? {}
+
   return (
     <div data-slot="config-group">
       <div data-slot="config-variant">
@@ -423,6 +440,7 @@ function UnionField(props: FieldProps) {
 function JsonEditor(props: FieldProps) {
   const language = useLanguage()
   const [error, setError] = createSignal(false)
+
   return (
     <div data-slot="config-json">
       <Textarea
@@ -431,10 +449,12 @@ function JsonEditor(props: FieldProps) {
         value={props.value === undefined ? "" : JSON.stringify(props.value, null, 2)}
         onChange={(event) => {
           const text = event.currentTarget.value.trim()
+
           if (text === "") return props.ctx.set(props.path, undefined)
-          const parsed = parseJson(text)
-          setError(parsed === invalid)
-          if (parsed !== invalid) props.ctx.set(props.path, parsed)
+          const parsed = decodeJson(text)
+          setError(Option.isNone(parsed))
+
+          if (Option.isSome(parsed)) props.ctx.set(props.path, parsed.value)
         }}
       />
       <Show when={error()}>
@@ -444,14 +464,8 @@ function JsonEditor(props: FieldProps) {
   )
 }
 
-const invalid = Symbol("invalid")
 
-function parseJson(text: string): unknown {
-  // JSON.parse is the boundary for a hand-typed value; a syntax error is an expected outcome, not a crash.
-  try {
-    return JSON.parse(text)
-  } catch {
-    return invalid
-  }
-}
+// A hand-typed value is parsed and checked as JSON once, here; a syntax error is an expected outcome, not a crash.
+
+const decodeJson = Schema.decodeUnknownOption(Schema.fromJsonString(Schema.Json))
 

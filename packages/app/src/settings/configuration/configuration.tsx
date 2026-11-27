@@ -2,6 +2,7 @@ import { createMemo, createSignal, For, Match, onCleanup, Show, Switch as Branch
 import { createStore } from "solid-js/store"
 import { diffLines } from "diff"
 import { parse, type ParseError } from "jsonc-parser"
+import { Option, Schema } from "effect"
 import { Button } from "@opencode/ui/button"
 import { Icon } from "@opencode/ui/icon"
 import { Loader } from "@opencode/ui/loader"
@@ -20,6 +21,8 @@ import {
   type ConfigEdit,
   type ConfigStudioEffect,
   type ConfigStudioEvent,
+  type ConfigStudioState,
+  type ConfigDocument,
 } from "./machine"
 import { categoryKeys, configCategories, createConfigSchema, type ConfigCategory } from "./schema-tree"
 import "./configuration.css"
@@ -33,12 +36,14 @@ export function SettingsConfiguration(props: { headerAction?: JSX.Element }) {
   const sdk = useServerSDK()
   const schema = createConfigSchema()
   const [studio, setStudio] = createSignal(createConfigStudioState())
+
   const [view, setView] = createStore<{ category: ConfigCategory; query: string; regex: boolean; raw: string | undefined }>({
     category: "general",
     query: "",
     regex: false,
     raw: undefined,
   })
+
   const [sources, setSources] = createStore<Record<string, ("global" | "project")[]>>({})
   let disposed = false
   onCleanup(() => (disposed = true))
@@ -46,17 +51,19 @@ export function SettingsConfiguration(props: { headerAction?: JSX.Element }) {
   const dispatch = (event: ConfigStudioEvent) => {
     if (disposed) return
     const result = transition(studio(), event)
+
     if (result.state !== studio()) setStudio(result.state)
     result.effects.forEach(run)
   }
 
   const run = (effect: ConfigStudioEffect) => {
     if (effect.type === "load") return void load(effect.attempt)
+
     if (effect.type === "dry-run")
       return void sdk.api.experimental.config
         .edit({ edits: wire(effect.edits), dryRun: true })
         .then((result) => dispatch({ type: "reviewed", attempt: effect.attempt, review: result }))
-        .catch((error: unknown) => dispatch({ type: "review.failed", attempt: effect.attempt, message: message(error) }))
+        .catch((error: Error) => dispatch({ type: "review.failed", attempt: effect.attempt, message: message(error) }))
     void sdk.api.experimental.config
       .edit({ edits: wire(effect.edits) })
       .then((result) =>
@@ -64,36 +71,41 @@ export function SettingsConfiguration(props: { headerAction?: JSX.Element }) {
           ? dispatch({ type: "saved", attempt: effect.attempt })
           : dispatch({ type: "save.failed", attempt: effect.attempt, message: result.issues.join("\n") }),
       )
-      .catch((error: unknown) => dispatch({ type: "save.failed", attempt: effect.attempt, message: message(error) }))
+      .catch((error: Error) => dispatch({ type: "save.failed", attempt: effect.attempt, message: message(error) }))
   }
 
   const load = async (attempt: number) => {
     const [document, entries] = await Promise.all([
       sdk.api.experimental.config.edit({ edits: [], dryRun: true }),
       sdk.api.config.get().catch(() => []),
-    ]).catch((error: unknown) => {
+    ]).catch((error: Error) => {
       dispatch({ type: "load.failed", attempt, message: message(error) })
+
       return [undefined, []] as const
     })
+
     if (!document) return
     const boundary = entries.findIndex((entry) => entry.type === "directory")
+
     const layers = entries.flatMap((entry, index) =>
       entry.type === "document" && entry.path !== document.path
         ? Object.keys(entry.info).map((key) => [key, boundary === -1 || index < boundary ? "global" : "project"] as const)
         : [],
     )
+
     setSources(
-      layers.reduce<Record<string, ("global" | "project")[]>>((all, [key, layer]) => {
-        const list = all[key] ?? []
-        return { ...all, [key]: list.includes(layer) ? list : [...list, layer] }
-      }, {}),
+      Object.fromEntries(
+        [...new Set(layers.map(([key]) => key))].map((key) => [
+          key,
+          [...new Set(layers.filter((layer) => layer[0] === key).map((layer) => layer[1]))],
+        ]),
+      ),
     )
-    const parsed: unknown = parse(document.before, [], { allowTrailingComma: true })
     dispatch({
       type: "loaded",
       attempt,
       path: document.path,
-      document: parsed && typeof parsed === "object" && !Array.isArray(parsed) ? (parsed as Record<string, unknown>) : {},
+      document: parseDocument(document.before) ?? {},
     })
   }
 
@@ -101,8 +113,10 @@ export function SettingsConfiguration(props: { headerAction?: JSX.Element }) {
   void load(0)
 
   const value = createMemo(() => draft(studio()))
+
   const edits = () => {
     const state = studio()
+
     return state.type === "loading" || state.type === "failed" ? [] : state.edits
   }
 
@@ -115,21 +129,27 @@ export function SettingsConfiguration(props: { headerAction?: JSX.Element }) {
 
   const matcher = createMemo(() => {
     const query = view.query.trim()
+
     if (!query) return undefined
+
     if (!view.regex) return (text: string) => text.toLowerCase().includes(query.toLowerCase())
     const pattern = compile(query)
+
     return pattern ? (text: string) => pattern.test(text) : () => false
   })
 
   const keys = createMemo(() => {
     const match = matcher()
     const all = Object.keys(schema.root.properties ?? {})
+
     if (match) return all.filter((key) => match(key) || match(schema.root.properties?.[key]?.description ?? ""))
+
     return categoryKeys(schema.root, view.category)
   })
 
   const categories = createMemo(() => {
     const extra = categoryKeys(schema.root, "other").length > 0 ? (["other"] as const) : []
+
     return [...configCategories.map((item) => item.id), ...extra, "raw" as const]
   })
 
@@ -157,7 +177,7 @@ export function SettingsConfiguration(props: { headerAction?: JSX.Element }) {
             <Icon name="circle-exclamation" />
             <div>
               <strong>{language.t("settings.configuration.loadFailed")}</strong>
-              <p>{(studio() as { message: string }).message}</p>
+              <p>{failedMessage(studio())}</p>
             </div>
             <Button size="small" variant="outline" icon="refresh" onClick={() => dispatch({ type: "retry" })}>
               {language.t("common.retry")}
@@ -165,7 +185,7 @@ export function SettingsConfiguration(props: { headerAction?: JSX.Element }) {
           </div>
         </Match>
         <Match when={true}>
-          <Show when={(studio() as { document?: Record<string, unknown> }).document?.bypass_permissions === true}>
+          <Show when={savedDocument(studio())?.bypass_permissions === true}>
             <div data-slot="config-bypass" role="alert">
               <Icon name="outline-hexagonal-warning" />
               <div>
@@ -217,9 +237,9 @@ export function SettingsConfiguration(props: { headerAction?: JSX.Element }) {
                 >
                   .*
                 </button>
-                <span data-slot="config-path" title={(studio() as { path?: string }).path}>
+                <span data-slot="config-path" title={documentPath(studio())}>
                   <Icon name="file-document" size="small" />
-                  <code>{(studio() as { path?: string }).path}</code>
+                  <code>{documentPath(studio())}</code>
                 </span>
               </div>
 
@@ -248,9 +268,11 @@ export function SettingsConfiguration(props: { headerAction?: JSX.Element }) {
                   onText={(text) => setView("raw", text)}
                   onApply={(next) => {
                     const current = value()
+
                     const changed = [...new Set([...Object.keys(current), ...Object.keys(next)])].filter(
                       (key) => JSON.stringify(current[key]) !== JSON.stringify(next[key]),
                     )
+
                     changed.forEach((key) => dispatch({ type: "set", path: [key], value: next[key] }))
                     setView("raw", undefined)
                   }}
@@ -283,10 +305,10 @@ export function SettingsConfiguration(props: { headerAction?: JSX.Element }) {
             </div>
           </Show>
 
-          <Show when={studio().type === "reviewing" || studio().type === "saving" ? studio() : undefined}>
+          <Show when={reviewState(studio())}>
             {(state) => (
               <ReviewDrawer
-                state={state() as ReviewState}
+                state={state()}
                 onCancel={() => dispatch({ type: "cancel" })}
                 onSave={() => dispatch({ type: "save" })}
               />
@@ -312,6 +334,7 @@ function ReviewDrawer(props: { state: ReviewState; onCancel: () => void; onSave:
   const confirmed = () => !enablesBypass() || authorized()
   const changes = createMemo(() => (props.state.review ? diffLines(props.state.review.before, props.state.review.after) : []))
   const issues = () => props.state.review?.issues ?? []
+
   return (
     <div data-slot="config-review" role="dialog" aria-modal="true" aria-label={language.t("settings.configuration.reviewTitle")} data-floating-overlay>
       <div data-slot="config-review-panel">
@@ -364,19 +387,16 @@ function ReviewDrawer(props: { state: ReviewState; onCancel: () => void; onSave:
 }
 
 function RawEditor(props: {
-  value: Record<string, unknown>
+  value: ConfigDocument
   text: string | undefined
   onText: (text: string) => void
-  onApply: (value: Record<string, unknown>) => void
+  onApply: (value: ConfigDocument) => void
 }) {
   const language = useLanguage()
   const text = () => props.text ?? JSON.stringify(props.value, null, 2)
-  const parsed = createMemo(() => {
-    const errors: ParseError[] = []
-    const result: unknown = parse(text(), errors, { allowTrailingComma: true })
-    if (errors.length || !result || typeof result !== "object" || Array.isArray(result)) return undefined
-    return result as Record<string, unknown>
-  })
+
+  const parsed = createMemo(() => parseDocument(text()))
+
   return (
     <div data-slot="config-raw">
       <p>{language.t("settings.configuration.rawDescription")}</p>
@@ -395,11 +415,41 @@ function RawEditor(props: {
 }
 
 function wire(edits: readonly ConfigEdit[]) {
-  return edits.map((edit) => ({ path: [...edit.path], value: edit.value as never }))
+  return edits.map((edit) => ({
+    path: [...edit.path],
+    // SAFETY: a structured clone of a JSON value is the same JSON value, now mutable as the client's type expects.
+    value: edit.value === undefined ? undefined : (structuredClone(edit.value) as Schema.MutableJson),
+  }))
 }
 
-function message(error: unknown) {
-  return error instanceof Error ? error.message : String(error)
+/** The configuration file's text, parsed as JSONC and checked to be a JSON object; undefined when it is neither. */
+function parseDocument(text: string): ConfigDocument | undefined {
+  const errors: ParseError[] = []
+  const result = decodeDocument(parse(text, errors, { allowTrailingComma: true }))
+
+  return errors.length ? undefined : Option.getOrUndefined(result)
+}
+
+const decodeDocument = Schema.decodeUnknownOption(Schema.JsonObject)
+
+function failedMessage(state: ConfigStudioState) {
+  return state.type === "failed" ? state.message : ""
+}
+
+function documentPath(state: ConfigStudioState) {
+  return state.type === "loading" || state.type === "failed" ? "" : state.path
+}
+
+function reviewState(state: ConfigStudioState) {
+  return state.type === "reviewing" || state.type === "saving" ? state : undefined
+}
+
+function savedDocument(state: ConfigStudioState) {
+  return state.type === "loading" || state.type === "failed" ? undefined : state.document
+}
+
+function message(error: Error) {
+  return error.message || String(error)
 }
 
 function compile(pattern: string) {

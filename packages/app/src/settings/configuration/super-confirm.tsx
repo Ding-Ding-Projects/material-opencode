@@ -7,12 +7,15 @@ import { initialSuperConfirm, superConfirmTransition, type SuperConfirmEvent } f
 export function SuperConfirm(props: { action: string; detail: string; onAuthorized: (authorized: boolean) => void; onCancel: () => void }) {
   const language = useLanguage()
   const [state, setState] = createSignal(initialSuperConfirm)
+
   const dispatch = (event: SuperConfirmEvent) => {
     const next = superConfirmTransition(state(), event)
+
     if (next === state()) return
     setState(next)
     props.onAuthorized(next.authorized)
   }
+
   const unlocked = () => state().first && state().second
 
   return (

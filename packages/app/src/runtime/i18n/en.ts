@@ -954,7 +954,7 @@ export const dict = {
   "settings.experimental.description": "Try experimental features",
   "settings.tab.configuration": "Configuration",
   "settings.configuration.title": "Configuration",
-  "settings.configuration.description": "Every setting from opencode.json, with the control that fits it",
+  "settings.configuration.description": "Every setting in your configuration file, with the control that fits it",
   "settings.configuration.loading": "Reading the configuration file",
   "settings.configuration.loadFailed": "Couldn't read the configuration file",
   "settings.configuration.categories": "Configuration categories",

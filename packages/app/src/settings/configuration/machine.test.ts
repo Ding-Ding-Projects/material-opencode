@@ -15,6 +15,7 @@ describe("config studio machine", () => {
       { type: "set", path: ["watcher"], value: { ignore: [] } },
       { type: "set", path: ["share"], value: "auto" },
     ])
+
     expect(state.type === "editing" && state.edits.map((edit) => edit.path)).toEqual([["watcher"], ["share"]])
     expect(draft(state)).toEqual({ share: "auto", watcher: { ignore: [] } })
   })

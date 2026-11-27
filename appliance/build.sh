@@ -27,8 +27,9 @@ suffix=""
 [ "$pi" = "--pi" ] && suffix="-pi"
 mkdir -p "$out"
 img="$out/material-opencode-${arch}${suffix}.img"
-boot=BIOS
-[ "$arch" = "aarch64" ] && boot=UEFI
+# UEFI on both architectures: it boots modern PCs, VirtualBox (with EFI enabled) and the Raspberry Pi UEFI firmware,
+# and it gives the image a partition table, which the BIOS layout lacks.
+boot=UEFI
 
 "$work/alpine-make-vm-image" \
   --arch "$arch" \
